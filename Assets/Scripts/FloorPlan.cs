@@ -89,6 +89,36 @@ namespace KaizenApp
                         IsFloorIcon = false
                     };
                     break;
+
+                case "Trolley":
+                    _trolleyIcon = iconContainer.Q<VisualElement>(ICON_IMAGE);
+                    _trolleyIcon.userData = new LayoutIconInfo()
+                    {
+                        Type = IconType.trolley,
+                        Name = "trolley",
+                        IsFloorIcon = false
+                    };
+                    break;
+                case "Worker":
+                    _workerIcon = iconContainer.Q<VisualElement>(ICON_IMAGE);
+                    _workerIcon.userData = new LayoutIconInfo()
+                    {
+                        Type = IconType.worker,
+                        Name = "worker",
+                        IsFloorIcon = false
+                    };
+                    break;
+                case "Conveyor":
+                    _conveyorIcon = iconContainer.Q<VisualElement>(ICON_IMAGE);
+                    _conveyorIcon.userData = new LayoutIconInfo()
+                    {
+                        Type = IconType.converyor,
+                        Name = "conveyor",
+                        IsFloorIcon = false
+                    };
+                    break;
+                default:
+                    break;
             }
         }
 

@@ -17,10 +17,36 @@
         </ui:VisualElement>
         <ui:VisualElement name="ve_icons" focusable="true" style="background-color: rgb(168, 143, 91); flex-grow: 0; -unity-background-image-tint-color: rgb(168, 143, 91); height: 10%; position: relative;">
             <ui:VisualElement name="ve_icons" style="background-color: rgba(0, 0, 0, 0);">
-                <ui:VisualElement name="ve_row_1" style="background-color: rgba(0, 0, 0, 0); align-items: center; justify-content: space-around; flex-direction: row;">
-                    <ui:VisualElement name="ve_icon_container" focusable="true" style="flex-grow: 0; background-color: rgb(245, 224, 181); width: 128px; height: 64px; flex-shrink: 0; justify-content: center; align-items: center; border-left-width: 3px; border-right-width: 3px; border-top-width: 3px; border-bottom-width: 3px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);">
-                        <ui:VisualElement name="ve_icon_image" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); width: 64px; height: 32px; background-image: url(&apos;project://database/Assets/UI/Sprites/Table.jpg?fileID=2800000&amp;guid=2107f81ea2d756a4891d00d99b1466db&amp;type=3#Table&apos;); flex-shrink: 0; padding-top: 10px; -unity-background-scale-mode: scale-and-crop; top: 16px;" />
-                        <ui:Label tabindex="-1" text="Table" display-tooltip-when-elided="true" style="top: 25px;" />
+                <ui:VisualElement name="ve_row_1" style="background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                    <ui:VisualElement name="ve_worker_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                        <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                            <ui:VisualElement name="ve_icon_image" class="icon_image worker_icon" />
+                            <ui:Label tabindex="-1" text="Worker" display-tooltip-when-elided="true" class="icon_label" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="ve_table_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                        <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                            <ui:VisualElement name="ve_icon_image" class="table_icon icon_image" />
+                            <ui:Label tabindex="-1" text="Table" display-tooltip-when-elided="true" class="icon_label" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="ve_trolley_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                        <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                            <ui:VisualElement name="ve_icon_image" class="icon_image trolley_icon" />
+                            <ui:Label tabindex="-1" text="Trolley" display-tooltip-when-elided="true" class="icon_label" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="ve_machine_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                        <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                            <ui:VisualElement name="ve_icon_image" class="icon_image machine_icon" />
+                            <ui:Label tabindex="-1" text="Machine" display-tooltip-when-elided="true" class="icon_label" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="ve_machine_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                        <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                            <ui:VisualElement name="ve_icon_image" class="icon_image conveyor_icon" />
+                            <ui:Label tabindex="-1" text="Conveyor" display-tooltip-when-elided="true" class="icon_label" />
+                        </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>

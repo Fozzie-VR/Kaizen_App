@@ -1,0 +1,22 @@
+VisualElement {
+}
+
+.ve_table_icon {
+    flex-grow: 0;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: url('project://database/Assets/UI/Sprites/Table.jpg?fileID=21300000&guid=2107f81ea2d756a4891d00d99b1466db&type=3#Table');
+    width: 128px;
+    height: 64px;
+    flex-shrink: 0;
+}
+
+.button_table_icon {
+    background-image: url('project://database/Assets/UI/Sprites/Table.jpg?fileID=2800000&guid=2107f81ea2d756a4891d00d99b1466db&type=3#Table');
+    width: 100px;
+    height: 50px;
+    flex-shrink: 0;
+}
+
+.hidden {
+	display: none;
+}

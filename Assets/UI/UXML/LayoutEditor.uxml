@@ -20,31 +20,31 @@
                 <ui:VisualElement name="ve_row_1" style="background-color: rgba(0, 0, 0, 0); flex-direction: row;">
                     <ui:VisualElement name="ve_worker_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
                         <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
-                            <ui:VisualElement name="ve_icon_image" class="icon_image worker_icon" />
+                            <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image worker_icon" />
                             <ui:Label tabindex="-1" text="Worker" display-tooltip-when-elided="true" class="icon_label" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <ui:VisualElement name="ve_table_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
                         <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
-                            <ui:VisualElement name="ve_icon_image" class="table_icon icon_image" />
+                            <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="table_icon icon_image" />
                             <ui:Label tabindex="-1" text="Table" display-tooltip-when-elided="true" class="icon_label" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <ui:VisualElement name="ve_trolley_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
                         <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
-                            <ui:VisualElement name="ve_icon_image" class="icon_image trolley_icon" />
+                            <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image trolley_icon" />
                             <ui:Label tabindex="-1" text="Trolley" display-tooltip-when-elided="true" class="icon_label" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <ui:VisualElement name="ve_machine_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
                         <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
-                            <ui:VisualElement name="ve_icon_image" class="icon_image machine_icon" />
+                            <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image machine_icon" />
                             <ui:Label tabindex="-1" text="Machine" display-tooltip-when-elided="true" class="icon_label" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <ui:VisualElement name="ve_machine_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
                         <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
-                            <ui:VisualElement name="ve_icon_image" class="icon_image conveyor_icon" />
+                            <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image conveyor_icon" />
                             <ui:Label tabindex="-1" text="Conveyor" display-tooltip-when-elided="true" class="icon_label" />
                         </ui:VisualElement>
                     </ui:VisualElement>

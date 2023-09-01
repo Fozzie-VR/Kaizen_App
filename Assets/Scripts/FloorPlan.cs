@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -19,11 +20,16 @@ namespace KaizenApp
         private const string ICON_IMAGE = "ve_icon_image";
         private const string FLOOR = "ve_layout_area";
 
+        private const string ICON_IMAGE_STYLE = "icon_image";
+        private const string ICON_CONTAINER_STYLE = "icon_container";
+        private const string ICON_LABEL_STYLE = "icon_label";
+
 
         private VisualElement _dragArea;
 
         //make a list of start drag elements and register callbacks for each
         private VisualElement _startDragElement;
+        private List<VisualElement> _startDragElements = new List<VisualElement>();
 
         //need to add each icon's element and then assign it as the pointer icon on Pointer Down using evt.target
         private VisualElement _tableIcon;
@@ -56,23 +62,20 @@ namespace KaizenApp
             RegisterCallbacks();
             _iconFactory.Factory = GetIcon;
             _iconFactory.PreReturn = ReturnIcon;
-           
-           
         }
 
         private void SetVisualElements(VisualElement root)
         {
             _dragArea = root.Q<VisualElement>(DRAG_AREA);
-            _startDragElement = root.Q<VisualElement>(START_DRAG);
-            _floor = root.Q<VisualElement>(FLOOR);
-            _tableIcon = root.Q<VisualElement>(ICON_IMAGE);
-            LayoutIconInfo info = new LayoutIconInfo()
-            {
-                Name = "table", 
-                IsFloorIcon = false 
-            };
-            _tableIcon.userData = info;
             
+            _floor = root.Q<VisualElement>(FLOOR);
+
+            _startDragElements = root.Query<VisualElement>(START_DRAG).ToList();
+            foreach(VisualElement iconContainer in _startDragElements)
+            {
+                SetIconUserData(iconContainer);
+            }
+
         }
 
         private void SetIconUserData(VisualElement iconContainer)
@@ -81,7 +84,7 @@ namespace KaizenApp
             switch(iconName)
             {
                 case "Table":
-                    _tableIcon = iconContainer.Q<VisualElement>(ICON_IMAGE);
+                    _tableIcon = iconContainer;
                     _tableIcon.userData = new LayoutIconInfo()
                     {
                         Type = IconType.table,
@@ -91,7 +94,7 @@ namespace KaizenApp
                     break;
 
                 case "Trolley":
-                    _trolleyIcon = iconContainer.Q<VisualElement>(ICON_IMAGE);
+                    _trolleyIcon = iconContainer;
                     _trolleyIcon.userData = new LayoutIconInfo()
                     {
                         Type = IconType.trolley,
@@ -100,7 +103,7 @@ namespace KaizenApp
                     };
                     break;
                 case "Worker":
-                    _workerIcon = iconContainer.Q<VisualElement>(ICON_IMAGE);
+                    _workerIcon = iconContainer;
                     _workerIcon.userData = new LayoutIconInfo()
                     {
                         Type = IconType.worker,
@@ -109,11 +112,20 @@ namespace KaizenApp
                     };
                     break;
                 case "Conveyor":
-                    _conveyorIcon = iconContainer.Q<VisualElement>(ICON_IMAGE);
+                    _conveyorIcon = iconContainer;
                     _conveyorIcon.userData = new LayoutIconInfo()
                     {
                         Type = IconType.converyor,
                         Name = "conveyor",
+                        IsFloorIcon = false
+                    };
+                    break;
+                case "Machine":
+                    _machineIcon = iconContainer;
+                    _machineIcon.userData = new LayoutIconInfo()
+                    {
+                        Type = IconType.machine,
+                        Name = "machine",
                         IsFloorIcon = false
                     };
                     break;
@@ -124,7 +136,10 @@ namespace KaizenApp
 
         private void RegisterCallbacks()
         {
-            _startDragElement.RegisterCallback<PointerDownEvent>(PointerDownEventHandler);
+            foreach(VisualElement iconContainer in _startDragElements)
+            {
+                iconContainer.RegisterCallback<PointerDownEvent>(PointerDownEventHandler);
+            }
             _dragArea.RegisterCallback<PointerMoveEvent>(PointerMoveEventHandler);
             _dragArea.RegisterCallback<PointerUpEvent>(PointerUpEventHandler);
 
@@ -134,14 +149,8 @@ namespace KaizenApp
 
         private void PointerDownEventHandler(PointerDownEvent evt)
         {
-            
-            //assign pointer icon to the element that was clicked
-            //register callbacks for pointer move and pointer up
-            Debug.Log("pointer down");
             VisualElement target = evt.target as VisualElement;
-            _pointerIcon = target.Q<VisualElement>(ICON_IMAGE);
-            //LayoutIconInfo info = _pointerIcon.userData as LayoutIconInfo;
-
+            _pointerIcon = target;
             _dragArea.CapturePointer(evt.pointerId);
 
             //set icon and pointer start positions
@@ -149,38 +158,56 @@ namespace KaizenApp
             _pointerStartPosition = evt.position;
 
             _isDragging = true;
-            
         }
 
         private void PointerUpEventHandler(PointerUpEvent evt)
         {
-            //Unregister callbacks for pointer move and pointer up
-            //need to differentiate between existing and new floor items so that we only add a new icon if new
-            Debug.Log("pointer up");
+            //Debug.Log("pointer up");
             _dragArea.ReleasePointer(evt.pointerId);
             _isDragging = false;
             LayoutIconInfo info = _pointerIcon.userData as LayoutIconInfo;
+            float xOffset = _pointerIcon.resolvedStyle.width / 2;
+            float yOffset = _pointerIcon.resolvedStyle.height / 2;
             var position = _dragArea.WorldToLocal(evt.position);
+            Debug.Log(position);
             bool floorContainsIcon = _floor.ContainsPoint(position);
-            Debug.Log("floor contains icon = " + floorContainsIcon);
-            if(info.IsFloorIcon && _floor.ContainsPoint(position))
+            if (position.x - xOffset < 0)
             {
-                float xOffset = _pointerIcon.resolvedStyle.width / 2;
-                float yOffset = _pointerIcon.resolvedStyle.height / 2;
+                floorContainsIcon = false;
+            }
+            
+            if (position.x + xOffset > _floor.resolvedStyle.width)
+            {
+                floorContainsIcon = false;
+            }
 
+            if (position.y - yOffset < 0)
+            {
+                floorContainsIcon = false;
+            }
+
+            if(position.y + yOffset > _floor.resolvedStyle.height)
+            {
+                floorContainsIcon = false;
+            }
+
+           
+            //Debug.Log("floor contains icon = " + floorContainsIcon);
+            if(info.IsFloorIcon && floorContainsIcon)
+            {
                 _pointerIcon.style.translate = new Translate(position.x - xOffset, position.y - yOffset);
                 _pointerIcon = null;
                 
             }
-            else if(!info.IsFloorIcon && _floor.ContainsPoint(position))
+            else if(!info.IsFloorIcon && floorContainsIcon)
             {
-                //create new icon at position
-                //this icon needs to register pointer event callbacks so it can be moved on the floor
-                //add to a list of icons on the floor
-                //make events to keep track of any changes to the icons on the floor
+               
                 VisualElement icon = _iconFactory.GetIcon();
-                float xOffset = _pointerIcon.resolvedStyle.width / 2;
-                float yOffset = _pointerIcon.resolvedStyle.height / 2;
+                VisualElement iconImage = icon.Q<VisualElement>(ICON_IMAGE);
+                string imageClass = GetImageIconStyleClass(info.Type);
+                iconImage.AddToClassList(imageClass);
+                Label label = icon.Q<Label>();
+                label.text = GetIconLabelText(info.Type);
                
                 icon.style.translate = new Translate(position.x - xOffset, position.y - yOffset);
 
@@ -195,15 +222,15 @@ namespace KaizenApp
                 _pointerIcon.transform.position = _iconStartPosition;
                 _pointerIcon = null;
             }
-            else if(info.IsFloorIcon && !_floor.ContainsPoint(position))
+            else if(info.IsFloorIcon && !floorContainsIcon)
             {
-                Debug.Log("evt position not inside floor area...");
+                //Debug.Log("evt position not inside floor area...");
                 _iconFactory.PreReturn(_pointerIcon);
                 _pointerIcon = null;
             }
-            else if (!info.IsFloorIcon && !_floor.ContainsPoint(position))
+            else if (!info.IsFloorIcon && !floorContainsIcon)
             {
-                Debug.Log("evt position not inside floor area...");
+                //Debug.Log("evt position not inside floor area...");
                 _pointerIcon.transform.position = _iconStartPosition;
                 _pointerIcon = null;
             }
@@ -228,12 +255,12 @@ namespace KaizenApp
 
         private void PointerEnterEventHandler(PointerEnterEvent evt)
         {
-            Debug.Log("pointer enter");
+            //Debug.Log("pointer enter");
         }
 
         private void PointerLeaveEventHandler(PointerLeaveEvent evt)
         {
-            Debug.Log("pointer leave");
+            //Debug.Log("pointer leave");
         }
 
 
@@ -241,22 +268,24 @@ namespace KaizenApp
         
         private VisualElement GetIcon()
         {
+            VisualElement iconContainer = new VisualElement();
+            iconContainer.AddToClassList("icon_container");
+            iconContainer.style.position = new StyleEnum<Position>(Position.Absolute);
+            iconContainer.name = START_DRAG;
 
+            VisualElement iconImage = new VisualElement();
+            iconImage.AddToClassList(ICON_IMAGE_STYLE);
+            iconImage.name = ICON_IMAGE;
+            iconImage.pickingMode = PickingMode.Ignore;
+            iconContainer.Add(iconImage);
 
-            VisualElement iconElement = new VisualElement();
-            iconElement.AddToClassList("ve_table_icon");
-            iconElement.style.position = new StyleEnum<Position>(Position.Absolute);
-            iconElement.name = ICON_IMAGE;
-            _floor.Add(iconElement);
-            return iconElement;
+            Label iconLabel = new Label();
+            iconLabel.AddToClassList(ICON_LABEL_STYLE);
+            iconContainer.Add(iconLabel);
 
-            //Button button = new Button();
-            //button.AddToClassList("button_table_icon");
-            ////button.clicked += () => Debug.Log("clicked");
-            //DraggableElement draggableElement = new DraggableElement(button, _iconFactory);
-            //draggableElement.AddDropHandler(_floor, OnFloorDrop);
-            //_floor.Add(button);
-            //return button;
+            _floor.Add(iconContainer);
+            return iconContainer;
+
         }
 
         private void ReturnIcon(VisualElement icon)
@@ -269,26 +298,54 @@ namespace KaizenApp
             
         }
 
-        private void AddIconToStyleClass(IconType type)
+        private string GetImageIconStyleClass(IconType type)
         {
             switch (type)
             {
                 case IconType.table:
-                    _tableIcon.AddToClassList("ve_table_icon");
+                    return "table_icon";
                     break;
                 case IconType.worker:
-                    _tableIcon.AddToClassList("ve_worker_icon");
+                    return "worker_icon";
                     break;  
                 case IconType.machine:
-                    _tableIcon.AddToClassList("ve_machine_icon");
+                    return "machine_icon";
                     break;
                 case IconType.trolley:
-                    _tableIcon.AddToClassList("ve_trolley_icon");
+                    return "trolley_icon";
+                    break;
+                case IconType.converyor:
+                    return "conveyor_icon";
                     break;
                 default:
-                    //do default stuff
-                    break;
+                    return "table_icon";
+                    
             }
+        }
+
+        private string GetIconLabelText(IconType type)
+        {
+            switch(type)
+            {
+                case IconType.table:
+                    return "Table";
+                    break;
+                case IconType.worker:
+                    return "Worker";
+                    break;
+                case IconType.machine:
+                    return "Machine";
+                    break;
+                case IconType.trolley:
+                    return "Trolley";
+                    break;
+                case IconType.converyor:
+                    return "Conveyor";
+                    break;
+                default:
+                    return "Table";
+
+            }   
         }
            
 

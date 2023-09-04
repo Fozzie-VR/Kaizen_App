@@ -11,7 +11,8 @@ namespace KaizenApp
 
         public UIDocument RootDocument;
         private VisualElement _root;
-        private FloorPlan _floorPlan;
+        private FloorPlanner _floorPlan;
+        private IconSpawner _iconSpawner;
 
         static KaizenAppManager _instance;
         private void Awake()
@@ -26,12 +27,18 @@ namespace KaizenApp
             }
 
             _root = RootDocument.rootVisualElement;
-            InitializeFloorPlan();
+            //InitializeFloorPlan();
+            InitializeIconSpawner();
         }
 
         private void InitializeFloorPlan()
         {
-           _floorPlan = new FloorPlan(_root);
+           _floorPlan = new FloorPlanner(_root);
+        }
+
+        private void InitializeIconSpawner()
+        {
+            _iconSpawner = new IconSpawner(_root);
         }
     }
 

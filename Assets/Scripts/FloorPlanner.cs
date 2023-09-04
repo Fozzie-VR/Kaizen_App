@@ -12,7 +12,9 @@ namespace KaizenApp
     //Keeps track of icons on the floor
     //Keeps floor measurements and handles scaling
     //could refactor to remove Pointer events related to the icons to a separate class
-    public class FloorPlan
+
+    public class FloorPlanner
+
     {
         private const string DRAG_AREA = "ve_layout_container";
         private const string START_DRAG = "ve_icon_container";
@@ -26,9 +28,6 @@ namespace KaizenApp
 
 
         private VisualElement _dragArea;
-
-        //make a list of start drag elements and register callbacks for each
-        private VisualElement _startDragElement;
         private List<VisualElement> _startDragElements = new List<VisualElement>();
 
         //need to add each icon's element and then assign it as the pointer icon on Pointer Down using evt.target
@@ -55,8 +54,7 @@ namespace KaizenApp
         private IconFactory<VisualElement> _iconFactory = new IconFactory<VisualElement>();
 
 
-
-        public FloorPlan(VisualElement root)
+        public FloorPlanner(VisualElement root)
         {
             SetVisualElements(root);
             RegisterCallbacks();
@@ -67,7 +65,6 @@ namespace KaizenApp
         private void SetVisualElements(VisualElement root)
         {
             _dragArea = root.Q<VisualElement>(DRAG_AREA);
-            
             _floor = root.Q<VisualElement>(FLOOR);
 
             _startDragElements = root.Query<VisualElement>(START_DRAG).ToList();
@@ -169,8 +166,15 @@ namespace KaizenApp
             float xOffset = _pointerIcon.resolvedStyle.width / 2;
             float yOffset = _pointerIcon.resolvedStyle.height / 2;
             var position = _dragArea.WorldToLocal(evt.position);
+            // floor 0, 0 is top left
+            //need to get current quadrant from position
+            //check for overlap based on quadrant
             Debug.Log(position);
+            Debug.Log("floor width " + _floor.resolvedStyle.width);
+            Debug.Log("floor height " + _floor.resolvedStyle.height);
             bool floorContainsIcon = _floor.ContainsPoint(position);
+
+
             if (position.x - xOffset < 0)
             {
                 floorContainsIcon = false;
@@ -250,6 +254,8 @@ namespace KaizenApp
                 _pointerIcon.transform.position = new Vector2(newX, newY);
             }
         }
+
+
 
         
 

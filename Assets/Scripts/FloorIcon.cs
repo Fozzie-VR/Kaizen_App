@@ -24,9 +24,14 @@ namespace KaizenApp
             _iconFactory = factory;
         }
 
-        private void OnIconDropped(PointerUpEvent evt)
+        private void OnIconDropped(Vector2 iconPosition, VisualElement icon)
         {
-            Vector2 position = _dragArea.WorldToLocal(evt.position);
+            if(_icon != icon)
+            {
+                return;
+            }
+
+            Vector2 position = _dragArea.WorldToLocal(iconPosition);
             float xOffset = _icon.resolvedStyle.width / 2;
             float yOffset = _icon.resolvedStyle.height / 2;
             bool floorContainsIcon = _floor.ContainsPoint(position);

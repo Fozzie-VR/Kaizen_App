@@ -30,11 +30,13 @@ namespace KaizenApp
         private Dictionary<VisualElement, Vector3> _iconPositions = new Dictionary<VisualElement, Vector3>();
         private IconFactory<VisualElement> _iconFactory = new IconFactory<VisualElement>();
 
-        public event Action<PointerUpEvent> DropIcon;
+        public event Action<Vector2, VisualElement> DropIcon;
         public IconSpawner(VisualElement root)
         {
             DropIcon += OnIconDropped;
             SetVisualElements(root);
+            _iconFactory.Factory += GetIcon;
+            _iconFactory.PreReturn += ReturnIcon;
             
         }
 
@@ -123,14 +125,15 @@ namespace KaizenApp
             }
         }
 
-        private void OnIconDropped(PointerUpEvent evt)
+        private void OnIconDropped(Vector2 dropPosition, VisualElement droppedIcon)
         {
+            Debug.Log("Icon dropped");
             //check if icon is dropped on floor and spawn floor icon if it is
-            VisualElement target = evt.target as VisualElement;
-            LayoutIconInfo info = target.userData as LayoutIconInfo;
-            float xOffset = target.resolvedStyle.width / 2;
-            float yOffset = target.resolvedStyle.height / 2;
-            var position = _dragArea.WorldToLocal(evt.position);
+           
+            LayoutIconInfo info = droppedIcon.userData as LayoutIconInfo;
+            float xOffset = droppedIcon.resolvedStyle.width / 2;
+            float yOffset = droppedIcon.resolvedStyle.height / 2;
+            var position = _dragArea.WorldToLocal(dropPosition);
           
             bool floorContainsIcon = _floor.ContainsPoint(position);
 
@@ -178,8 +181,8 @@ namespace KaizenApp
             }
 
             //return to start position
-            Vector3 startPosition = _iconPositions[target];
-            target.transform.position = startPosition;
+            Vector3 startPosition = _iconPositions[droppedIcon];
+            droppedIcon.transform.position = startPosition;
         }
 
         private VisualElement GetIcon()

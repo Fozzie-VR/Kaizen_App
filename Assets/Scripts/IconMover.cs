@@ -20,9 +20,9 @@ namespace KaizenApp
         private bool _isDragging;
 
         
-        public event Action<PointerUpEvent> DropIcon;
+        public event Action<Vector2, VisualElement> DropIcon;
 
-        public IconMover(VisualElement iconElement, VisualElement draggableArea, Action<PointerUpEvent> dropAction)
+        public IconMover(VisualElement iconElement, VisualElement draggableArea, Action<Vector2, VisualElement> dropAction)
         {
             LayoutIconInfo iconInfo = iconElement.userData as LayoutIconInfo;
             Debug.Log("IconMover constructor for icon " + iconInfo.Type);
@@ -33,15 +33,10 @@ namespace KaizenApp
             RegisterCallbacks();
         }
 
-        public void RegisterDropEvent(Action<PointerUpEvent> dropAction)
-        {
-            DropIcon = dropAction;
-        }
-
         private void RegisterCallbacks()
         {
             _iconElement.RegisterCallback<PointerDownEvent>(OnPointerDown);
-            _draggableArea.RegisterCallback<PointerUpEvent>(OnPointerUp);
+            //_draggableArea.RegisterCallback<PointerUpEvent>(OnPointerUp);
             
         }
             
@@ -56,6 +51,7 @@ namespace KaizenApp
             _pointerStartPosition = evt.position;
             _isDragging = true;
             _draggableArea.RegisterCallback<PointerMoveEvent>(OnPointerMove);
+            _draggableArea.RegisterCallback<PointerUpEvent>(OnPointerUp);
         }
 
         //drop icon
@@ -66,18 +62,19 @@ namespace KaizenApp
             _draggableArea.ReleasePointer(evt.pointerId);
             _isDragging = false;
             _draggableArea.UnregisterCallback<PointerMoveEvent>(OnPointerMove);
+            _draggableArea.UnregisterCallback<PointerUpEvent>(OnPointerUp);
 
-            DropIcon?.Invoke(evt);
+            DropIcon?.Invoke(evt.position, _iconElement);
         }
 
 
         //move icon
         private void OnPointerMove(PointerMoveEvent evt)
         {
-            Debug.Log("move icon event");
+            //Debug.Log("move icon event");
             if (_isDragging && _draggableArea.HasPointerCapture(evt.pointerId))
             {
-                Debug.Log("should be moving icon");
+                //Debug.Log("should be moving icon");
                 float newX = _iconStartPosition.x + (evt.position.x - _pointerStartPosition.x);
                 float newY = _iconStartPosition.y + (evt.position.y - _pointerStartPosition.y);
 

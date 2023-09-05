@@ -13,6 +13,8 @@ namespace KaizenApp
         private LayoutIconInfo _iconInfo;
         private IconMover _mover;
         private IconFactory<VisualElement> _iconFactory;
+
+        public LayoutIconInfo IconInfo => _iconInfo;
         
         public FloorIcon(VisualElement icon, VisualElement dragArea, VisualElement floor, IconFactory<VisualElement> factory)
         {
@@ -64,6 +66,7 @@ namespace KaizenApp
             else
             {
                 _iconFactory.PreReturn(_icon);
+                KaizenAppManager._instance.KaizenEvents.OnFloorIconRemoved(this);
             }
         }
 

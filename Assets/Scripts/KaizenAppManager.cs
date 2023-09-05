@@ -13,8 +13,10 @@ namespace KaizenApp
         private VisualElement _root;
         private FloorPlanner _floorPlan;
         private IconSpawner _iconSpawner;
+        
+        public KaizenEvents KaizenEvents;
 
-        static KaizenAppManager _instance;
+        public static KaizenAppManager _instance;
         private void Awake()
         {
             if(_instance != null)

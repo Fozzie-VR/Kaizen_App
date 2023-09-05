@@ -160,29 +160,37 @@ namespace KaizenApp
 
             if (floorContainsIcon)
             {
-                VisualElement icon = _iconFactory.GetIcon();
-                VisualElement iconImage = icon.Q<VisualElement>(ICON_IMAGE);
-                string imageClass = GetImageIconStyleClass(info.Type);
-                iconImage.AddToClassList(imageClass);
-                Label label = icon.Q<Label>();
-                label.text = GetIconLabelText(info.Type);
-
-                icon.style.translate = new Translate(position.x - xOffset, position.y - yOffset);
-
-                LayoutIconInfo iconInfo = new LayoutIconInfo()
-                {
-                    Type = info.Type,
-                    Name = info.Name,
-                    IsFloorIcon = true
-                };
-                icon.userData = iconInfo;
-                FloorIcon floorIcon = new FloorIcon(icon, _dragArea, _floor, _iconFactory);
-                //icon.RegisterCallback<PointerDownEvent>(PointerDownEventHandler);
+                position.x -= xOffset;
+                position.y -= yOffset;  
+               SpawnFloorIcon(position, info);
+                
             }
 
             //return to start position
             Vector3 startPosition = _iconPositions[droppedIcon];
             droppedIcon.transform.position = startPosition;
+        }
+
+        private void SpawnFloorIcon(Vector3 position, LayoutIconInfo info)
+        {
+            VisualElement icon = _iconFactory.GetIcon();
+            VisualElement iconImage = icon.Q<VisualElement>(ICON_IMAGE);
+            string imageClass = GetImageIconStyleClass(info.Type);
+            iconImage.AddToClassList(imageClass);
+            Label label = icon.Q<Label>();
+            label.text = GetIconLabelText(info.Type);
+
+            icon.style.translate = new Translate(position.x, position.y);
+
+            LayoutIconInfo iconInfo = new LayoutIconInfo()
+            {
+                Type = info.Type,
+                Name = info.Name,
+                IsFloorIcon = true
+            };
+            icon.userData = iconInfo;
+            FloorIcon floorIcon = new FloorIcon(icon, _dragArea, _floor, _iconFactory);
+            KaizenAppManager._instance.KaizenEvents.OnFloorIconSpawned(floorIcon);
         }
 
         private VisualElement GetIcon()

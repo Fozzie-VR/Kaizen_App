@@ -43,7 +43,7 @@ namespace KaizenApp
         //select icon for movement
         private void OnPointerDown(PointerDownEvent evt)
         {
-            Debug.Log("IconMover: OnPointerDown");
+            //Debug.Log("IconMover: OnPointerDown");
             _draggableArea.CapturePointer(evt.pointerId);
 
             //set icon and pointer start positions
@@ -58,7 +58,7 @@ namespace KaizenApp
         //need different behavior for floor icons and layout icons; pass through a delegate
         private void OnPointerUp(PointerUpEvent evt)
         {
-            Debug.Log("On pointer up called");
+            //Debug.Log("On pointer up called");
             _draggableArea.ReleasePointer(evt.pointerId);
             _isDragging = false;
             _draggableArea.UnregisterCallback<PointerMoveEvent>(OnPointerMove);

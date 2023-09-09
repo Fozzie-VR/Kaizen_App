@@ -15,6 +15,7 @@ namespace KaizenApp
         private IconSpawner _iconSpawner;
         
         public KaizenEvents KaizenEvents;
+        private EventManager _eventManager;
 
         public static KaizenAppManager _instance;
         private void Awake()
@@ -31,6 +32,13 @@ namespace KaizenApp
             _root = RootDocument.rootVisualElement;
             //InitializeFloorPlan();
             InitializeIconSpawner();
+            InitializeEventManager();
+            InitializeFloorPlan();
+        }
+
+        private void InitializeEventManager()
+        {
+            _eventManager = new EventManager();
         }
 
         private void InitializeFloorPlan()

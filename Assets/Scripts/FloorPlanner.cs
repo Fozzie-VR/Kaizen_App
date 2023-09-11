@@ -45,7 +45,7 @@ namespace KaizenApp
         {
             var icon = (FloorIcon)message[ICON_SPAWNED_EVENT_KEY];
             _floorIcons.Add(icon);
-            Debug.Log("number of floor icons = " + _floorIcons.Count);  
+            Debug.Log("number of floor icons = " + _floorIcons.Count);
         }
 
         public void RemoveIcon(FloorIcon icon)

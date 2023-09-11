@@ -6,14 +6,21 @@ using UnityEngine;
 namespace KaizenApp
 {
 
-    public enum IconType { table, trolley, worker, converyor, kanban, machine, product_flow }
+    public enum IconType { Worker, CustomItem, CustomLabel, ProductFlow, WorkerMovement, 
+        TransportFlow, Product, Table, Trolley, Machine, Conveyor, Kanban, PartsShelf }
     public class LayoutIconInfo
     {
-        public string Name;
         public IconType Type;
-        public bool IsFloorIcon;
         public float Width;
-        public float Length;
+        public float Height;
+        public float Rotation;
+        public Vector2 Position;
+
+        public LayoutIconInfo(IconType iconType)
+        {
+            Type = iconType;
+           
+        }
     }
 
 }

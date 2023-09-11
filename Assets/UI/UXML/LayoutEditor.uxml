@@ -1,55 +1,144 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/StyleSheets/LayoutEditorStyles.uss?fileID=7433441132597879392&amp;guid=8ae92a8b5f9424e42a8849c5c201882e&amp;type=3#LayoutEditorStyles" />
-    <ui:VisualElement name="ve_floor_plan_screen" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-        <ui:VisualElement name="ve_inspector" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); height: auto; flex-direction: row; visibility: hidden; overflow: hidden; display: flex;">
-            <ui:VisualElement name="ve_floor_specs" style="flex-grow: 1; background-color: rgb(108, 131, 168); overflow: hidden; width: 50%; visibility: visible;">
-                <ui:Label tabindex="-1" text="Floor Area Specs" display-tooltip-when-elided="true" style="font-size: 24px; -unity-text-align: upper-center;" />
-                <ui:FloatField label="Length" value="42.2" />
-                <ui:FloatField label="Width" value="42.2" />
+    <ui:VisualElement name="ve_floor_plan_screen" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 1852px;">
+        <ui:VisualElement name="ve_inspector" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 20%; flex-direction: row; visibility: hidden; overflow: hidden; display: flex;">
+            <ui:VisualElement name="ve_floor_specs" class="skyblue_background" style="flex-grow: 1; overflow: hidden; width: 30%; visibility: visible;">
+                <ui:Label tabindex="-1" text="Floor Area" display-tooltip-when-elided="true" style="font-size: 24px; -unity-text-align: upper-center;" />
+                <ui:FloatField label="Height" value="42.2" class="inspector_float_field" style="width: 35%; justify-content: space-around;" />
+                <ui:FloatField label="Width" value="42.2" class="inspector_float_field" style="width: 35%;" />
             </ui:VisualElement>
-            <ui:VisualElement name="ve_selection_inspector" style="flex-grow: 1; background-color: rgb(108, 131, 168); overflow: hidden; width: 50%; visibility: visible;">
+            <ui:VisualElement name="ve_selection_inspector" class="skyblue_background" style="flex-grow: 1; overflow: hidden; width: 50%; visibility: visible;">
                 <ui:Label tabindex="-1" text="Current Selection" display-tooltip-when-elided="true" style="font-size: 24px; -unity-text-align: upper-center;" />
-                <ui:VisualElement name="ve_inspector_container" />
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement name="ve_layout_container" focusable="true" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1; height: 60%;">
-            <ui:VisualElement name="ve_layout_area" focusable="true" style="flex-grow: 1; background-color: rgb(214, 230, 255); width: 100%; height: 80%; flex-shrink: 0;" />
-        </ui:VisualElement>
-        <ui:VisualElement name="ve_icons" focusable="true" style="background-color: rgb(168, 143, 91); flex-grow: 0; -unity-background-image-tint-color: rgb(168, 143, 91); height: 10%; position: relative;">
-            <ui:VisualElement name="ve_icons" style="background-color: rgba(0, 0, 0, 0);">
-                <ui:VisualElement name="ve_row_1" style="background-color: rgba(0, 0, 0, 0); flex-direction: row;">
-                    <ui:VisualElement name="ve_worker_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
-                        <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
-                            <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image worker_icon" />
-                            <ui:Label tabindex="-1" text="Worker" display-tooltip-when-elided="true" class="icon_label" />
-                        </ui:VisualElement>
+                <ui:VisualElement name="ve_inspector_container" style="flex-direction: row;">
+                    <ui:VisualElement name="ve_left_fields" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 40%;">
+                        <ui:FloatField label="Height" value="42.2" class="inspector_float_field" style="width: 50%;" />
+                        <ui:FloatField label="Width" value="42.2" class="inspector_float_field" style="width: 50%;" />
                     </ui:VisualElement>
-                    <ui:VisualElement name="ve_table_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
-                        <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
-                            <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="table_icon icon_image" />
-                            <ui:Label tabindex="-1" text="Table" display-tooltip-when-elided="true" class="icon_label" />
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-                    <ui:VisualElement name="ve_trolley_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
-                        <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
-                            <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image trolley_icon" />
-                            <ui:Label tabindex="-1" text="Trolley" display-tooltip-when-elided="true" class="icon_label" />
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-                    <ui:VisualElement name="ve_machine_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
-                        <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
-                            <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image machine_icon" />
-                            <ui:Label tabindex="-1" text="Machine" display-tooltip-when-elided="true" class="icon_label" />
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-                    <ui:VisualElement name="ve_machine_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
-                        <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
-                            <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image conveyor_icon" />
-                            <ui:Label tabindex="-1" text="Conveyor" display-tooltip-when-elided="true" class="icon_label" />
-                        </ui:VisualElement>
+                    <ui:VisualElement name="ve_right_fields" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 60%;">
+                        <ui:Vector2Field label="Position" style="padding-right: 10px; width: 65%;" />
+                        <ui:Slider picking-mode="Ignore" label="Rotation" value="42" high-value="180" low-value="-180" inverted="false" style="padding-right: 20px;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
+        <ui:VisualElement name="ve_layout_container" focusable="true" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1; height: 60%; min-height: auto; min-width: auto;">
+            <ui:VisualElement name="ve_layout_area" focusable="true" class="white_background" style="flex-grow: 1; width: 100%; height: 80%; flex-shrink: 0;" />
+        </ui:VisualElement>
+        <ui:ScrollView name="ve_icons" class="skyblue_background" style="padding-top: 20px; height: 20%;">
+            <ui:VisualElement name="ve_row_1" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; padding-bottom: 30px;">
+                <ui:VisualElement name="ve_worker_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image worker_icon" />
+                        <ui:Label tabindex="-1" text="Worker" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_custom_item" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image" />
+                        <ui:Label tabindex="-1" text="Custom Item" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_custom_lable" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image custom_label_icon" />
+                        <ui:Label tabindex="-1" text="Custom Label" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_product_flow" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image flow_icon" />
+                        <ui:Label tabindex="-1" text="Product Flow" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_worker_movement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image movement_icon" />
+                        <ui:Label tabindex="-1" text="Worker Movement" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_transport_flow" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image transport_icon" />
+                        <ui:Label tabindex="-1" text="Transport Flow" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="ve_row_2" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; padding-bottom: 30px;">
+                <ui:VisualElement name="ve_product_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image product_icon" />
+                        <ui:Label tabindex="-1" text="Product" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_table_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="table_icon icon_image" />
+                        <ui:Label tabindex="-1" text="Table" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_trolley_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image trolley_icon" />
+                        <ui:Label tabindex="-1" text="Trolley" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_machine_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image machine_icon" />
+                        <ui:Label tabindex="-1" text="Machine" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_converyor_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image conveyor_icon" />
+                        <ui:Label tabindex="-1" text="Conveyor" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_kanban" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image kanban_icon" />
+                        <ui:Label tabindex="-1" text="Kanban" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="ve_row_2" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; padding-bottom: 30px;">
+                <ui:VisualElement name="ve_parts_shelf" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image parts_shelf_icon" />
+                        <ui:Label tabindex="-1" text="Parts Shelf" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_table_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; visibility: hidden;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="table_icon icon_image" />
+                        <ui:Label tabindex="-1" text="Table" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_trolley_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; visibility: hidden;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image trolley_icon" />
+                        <ui:Label tabindex="-1" text="Trolley" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_machine_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; visibility: hidden;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image machine_icon" />
+                        <ui:Label tabindex="-1" text="Machine" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_machine_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; visibility: hidden;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image conveyor_icon" />
+                        <ui:Label tabindex="-1" text="Conveyor" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_machine_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; visibility: hidden;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image" style="background-image: url(&apos;project://database/Assets/UI/Sprites/Kanban.jpg?fileID=2800000&amp;guid=b9664df4c25a2854086eaf53e843f4a9&amp;type=3#Kanban&apos;); -unity-background-scale-mode: stretch-to-fill;" />
+                        <ui:Label tabindex="-1" text="Kanban" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:ScrollView>
     </ui:VisualElement>
 </ui:UXML>

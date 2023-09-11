@@ -30,6 +30,7 @@ namespace KaizenApp
             }
 
             _root = RootDocument.rootVisualElement;
+           
             //InitializeFloorPlan();
             InitializeIconSpawner();
             InitializeEventManager();

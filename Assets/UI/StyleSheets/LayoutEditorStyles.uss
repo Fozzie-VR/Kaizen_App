@@ -25,7 +25,7 @@ VisualElement {
 
 .icon_container {
     flex-grow: 0;
-    background-color: rgb(245, 224, 181);
+    background-color: rgb(255, 255, 255);
     width: 128px;
     height: 64px;
     flex-shrink: 0;
@@ -63,4 +63,56 @@ VisualElement {
 
 .machine_icon {
     background-image: url('project://database/Assets/UI/Sprites/Machinery.jpg?fileID=2800000&guid=d932ee7b3e944b94ba919083a366958a&type=3#Machinery');
+}
+
+.skyblue_background {
+    background-color: rgb(203, 231, 255);
+}
+
+.white_background {
+    background-color: rgb(255, 255, 255);
+}
+
+.flow_icon {
+    background-image: url('project://database/Assets/UI/Sprites/Product%20Flow.jpg?fileID=2800000&guid=83ad816aa31108743a8c1b840fdacb4d&type=3#Product Flow');
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.movement_icon {
+    background-image: url('project://database/Assets/UI/Sprites/Movement.jpg?fileID=2800000&guid=fa9f4d7009dc03d49ab5d725e0f3b10d&type=3#Movement');
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.inspector_float_field {
+    width: 25%;
+    align-self: center;
+}
+
+.transport_icon {
+    background-image: url('project://database/Assets/UI/Sprites/Transport.jpg?fileID=2800000&guid=c48eeb918018c9343a62eab037a17521&type=3#Transport');
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.product_icon {
+    background-image: url('project://database/Assets/UI/Sprites/Product.jpg?fileID=2800000&guid=0ae56add06ab0f940a6cb1fe84a38bb6&type=3#Product');
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.kanban_icon {
+    background-image: url('project://database/Assets/UI/Sprites/Kanban.jpg?fileID=2800000&guid=b9664df4c25a2854086eaf53e843f4a9&type=3#Kanban');
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.parts_shelf_icon {
+    background-image: url('project://database/Assets/UI/Sprites/Parts%20shelf.jpg?fileID=2800000&guid=a7307586386ea8b43862a8807a235f2d&type=3#Parts shelf');
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.label_icon {
+    -unity-text-align: middle-center;
+}
+
+.custom_label_icon {
+    background-image: url('project://database/Assets/UI/Sprites/text.png?fileID=2800000&guid=229807b06dc5ebc4489e5e382601b719&type=3#text');
+    -unity-background-scale-mode: stretch-to-fill;
 }

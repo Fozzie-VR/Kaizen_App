@@ -21,17 +21,27 @@ namespace KaizenApp
 
         
         public event Action<Vector2, VisualElement> DropIcon;
-
+        public event Action<PointerDownEvent> PointerDown;
         public IconMover(VisualElement iconElement, VisualElement draggableArea, Action<Vector2, VisualElement> dropAction)
         {
             LayoutIconInfo iconInfo = iconElement.userData as LayoutIconInfo;
-            Debug.Log("IconMover constructor for icon " + iconInfo.Type);
+            //Debug.Log("IconMover constructor for icon " + iconInfo.Type);
             _iconElement = iconElement;
             //_floorElement = floor;
             _draggableArea = draggableArea;
             DropIcon = dropAction;
             RegisterCallbacks();
         }
+
+        public void StartDragging(PointerDownEvent evt)
+        {
+            OnPointerDown(evt);
+        }
+
+        public void RegisterPointerDownCallback(Action<PointerDownEvent> callback)
+        {
+            PointerDown = callback;
+        }   
 
         private void RegisterCallbacks()
         {
@@ -44,6 +54,9 @@ namespace KaizenApp
         private void OnPointerDown(PointerDownEvent evt)
         {
             //Debug.Log("IconMover: OnPointerDown");
+            //_draggableArea.Add(_iconElement);
+            //_iconElement.BringToFront();
+            PointerDown?.Invoke(evt);
             _draggableArea.CapturePointer(evt.pointerId);
 
             //set icon and pointer start positions

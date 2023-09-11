@@ -8,7 +8,7 @@ namespace KaizenApp
 {
     public class IconSpawner
     {
-        private const string DRAG_AREA = "ve_layout_container";
+        private const string DRAG_AREA = "ve_floor_plan_screen";
         private const string ICON_DRAGGABLE = "ve_icon_container";
         private const string ICON_IMAGE = "ve_icon_image";
         private const string FLOOR = "ve_layout_area";
@@ -17,15 +17,7 @@ namespace KaizenApp
         private const string ICON_LABEL_STYLE = "icon_label";
         private const string ICON_SPAWNED_EVENT = "IconSpawned";
         private const string ICON_SPAWNED_EVENT_KEY = "floorIcon";
-
-        private VisualElement _tableIcon;
-        private VisualElement _trolleyIcon;
-        private VisualElement _workerIcon;
-        private VisualElement _conveyorIcon;
-        private VisualElement _kanbanIcon;
-        private VisualElement _machineIcon;
-        private VisualElement _productFlowIcon;
-
+       
         private VisualElement _dragArea;
         private VisualElement _floor;
         private List<VisualElement> _iconDraggables = new List<VisualElement>();
@@ -51,94 +43,49 @@ namespace KaizenApp
             _iconDraggables = root.Query<VisualElement>(ICON_DRAGGABLE).ToList();
             foreach (VisualElement iconContainer in _iconDraggables)
             {
-                SetupSpawnerIcons(iconContainer);
+                iconContainer.RegisterCallback<PointerDownEvent>(OnIconSelected);
+                //SetupSpawnerIcons(iconContainer);
             }
-
         }
+        
 
-        private void SetupSpawnerIcons(VisualElement iconContainer)
+        private void OnIconSelected(PointerDownEvent evt)
         {
-            string iconName = iconContainer.Q<Label>().text;
-            switch (iconName)
-            {
-                case "Table":
-                    _tableIcon = iconContainer;
-                   
-                    _iconPositions.Add(_tableIcon, _tableIcon.transform.position);
-                    _tableIcon.userData = new LayoutIconInfo()
-                    {
-                        Type = IconType.table,
-                        Name = "table",
-                        IsFloorIcon = false
-                    };
-                    IconMover mover = new IconMover(_tableIcon, _dragArea, DropIcon);
-                    break;
+            Debug.Log("Icon selected");
+            VisualElement icon = evt.currentTarget as VisualElement;
 
-                case "Trolley":
-                    _trolleyIcon = iconContainer;
-                   
-                    _iconPositions.Add(_trolleyIcon, _trolleyIcon.transform.position);
-                    _trolleyIcon.userData = new LayoutIconInfo()
-                    {
-                        Type = IconType.trolley,
-                        Name = "trolley",
-                        IsFloorIcon = false
-                    };
-                    IconMover mover2 = new IconMover(_trolleyIcon, _dragArea, DropIcon);
-                    break;
-                case "Worker":
-                    _workerIcon = iconContainer;
-                   
-                    _iconPositions.Add(_workerIcon, _workerIcon.transform.position);
-                    _workerIcon.userData = new LayoutIconInfo()
-                    {
-                        Type = IconType.worker,
-                        Name = "worker",
-                        IsFloorIcon = false
-                    };
-                    IconMover mover3 = new IconMover(_workerIcon, _dragArea, DropIcon);
-                    break;
-                case "Conveyor":
-                    _conveyorIcon = iconContainer;
-                   
-                    _iconPositions.Add(_conveyorIcon, _conveyorIcon.transform.position);
-                    _conveyorIcon.userData = new LayoutIconInfo()
-                    {
-                        Type = IconType.converyor,
-                        Name = "conveyor",
-                        IsFloorIcon = false
-                    };
-                    IconMover mover4 = new IconMover(_conveyorIcon, _dragArea, DropIcon);
-                    break;
-                case "Machine":
-                    _machineIcon = iconContainer;
-                    
-                    _iconPositions.Add(_machineIcon, _machineIcon.transform.position);
-                    _machineIcon.userData = new LayoutIconInfo()
-                    {
-                        Type = IconType.machine,
-                        Name = "machine",
-                        IsFloorIcon = false
-                    };
-                    IconMover mover5 = new IconMover(_machineIcon, _dragArea, DropIcon);
-                    break;
-                default:
-                    break;
-            }
+            //Get icon from pool
+            VisualElement draggableIcon = GetIcon();
+
+            //Set icon position to mouse position
+            float xOffset = icon.resolvedStyle.width / 2;
+            float yOffset = icon.resolvedStyle.height / 2;
+            Vector2 pos = new Vector2(evt.position.x - xOffset, evt.position.y - yOffset);
+            draggableIcon.transform.position = _dragArea.WorldToLocal(pos);
+
+            //Set icon info, image and label
+            string iconName = icon.Q<Label>().text; 
+            LayoutIconInfo info = GetIconInfo(iconName);
+            draggableIcon.userData = info;
+            VisualElement iconImage = draggableIcon.Q<VisualElement>(ICON_IMAGE);
+            string imageClass = GetImageIconStyleClass(info.Type);
+            iconImage.AddToClassList(imageClass);
+            Label label = draggableIcon.Q<Label>();
+            label.text = GetIconLabelText(info.Type);
+            
+            //setup icon mover
+            IconMover mover = new IconMover(draggableIcon, _dragArea, DropIcon);
+            mover.StartDragging(evt);
+            
         }
 
         private void OnIconDropped(Vector2 dropPosition, VisualElement droppedIcon)
         {
-            Debug.Log("Icon dropped");
-            //check if icon is dropped on floor and spawn floor icon if it is
-           
-            LayoutIconInfo info = droppedIcon.userData as LayoutIconInfo;
-            float xOffset = droppedIcon.resolvedStyle.width / 2;
-            float yOffset = droppedIcon.resolvedStyle.height / 2;
-            var position = _dragArea.WorldToLocal(dropPosition);
-          
+            var position = _floor.WorldToLocal(dropPosition);
             bool floorContainsIcon = _floor.ContainsPoint(position);
 
+            float xOffset = droppedIcon.resolvedStyle.width / 2;
+            float yOffset = droppedIcon.resolvedStyle.height / 2;
 
             if (position.x - xOffset < 0)
             {
@@ -160,42 +107,18 @@ namespace KaizenApp
                 floorContainsIcon = false;
             }
 
-            if (floorContainsIcon)
+            if(!floorContainsIcon)
             {
-                position.x -= xOffset;
-                position.y -= yOffset;  
-               SpawnFloorIcon(position, info);
-                
+                ReturnIcon(droppedIcon);
+            }
+            else
+            {
+                FloorIcon floorIcon = new FloorIcon(droppedIcon, _dragArea, _floor, _iconFactory);
+                EventManager.TriggerEvent(ICON_SPAWNED_EVENT, new Dictionary<string, object> { { ICON_SPAWNED_EVENT_KEY, floorIcon } });
             }
 
-            //return to start position
-            Vector3 startPosition = _iconPositions[droppedIcon];
-            droppedIcon.transform.position = startPosition;
         }
-
-        private void SpawnFloorIcon(Vector3 position, LayoutIconInfo info)
-        {
-            VisualElement icon = _iconFactory.GetIcon();
-            VisualElement iconImage = icon.Q<VisualElement>(ICON_IMAGE);
-            string imageClass = GetImageIconStyleClass(info.Type);
-            iconImage.AddToClassList(imageClass);
-            Label label = icon.Q<Label>();
-            label.text = GetIconLabelText(info.Type);
-
-            icon.style.translate = new Translate(position.x, position.y);
-
-            LayoutIconInfo iconInfo = new LayoutIconInfo()
-            {
-                Type = info.Type,
-                Name = info.Name,
-                IsFloorIcon = true
-            };
-            icon.userData = iconInfo;
-            FloorIcon floorIcon = new FloorIcon(icon, _dragArea, _floor, _iconFactory);
-            //KaizenAppManager._instance.KaizenEvents.OnFloorIconSpawned(floorIcon);
-            EventManager.TriggerEvent(ICON_SPAWNED_EVENT, new Dictionary<string, object> { { ICON_SPAWNED_EVENT_KEY, floorIcon} });
-        }
-
+       
         private VisualElement GetIcon()
         {
             VisualElement iconContainer = new VisualElement();
@@ -213,7 +136,7 @@ namespace KaizenApp
             iconLabel.AddToClassList(ICON_LABEL_STYLE);
             iconContainer.Add(iconLabel);
 
-            _floor.Add(iconContainer);
+            _dragArea.Add(iconContainer);
             return iconContainer;
 
         }
@@ -228,23 +151,97 @@ namespace KaizenApp
 
         }
 
+        private LayoutIconInfo GetIconInfo(string iconName)
+        {
+            LayoutIconInfo info = null;
+            switch (iconName)
+            {
+                case "Table":
+                    info = new LayoutIconInfo(IconType.Table);
+                    break;
+                case "Trolley":
+                    info = new LayoutIconInfo(IconType.Trolley);
+                    break;
+                case "Worker":
+                    info = new LayoutIconInfo(IconType.Worker);
+                    break;
+                case "Conveyor":
+                    info = new LayoutIconInfo(IconType.Conveyor);
+                    break;
+                case "Machine":
+                    info = new LayoutIconInfo(IconType.Machine);
+                    break;
+                case "Product":
+                    info = new LayoutIconInfo(IconType.Product);
+                    break;
+                case "Kanban":
+                    info = new LayoutIconInfo(IconType.Kanban);
+                    break;
+                case "Parts Shelf":
+                    info = new LayoutIconInfo(IconType.PartsShelf);
+                    break;
+                case "Custom Item":
+                    info = new LayoutIconInfo(IconType.CustomItem);
+                    break;
+                case "Custom Label":
+                    info = new LayoutIconInfo(IconType.CustomLabel);
+                    break;
+                case "Product Flow":
+                    info = new LayoutIconInfo(IconType.ProductFlow);
+                    break;
+                case "Worker Movement":
+                    info = new LayoutIconInfo(IconType.WorkerMovement);
+                    break;
+                case "Transport Flow":
+                    info = new LayoutIconInfo(IconType.TransportFlow);
+                    break;
+                default:
+                    break;
+            }
+            return info;
+        }
+
         private string GetImageIconStyleClass(IconType type)
         {
             switch (type)
             {
-                case IconType.table:
+                case IconType.CustomItem:
+                    return "custom_item_icon";
+                    break;
+                case IconType.CustomLabel:
+                    return "custom_label_icon";
+                    break;
+                case IconType.ProductFlow:
+                    return "flow_icon";
+                    break;
+                case IconType.WorkerMovement:
+                    return "movement_icon";
+                    break;
+                case IconType.TransportFlow:
+                    return "transport_icon";
+                    break;
+                case IconType.Product:
+                    return "product_icon";
+                    break;
+                case IconType.Kanban:
+                    return "kanban_icon";
+                    break;
+                case IconType.PartsShelf:
+                    return "parts_shelf_icon";
+                    break;
+                case IconType.Table:
                     return "table_icon";
                     break;
-                case IconType.worker:
+                case IconType.Worker:
                     return "worker_icon";
                     break;
-                case IconType.machine:
+                case IconType.Machine:
                     return "machine_icon";
                     break;
-                case IconType.trolley:
+                case IconType.Trolley:
                     return "trolley_icon";
                     break;
-                case IconType.converyor:
+                case IconType.Conveyor:
                     return "conveyor_icon";
                     break;
                 default:
@@ -257,19 +254,43 @@ namespace KaizenApp
         {
             switch (type)
             {
-                case IconType.table:
+                case IconType.CustomItem:
+                    return "Custom Item";
+                    break;
+                case IconType.CustomLabel:
+                    return "Label";
+                    break;
+                case IconType.ProductFlow:
+                    return "Product Flow";
+                    break;
+                case IconType.WorkerMovement:
+                    return "Movement";
+                    break;
+                case IconType.TransportFlow:
+                    return "Transport";
+                    break;
+                case IconType.Product:
+                    return "Product";
+                    break;
+                case IconType.Kanban:
+                    return "Kanban";
+                    break;
+                case IconType.PartsShelf:
+                    return "Parts Shelf";
+                    break;
+                case IconType.Table:
                     return "Table";
                     break;
-                case IconType.worker:
+                case IconType.Worker:
                     return "Worker";
                     break;
-                case IconType.machine:
+                case IconType.Machine:
                     return "Machine";
                     break;
-                case IconType.trolley:
+                case IconType.Trolley:
                     return "Trolley";
                     break;
-                case IconType.converyor:
+                case IconType.Conveyor:
                     return "Conveyor";
                     break;
                 default:

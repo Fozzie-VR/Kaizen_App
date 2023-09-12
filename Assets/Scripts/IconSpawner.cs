@@ -115,6 +115,7 @@ namespace KaizenApp
             {
                 FloorIcon floorIcon = new FloorIcon(droppedIcon, _dragArea, _floor, _iconFactory);
                 EventManager.TriggerEvent(ICON_SPAWNED_EVENT, new Dictionary<string, object> { { ICON_SPAWNED_EVENT_KEY, floorIcon } });
+                droppedIcon.UnregisterCallback<PointerUpEvent>(OnIconDropped);
             }
 
         }

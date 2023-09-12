@@ -16,6 +16,7 @@ namespace KaizenApp
         
         public KaizenEvents KaizenEvents;
         private EventManager _eventManager;
+        private SelectionInspector _selectionInspector;
 
         public static KaizenAppManager _instance;
         private void Awake()
@@ -35,6 +36,12 @@ namespace KaizenApp
             InitializeIconSpawner();
             InitializeEventManager();
             InitializeFloorPlan();
+            InitializeSelectionInspector();
+        }
+
+        private void InitializeSelectionInspector()
+        {
+            _selectionInspector = new SelectionInspector(_root);
         }
 
         private void InitializeEventManager()

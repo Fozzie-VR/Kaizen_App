@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UIElements;
 
 namespace KaizenApp
 {
@@ -15,6 +15,7 @@ namespace KaizenApp
         public float Height;
         public float Rotation;
         public Vector2 Position;
+        public VisualElement IconElement;
 
         public LayoutIconInfo(IconType iconType)
         {

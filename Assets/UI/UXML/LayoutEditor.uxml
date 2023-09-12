@@ -2,7 +2,7 @@
     <Style src="project://database/Assets/UI/StyleSheets/LayoutEditorStyles.uss?fileID=7433441132597879392&amp;guid=8ae92a8b5f9424e42a8849c5c201882e&amp;type=3#LayoutEditorStyles" />
     <ui:VisualElement name="ve_floor_plan_screen" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 1852px;">
         <ui:VisualElement name="ve_inspector" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 20%; flex-direction: row; visibility: hidden; overflow: hidden; display: flex;">
-            <ui:VisualElement name="ve_floor_specs" class="skyblue_background" style="flex-grow: 1; overflow: hidden; width: 30%; visibility: visible;">
+            <ui:VisualElement name="ve_floor_specs" class="skyblue_background" style="flex-grow: 1; overflow: hidden; width: 30%; visibility: visible; border-right-width: 5px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);">
                 <ui:Label tabindex="-1" text="Floor Area" display-tooltip-when-elided="true" style="font-size: 24px; -unity-text-align: upper-center;" />
                 <ui:FloatField label="Height" value="42.2" class="inspector_float_field" style="width: 35%; justify-content: space-around;" />
                 <ui:FloatField label="Width" value="42.2" class="inspector_float_field" style="width: 35%;" />
@@ -11,12 +11,12 @@
                 <ui:Label tabindex="-1" text="Current Selection" display-tooltip-when-elided="true" style="font-size: 24px; -unity-text-align: upper-center;" />
                 <ui:VisualElement name="ve_inspector_container" style="flex-direction: row;">
                     <ui:VisualElement name="ve_left_fields" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 40%;">
-                        <ui:FloatField label="Height" value="42.2" class="inspector_float_field" style="width: 50%;" />
-                        <ui:FloatField label="Width" value="42.2" class="inspector_float_field" style="width: 50%;" />
+                        <ui:FloatField label="Height" value="42.2" name="float_height" class="inspector_float_field" style="width: 50%;" />
+                        <ui:FloatField label="Width" value="42.2" name="float_width" class="inspector_float_field" style="width: 50%;" />
                     </ui:VisualElement>
                     <ui:VisualElement name="ve_right_fields" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 60%;">
-                        <ui:Vector2Field label="Position" style="padding-right: 10px; width: 65%;" />
-                        <ui:Slider picking-mode="Ignore" label="Rotation" value="42" high-value="180" low-value="-180" inverted="false" style="padding-right: 20px;" />
+                        <ui:Vector2Field label="Position" name="v2_position" style="padding-right: 10px; width: 65%;" />
+                        <ui:Slider picking-mode="Ignore" label="Rotation" value="42" high-value="180" low-value="-180" inverted="false" name="slider_rotation" style="padding-right: 20px;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>

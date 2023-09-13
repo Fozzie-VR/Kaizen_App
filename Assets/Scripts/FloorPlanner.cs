@@ -19,7 +19,9 @@ namespace KaizenApp
         private const string DRAG_AREA = "ve_layout_container";
         private const string START_DRAG = "ve_icon_container";
         private const string ICON_SPAWNED_EVENT = "IconSpawned";
-        private const string ICON_SPAWNED_EVENT_KEY = "floorIcon";
+        private const string FLOOR_ICON_EVENT_KEY = "floorIcon";
+
+        private const string ICON_REMOVED_EVENT = "IconRemoved";
 
         private const string ICON_IMAGE = "ve_icon_image";
         private const string FLOOR = "ve_layout_area";
@@ -39,22 +41,22 @@ namespace KaizenApp
            _floor = root.Q(FLOOR);
             //KaizenAppManager._instance.KaizenEvents.FloorIconSpawned += AddIcon;
             EventManager.StartListening(ICON_SPAWNED_EVENT, AddIcon);
+            EventManager.StartListening(ICON_REMOVED_EVENT, RemoveIcon);
         }
 
         public void AddIcon(Dictionary<string, object> message)
         {
-            var icon = (FloorIcon)message[ICON_SPAWNED_EVENT_KEY];
+            var icon = (FloorIcon)message[FLOOR_ICON_EVENT_KEY];
             _floorIcons.Add(icon);
             Debug.Log("number of floor icons = " + _floorIcons.Count);
         }
 
-        public void RemoveIcon(FloorIcon icon)
+        public void RemoveIcon(Dictionary<string, object> message)
         {
+            var icon = (FloorIcon)message[FLOOR_ICON_EVENT_KEY];
             _floorIcons.Remove(icon);
+            Debug.Log("number of floor icons = " + _floorIcons.Count);
         }
-
-       
-
        
     }
 }

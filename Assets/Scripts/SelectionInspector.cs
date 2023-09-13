@@ -76,17 +76,23 @@ namespace KaizenApp
 
         private void OnPositionChanged(ChangeEvent<Vector2> evt)
         {
-            
+            Vector2 position = evt.newValue;
+            _icon.style.translate = new Translate(position.x, position.y);
+            _iconInfo.Position = position;
         }
 
         private void OnHeightChanged(ChangeEvent<float> evt)
         {
-            
+            float height = evt.newValue;
+            _icon.style.height = height;
+            _iconInfo.Height = height;
         }
 
         private void OnWidthChanged(ChangeEvent<float> evt)
         {
-            
+            float width = evt.newValue;
+            _icon.style.width = width;
+            _iconInfo.Width = width;   
         }
     }
 

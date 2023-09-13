@@ -25,6 +25,7 @@ namespace KaizenApp
         private IconFactory<VisualElement> _iconFactory = new IconFactory<VisualElement>();
 
         public event Action<Vector2, VisualElement> DropIcon;
+        private IconMover _iconMover;
         public IconSpawner(VisualElement root)
         {
             DropIcon += OnIconDropped;
@@ -74,8 +75,8 @@ namespace KaizenApp
             label.text = GetIconLabelText(info.Type);
             
             //setup icon mover
-            IconMover mover = new IconMover(draggableIcon, _dragArea, DropIcon);
-            mover.StartDragging(evt);
+            _iconMover = new IconMover(draggableIcon, _dragArea, DropIcon);
+            _iconMover.StartDragging(evt);
             
         }
 
@@ -113,9 +114,11 @@ namespace KaizenApp
             }
             else
             {
+                _iconMover.UnregisterDropAction(DropIcon);
+                _iconMover = null;
                 FloorIcon floorIcon = new FloorIcon(droppedIcon, _dragArea, _floor, _iconFactory);
                 EventManager.TriggerEvent(ICON_SPAWNED_EVENT, new Dictionary<string, object> { { ICON_SPAWNED_EVENT_KEY, floorIcon } });
-                droppedIcon.UnregisterCallback<PointerUpEvent>(OnIconDropped);
+               
             }
 
         }

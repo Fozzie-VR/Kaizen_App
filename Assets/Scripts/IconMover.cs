@@ -43,6 +43,11 @@ namespace KaizenApp
             PointerDown = callback;
         }   
 
+        public void UnregisterDropAction(Action<Vector2, VisualElement> dropAction)
+        {
+            DropIcon -= dropAction;
+        }
+
         private void RegisterCallbacks()
         {
             _iconElement.RegisterCallback<PointerDownEvent>(OnPointerDown);

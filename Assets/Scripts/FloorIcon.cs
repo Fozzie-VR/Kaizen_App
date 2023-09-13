@@ -9,6 +9,9 @@ namespace KaizenApp
     {
         private const string SELECTION_EVENT = "IconSelected";
         private const string ICON_INFO = "iconInfo";
+        private const string ICON_REMOVED_EVENT = "IconRemoved";
+        private const string FLOOR_ICON_EVENT_KEY = "floorIcon";
+
         private VisualElement _icon;
         private VisualElement _floor;
         private VisualElement _dragArea;
@@ -38,17 +41,19 @@ namespace KaizenApp
             _iconInfo.IconElement = _icon;
         }
 
-        private void OnIconDropped(Vector2 iconPosition, VisualElement icon)
+        private void OnIconDropped(Vector2 dropPosition, VisualElement droppedIcon)
         {
-            if(_icon != icon)
+            if(_icon != droppedIcon)
             {
                 return;
             }
+            //TODO need a helper class to check if the icon is on the floor
 
-            Vector2 position = _dragArea.WorldToLocal(iconPosition);
-            float xOffset = _icon.resolvedStyle.width / 2;
-            float yOffset = _icon.resolvedStyle.height / 2;
+            var position = _floor.WorldToLocal(dropPosition);
             bool floorContainsIcon = _floor.ContainsPoint(position);
+
+            float xOffset = droppedIcon.resolvedStyle.width / 2;
+            float yOffset = droppedIcon.resolvedStyle.height / 2;
 
             if (position.x - xOffset < 0)
             {
@@ -70,18 +75,17 @@ namespace KaizenApp
                 floorContainsIcon = false;
             }
 
+
             if (floorContainsIcon)
             {
-                _icon.style.translate = new Translate(position.x - xOffset, position.y - yOffset);
-                _icon.style.rotate = new Rotate(_iconInfo.Rotation);
-                Debug.Log("rotation = " + _iconInfo.Rotation);  
                 EventManager.TriggerEvent(SELECTION_EVENT, new Dictionary<string, object> { { ICON_INFO, _iconInfo } });
+                _iconInfo.Position = position;
                 //update info
             }
             else
             {
                 _iconFactory.PreReturn(_icon);
-                KaizenAppManager._instance.KaizenEvents.OnFloorIconRemoved(this);
+                EventManager.TriggerEvent(ICON_REMOVED_EVENT, new Dictionary<string, object> { { FLOOR_ICON_EVENT_KEY, this } });
             }
         }
 

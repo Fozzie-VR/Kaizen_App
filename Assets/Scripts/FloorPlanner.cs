@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+
 
 namespace KaizenApp
 {
@@ -16,7 +18,7 @@ namespace KaizenApp
     public class FloorPlanner
 
     {
-        private const string DRAG_AREA = "ve_layout_container";
+        private const string FLOOR_PARENT = "ve_layout_container";
         private const string START_DRAG = "ve_icon_container";
         private const string ICON_SPAWNED_EVENT = "IconSpawned";
         private const string FLOOR_ICON_EVENT_KEY = "floorIcon";
@@ -32,16 +34,44 @@ namespace KaizenApp
     
 
         private VisualElement _floor;
+        private VisualElement _floorInspector;
+        private FloatField _floorHeight;
+        private FloatField _floorWidth;
 
         private List<FloorIcon> _floorIcons = new();
+
+        private Texture2D _gridTexture;
 
 
         public FloorPlanner(VisualElement root)
         {
-           _floor = root.Q(FLOOR);
+            _floor = root.Q(FLOOR);
+            _floor.style.width = 1024;
+            _floor.style.height = 480;
+            //_floor.RegisterCallback<OnEnable>(SetDimensions);
+            _floorInspector = root.Q("ve_floor_specs");
+            _floorHeight = _floorInspector.Q<FloatField>("float_floor_height");
+            _floorWidth = _floorInspector.Q<FloatField>("float_floor_width");
+          
             //KaizenAppManager._instance.KaizenEvents.FloorIconSpawned += AddIcon;
             EventManager.StartListening(ICON_SPAWNED_EVENT, AddIcon);
             EventManager.StartListening(ICON_REMOVED_EVENT, RemoveIcon);
+            _floor.RegisterCallback<GeometryChangedEvent>(OnFloorGeometryChanged);
+            
+
+        }
+
+        private void OnFloorGeometryChanged(GeometryChangedEvent evt)
+        {
+            Debug.Log("floor width = " + _floor.resolvedStyle.width);
+            _floorHeight.value = _floor.resolvedStyle.height;
+            _floorWidth.value = _floor.resolvedStyle.width;
+            DrawGrid();
+        }
+
+        private void SetDimensions()
+        {
+            
         }
 
         public void AddIcon(Dictionary<string, object> message)
@@ -56,6 +86,44 @@ namespace KaizenApp
             var icon = (FloorIcon)message[FLOOR_ICON_EVENT_KEY];
             _floorIcons.Remove(icon);
             Debug.Log("number of floor icons = " + _floorIcons.Count);
+        }
+
+        //method to create grid texture with black background and white lines
+
+        private void DrawGrid()
+        {
+            //grid should be size of floor
+            
+            int gridWidth = (int)_floorWidth.value;
+            int gridRowHeight = gridWidth/8;
+
+            _gridTexture = new Texture2D(gridWidth, gridRowHeight);
+            
+            //create array of colors to fill texture
+            Color[] pixels = _gridTexture.GetPixels();
+            for(int i = 0; i < pixels.Length; i++)
+            {
+                pixels[i] = Color.white;
+            }   
+
+            for (int y = 0; y < gridRowHeight; y++)
+            {
+                for (int x = 0; x < gridWidth; x++)
+                {
+                    if (x % gridRowHeight == 0 && y % 2 == 0  || y % gridRowHeight == 0 && x % 2 == 0)
+                    {
+                        pixels[x + y * gridWidth] = Color.black;
+                    }
+                }
+            }
+
+            _gridTexture.SetPixels(pixels);
+            _gridTexture.Apply();
+            _floor.style.backgroundImage = _gridTexture;
+            _floor.style.unityBackgroundScaleMode = ScaleMode.ScaleToFit;
+            _floor.style.backgroundRepeat = new BackgroundRepeat(Repeat.Repeat, Repeat.Repeat);
+
+
         }
        
     }

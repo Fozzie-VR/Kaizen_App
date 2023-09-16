@@ -54,13 +54,12 @@ namespace KaizenApp
         private void SetData(Dictionary<string, object> selectionEvent)
         {
             _iconInfo = selectionEvent[ICON_INFO] as LayoutIconInfo;
-            _widthField.value = _iconInfo.Width;
-            _heightField.value = _iconInfo.Height;
-            _positionField.value = _iconInfo.Position;
+            _widthField.SetValueWithoutNotify(_iconInfo.Width);
+            _heightField.SetValueWithoutNotify(_iconInfo.Height);
+            _positionField.SetValueWithoutNotify(_iconInfo.Position);
             _rotationSlider.SetValueWithoutNotify(_iconInfo.Rotation);
             _icon = _iconInfo.IconElement;
         }
-
 
         private void OnRotationChanged(ChangeEvent<float> evt)
         {
@@ -76,9 +75,13 @@ namespace KaizenApp
 
         private void OnPositionChanged(ChangeEvent<Vector2> evt)
         {
-            Vector2 position = evt.newValue;
-            _icon.style.translate = new Translate(position.x, position.y);
-            _iconInfo.Position = position;
+            Vector2 delta = evt.newValue - evt.previousValue;
+            float newX = _icon.transform.position.x + delta.x;
+            float newY = _icon.transform.position.y + delta.y;
+
+            //_icon.style.translate = new Translate(delta.x, delta.y);
+            _icon.transform.position = new Vector2(newX, newY);
+            _iconInfo.Position = _icon.transform.position;
         }
 
         private void OnHeightChanged(ChangeEvent<float> evt)

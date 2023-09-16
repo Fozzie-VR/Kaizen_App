@@ -35,6 +35,7 @@ namespace KaizenApp
         private void SetIconInfo()
         {
             _iconInfo.Position = _icon.transform.position;
+            Debug.Log("FloorIcon SetIconInfo position: " + _iconInfo.Position);
             _iconInfo.Rotation = 0f;
             _iconInfo.Width = _icon.resolvedStyle.width;
             _iconInfo.Height = _icon.resolvedStyle.height;
@@ -43,6 +44,7 @@ namespace KaizenApp
 
         private void OnIconDropped(Vector2 dropPosition, VisualElement droppedIcon)
         {
+            //Debug.Log("FloorIcon OnIconDropped");
             if(_icon != droppedIcon)
             {
                 return;
@@ -79,7 +81,8 @@ namespace KaizenApp
             if (floorContainsIcon)
             {
                 EventManager.TriggerEvent(SELECTION_EVENT, new Dictionary<string, object> { { ICON_INFO, _iconInfo } });
-                _iconInfo.Position = position;
+                _iconInfo.Position = _icon.transform.position;
+                Debug.Log("FloorIcon OnIconDropped position: " + _iconInfo.Position);
                 //update info
             }
             else

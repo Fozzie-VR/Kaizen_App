@@ -1,11 +1,11 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/StyleSheets/LayoutEditorStyles.uss?fileID=7433441132597879392&amp;guid=8ae92a8b5f9424e42a8849c5c201882e&amp;type=3#LayoutEditorStyles" />
-    <ui:VisualElement name="ve_floor_plan_screen" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 1852px;">
+    <ui:VisualElement name="ve_floor_plan_screen" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1;">
         <ui:VisualElement name="ve_inspector" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 20%; flex-direction: row; visibility: hidden; overflow: hidden; display: flex;">
             <ui:VisualElement name="ve_floor_specs" class="skyblue_background" style="flex-grow: 1; overflow: hidden; width: 30%; visibility: visible; border-right-width: 5px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);">
                 <ui:Label tabindex="-1" text="Floor Area" display-tooltip-when-elided="true" style="font-size: 24px; -unity-text-align: upper-center;" />
-                <ui:FloatField label="Height" value="42.2" class="inspector_float_field" style="width: 35%; justify-content: space-around;" />
-                <ui:FloatField label="Width" value="42.2" class="inspector_float_field" style="width: 35%;" />
+                <ui:FloatField label="Height" value="42.2" name="float_floor_height" class="inspector_float_field" style="width: 35%; justify-content: space-around;" />
+                <ui:FloatField label="Width" value="42.2" name="float_floor_width" class="inspector_float_field" style="width: 35%;" />
             </ui:VisualElement>
             <ui:VisualElement name="ve_selection_inspector" class="skyblue_background" style="flex-grow: 1; overflow: hidden; width: 50%; visibility: visible;">
                 <ui:Label tabindex="-1" text="Current Selection" display-tooltip-when-elided="true" style="font-size: 24px; -unity-text-align: upper-center;" />
@@ -22,8 +22,8 @@
                 <ui:Button text="Delete" display-tooltip-when-elided="true" name="btn_delete" style="width: 25%; align-self: center; -unity-font-style: bold;" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="ve_layout_container" focusable="true" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1; height: 60%; min-height: auto; min-width: auto;">
-            <ui:VisualElement name="ve_layout_area" focusable="true" class="white_background" style="flex-grow: 1; width: 100%; height: 80%; flex-shrink: 0;" />
+        <ui:VisualElement name="ve_layout_container" focusable="true" style="background-color: rgb(255, 255, 255); flex-grow: 1; height: 60%; min-height: auto; min-width: auto; align-items: center;">
+            <ui:VisualElement name="ve_layout_area" focusable="true" class="white_background" style="flex-grow: 1; width: 1024px; height: 480px; flex-shrink: 1; -unity-background-scale-mode: scale-to-fit; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;" />
         </ui:VisualElement>
         <ui:ScrollView name="ve_icons" class="skyblue_background" style="padding-top: 20px; height: 20%;">
             <ui:VisualElement name="ve_row_1" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; padding-bottom: 30px;">

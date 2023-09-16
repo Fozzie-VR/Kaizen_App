@@ -82,6 +82,7 @@ namespace KaizenApp
 
         private void OnIconDropped(Vector2 dropPosition, VisualElement droppedIcon)
         {
+            Debug.Log("spawner on icon dropped");
             var position = _floor.WorldToLocal(dropPosition);
             bool floorContainsIcon = _floor.ContainsPoint(position);
 

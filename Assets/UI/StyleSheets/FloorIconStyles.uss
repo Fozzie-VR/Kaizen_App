@@ -1,0 +1,4 @@
+.floor_worker_container {
+    width: 64px;
+    height: 64px;
+}

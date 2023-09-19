@@ -1,5 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/StyleSheets/LayoutEditorStyles.uss?fileID=7433441132597879392&amp;guid=8ae92a8b5f9424e42a8849c5c201882e&amp;type=3#LayoutEditorStyles" />
+    <Style src="project://database/Assets/UI/StyleSheets/FloorIconStyles.uss?fileID=7433441132597879392&amp;guid=273822ff3b16a7343a5b859dd5c6f3b8&amp;type=3#FloorIconStyles" />
     <ui:VisualElement name="ve_floor_plan_screen" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1;">
         <ui:VisualElement name="ve_inspector" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 20%; flex-direction: row; visibility: hidden; overflow: hidden; display: flex;">
             <ui:VisualElement name="ve_floor_specs" class="skyblue_background" style="flex-grow: 1; overflow: hidden; width: 30%; visibility: visible; border-right-width: 5px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);">
@@ -35,7 +36,7 @@
                 </ui:VisualElement>
                 <ui:VisualElement name="ve_custom_item" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
                     <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
-                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image" />
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image" style="border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;" />
                         <ui:Label tabindex="-1" text="Custom Item" display-tooltip-when-elided="true" class="icon_label" />
                     </ui:VisualElement>
                 </ui:VisualElement>

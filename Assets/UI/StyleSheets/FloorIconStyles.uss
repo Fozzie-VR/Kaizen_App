@@ -1,4 +1,94 @@
-.floor_worker_container {
+.floor_worker {
+    width: 48px;
+    height: 48px;
+    background-image: url('project://database/Assets/UI/Sprites/Worker.jpg?fileID=21300000&guid=28d9d37f56af0a742b1140e9967b1260&type=3#Worker');
+}
+
+.floor_custom_item {
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    width: 96px;
+    height: 48px;
+}
+
+.floor_custom_label {
+    width: 128px;
+    height: 32px;
+    flex-grow: 1;
+    max-height: 64px;
+    max-width: 256px;
+    flex-direction: column;
+}
+
+.label_text_field {
+    flex-shrink: 1;
+    flex-grow: 1;
+    -unity-text-align: middle-center;
+    bottom: 33%;
+}
+
+.floor_product_flow {
+    background-image: url('project://database/Assets/UI/Sprites/Product%20Flow.jpg?fileID=21300000&guid=83ad816aa31108743a8c1b840fdacb4d&type=3#Product Flow');
     width: 64px;
-    height: 64px;
+    height: 32px;
+}
+
+.floor_worker_movement {
+    background-image: url('project://database/Assets/UI/Sprites/Movement.jpg?fileID=21300000&guid=fa9f4d7009dc03d49ab5d725e0f3b10d&type=3#Movement');
+    width: 64px;
+    height: 32px;
+}
+
+.floor_transport_flow {
+    width: 64px;
+    height: 32px;
+    background-image: url('project://database/Assets/UI/Sprites/Transport.jpg?fileID=21300000&guid=c48eeb918018c9343a62eab037a17521&type=3#Transport');
+}
+
+.floor_product {
+    width: 64px;
+    height: 32px;
+    background-image: url('project://database/Assets/UI/Sprites/Product.jpg?fileID=21300000&guid=0ae56add06ab0f940a6cb1fe84a38bb6&type=3#Product');
+}
+
+.floor_table {
+    width: 96px;
+    height: 48px;
+    background-image: url('project://database/Assets/UI/Sprites/Table.jpg?fileID=21300000&guid=2107f81ea2d756a4891d00d99b1466db&type=3#Table');
+}
+
+.floor_trolley {
+    width: 96px;
+    height: 48px;
+    background-image: url('project://database/Assets/UI/Sprites/Trolley.jpg?fileID=21300000&guid=441d0cc464237d34aa308b5df8e42f17&type=3#Trolley');
+}
+
+.floor_machine {
+    background-image: url('project://database/Assets/UI/Sprites/Machinery.jpg?fileID=21300000&guid=d932ee7b3e944b94ba919083a366958a&type=3#Machinery');
+    width: 96px;
+    height: 48px;
+}
+
+.floor_conveyor {
+    background-image: url('project://database/Assets/UI/Sprites/Conveyor%20Roller.jpg?fileID=21300000&guid=c1d7395b32dbb28499252fdd0589535b&type=3#Conveyor Roller');
+    width: 96px;
+    height: 48px;
+}
+
+.floor_kanban {
+    background-image: url('project://database/Assets/UI/Sprites/Kanban.jpg?fileID=21300000&guid=b9664df4c25a2854086eaf53e843f4a9&type=3#Kanban');
+    width: 96px;
+    height: 48px;
+}
+
+.floor_parts_shelf {
+    background-image: url('project://database/Assets/UI/Sprites/Parts%20shelf.jpg?fileID=21300000&guid=a7307586386ea8b43862a8807a235f2d&type=3#Parts shelf');
+    width: 96px;
+    height: 48px;
 }

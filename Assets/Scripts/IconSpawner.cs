@@ -54,16 +54,30 @@ namespace KaizenApp
         private void OnIconSelected(PointerDownEvent evt)
         {
             Debug.Log("Icon selected");
-            
+            VisualElement icon = evt.currentTarget as VisualElement;
+            string iconName = icon.Q<Label>().text;
+            VisualElement iconImage = icon.Q<VisualElement>(ICON_IMAGE);
 
             //Get icon from pool
             VisualElement draggableIcon = GetIcon();
-            VisualElement icon = evt.currentTarget as VisualElement;
-            VisualElement iconImage = icon.Q<VisualElement>(ICON_IMAGE);
-            
-            string iconName = icon.Q<Label>().text;
+           
+           
+           //set user data
             LayoutIconInfo info = GetIconInfo(iconName);
             draggableIcon.userData = info;
+
+            //set styles; should only need one style per icon type
+
+            if (iconName == "Custom Label")
+            {
+                TextField textField = new TextField();
+                draggableIcon.Add(textField);
+                textField.AddToClassList("label_text_field");
+            }
+
+            VisualElement container = draggableIcon.Q<VisualElement>(ICON_DRAGGABLE);
+            string containerClass = GetFloorIconContainerStyle(info.Type);
+            container.AddToClassList(containerClass);
 
             //Set icon position to mouse position
             Vector2 position = _dragArea.WorldToLocal(evt.position);
@@ -71,13 +85,7 @@ namespace KaizenApp
             float yOffset = iconImage.resolvedStyle.height / 2;
             draggableIcon.transform.position = new Vector2(position.x - xOffset, position.y - yOffset);
 
-            VisualElement container = draggableIcon.Q<VisualElement>(ICON_DRAGGABLE);
-            string containerClass = GetFloorIconContainerStyle(info.Type);
-            container.AddToClassList(containerClass);
-            VisualElement draggableIconImage = draggableIcon.Q<VisualElement>(ICON_IMAGE);
-            string imageClass = GetImageIconStyleClass(info.Type);
-            draggableIconImage.AddToClassList(imageClass);
-
+           //create icon mover
             _iconMover = new IconMover(draggableIcon, _dragArea, DropIcon);
             _iconMover.StartDragging(evt);
         }
@@ -121,7 +129,6 @@ namespace KaizenApp
                 _iconMover = null;
                 FloorIcon floorIcon = new FloorIcon(droppedIcon, _dragArea, _floor, _iconFactory);
                 EventManager.TriggerEvent(ICON_SPAWNED_EVENT, new Dictionary<string, object> { { ICON_SPAWNED_EVENT_KEY, floorIcon } });
-               
             }
 
         }
@@ -133,11 +140,11 @@ namespace KaizenApp
             iconContainer.style.position = new StyleEnum<Position>(Position.Absolute);
             iconContainer.name = ICON_DRAGGABLE;
 
-            VisualElement iconImage = new VisualElement();
-            iconImage.AddToClassList(ICON_IMAGE_STYLE);
-            iconImage.name = ICON_IMAGE;
-            iconImage.pickingMode = PickingMode.Ignore;
-            iconContainer.Add(iconImage);
+            //VisualElement iconImage = new VisualElement();
+            //iconImage.AddToClassList(ICON_IMAGE_STYLE);
+            //iconImage.name = ICON_IMAGE;
+            //iconImage.pickingMode = PickingMode.Ignore;
+            //iconContainer.Add(iconImage);
 
             //Label iconLabel = new Label();
             //iconLabel.AddToClassList(ICON_LABEL_STYLE);
@@ -264,46 +271,46 @@ namespace KaizenApp
             switch(iconType)
             {
                 case IconType.CustomItem:
-                    return "floor_custom_item_container";
+                    return "floor_custom_item";
                     break;
                 case IconType.CustomLabel:
-                    return "floor_custom_label_container";
+                    return "floor_custom_label";
                     break;
                 case IconType.ProductFlow:
-                    return "floor_flow_container";
+                    return "floor_product_flow";
                     break;
                 case IconType.WorkerMovement:
-                    return "floor_movement_container";
+                    return "floor_worker_movement";
                     break;
                 case IconType.TransportFlow:
-                    return "floor_transport_container";
+                    return "floor_transport_flow";
                     break;
                 case IconType.Product:
-                    return "floor_product_container";
+                    return "floor_product";
                     break;
                 case IconType.Kanban:
-                    return "floor_kanban_container";
+                    return "floor_kanban";
                     break;
                 case IconType.PartsShelf:
-                    return "floor_parts_shelf_container";
+                    return "floor_parts_shelf";
                     break;
                 case IconType.Table:
-                    return "floor_table_container";
+                    return "floor_table";
                     break;
                 case IconType.Worker:
-                    return "floor_worker_container";
+                    return "floor_worker";
                     break;
                 case IconType.Machine:
-                    return "floor_machine_container";
+                    return "floor_machine";
                     break;
                 case IconType.Trolley:
-                    return "floor_trolley_container";
+                    return "floor_trolley";
                     break;
                 case IconType.Conveyor:
-                    return "floor_conveyor_container";
+                    return "floor_conveyor";
                     break;
                 default:
-                    return "floor_table_container";
+                    return "floor_table";
 
             }
         }

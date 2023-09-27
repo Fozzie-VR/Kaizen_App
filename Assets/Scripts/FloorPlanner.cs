@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -63,7 +64,7 @@ namespace KaizenApp
 
         private void OnFloorGeometryChanged(GeometryChangedEvent evt)
         {
-            Debug.Log("floor width = " + _floor.resolvedStyle.width);
+            //Debug.Log("floor width = " + _floor.resolvedStyle.width);
             _floorHeight.value = _floor.resolvedStyle.height;
             _floorWidth.value = _floor.resolvedStyle.width;
             DrawGrid();
@@ -94,10 +95,15 @@ namespace KaizenApp
         {
             //grid should be size of floor
             
-            int gridWidth = (int)_floorWidth.value;
-            int gridRowHeight = gridWidth/8;
+            int gridWidth = Mathf.RoundToInt(_floorWidth.value);
+            int gridRowWidth = gridWidth/8;
+            int numberOfColumns = (int)_floor.resolvedStyle.height / gridRowWidth;
+            int floorHeight = numberOfColumns * gridRowWidth;
+            _floor.style.height = floorHeight;
 
-            _gridTexture = new Texture2D(gridWidth, gridRowHeight);
+
+            _gridTexture = new Texture2D(gridWidth, gridRowWidth);
+            Debug.Log("grid width = " + gridWidth + " grid row width = " + gridRowWidth);
             
             //create array of colors to fill texture
             Color[] pixels = _gridTexture.GetPixels();
@@ -106,14 +112,22 @@ namespace KaizenApp
                 pixels[i] = Color.white;
             }   
 
-            for (int y = 0; y < gridRowHeight; y++)
+            for (int y = 0; y < gridRowWidth; y++)
             {
+                
                 for (int x = 0; x < gridWidth; x++)
                 {
-                    if (x % gridRowHeight == 0 && y % 2 == 0  || y % gridRowHeight == 0 && x % 2 == 0)
+                    
+                    if (x % gridRowWidth == 0 && y % 2 == 0  || y % gridRowWidth == 0 && x % 2 == 0 || x == gridWidth - 1 && y % 2 == 0)
                     {
                         pixels[x + y * gridWidth] = Color.black;
+                        Debug.Log(x + y * gridWidth);
                     }
+
+                    //if(x == 0 && y% 2 == 0 || x == gridWidth - 1 && y % 2 == 0 || y == 0 && x % 2 == 0 || y == gridRowWidth - 1 && x % 2 == 0)
+                    //{
+                    //    pixels[x + y * gridWidth] = Color.black;
+                    //}
                 }
             }
 
@@ -121,7 +135,8 @@ namespace KaizenApp
             _gridTexture.Apply();
             _floor.style.backgroundImage = _gridTexture;
             _floor.style.unityBackgroundScaleMode = ScaleMode.ScaleToFit;
-            _floor.style.backgroundRepeat = new BackgroundRepeat(Repeat.Repeat, Repeat.Repeat);
+            _floor.style.backgroundRepeat = new BackgroundRepeat(Repeat.NoRepeat, Repeat.Repeat);
+            
 
 
         }

@@ -23,8 +23,8 @@
                 <ui:Button text="Delete" display-tooltip-when-elided="true" name="btn_delete" style="width: 25%; align-self: center; -unity-font-style: bold;" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="ve_layout_container" focusable="true" style="background-color: rgb(255, 255, 255); flex-grow: 1; height: 60%; min-height: auto; min-width: auto; align-items: center;">
-            <ui:VisualElement name="ve_layout_area" focusable="true" class="white_background" style="flex-grow: 1; width: 1024px; height: 480px; flex-shrink: 1; -unity-background-scale-mode: scale-to-fit; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;" />
+        <ui:VisualElement name="ve_layout_container" focusable="true" style="background-color: rgb(255, 255, 255); flex-grow: 1; height: 60%; min-height: auto; min-width: auto; align-items: center; justify-content: center;">
+            <ui:VisualElement name="ve_layout_area" focusable="true" class="white_background" style="flex-grow: 1; width: 1024px; height: 480px; flex-shrink: 1; -unity-background-scale-mode: scale-to-fit; max-height: none;" />
         </ui:VisualElement>
         <ui:ScrollView name="ve_icons" class="skyblue_background" style="padding-top: 20px; height: 20%;">
             <ui:VisualElement name="ve_row_1" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; padding-bottom: 30px;">

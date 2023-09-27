@@ -17,7 +17,10 @@ namespace KaizenApp
         private const string ICON_LABEL_STYLE = "icon_label";
         private const string ICON_SPAWNED_EVENT = "IconSpawned";
         private const string ICON_SPAWNED_EVENT_KEY = "floorIcon";
-       
+
+        private const string SELECTION_EVENT = "IconSelected";
+        private const string ICON_INFO = "iconInfo";
+
         private VisualElement _dragArea;
         private VisualElement _floor;
         private List<VisualElement> _iconDraggables = new List<VisualElement>();
@@ -129,6 +132,7 @@ namespace KaizenApp
                 _iconMover = null;
                 FloorIcon floorIcon = new FloorIcon(droppedIcon, _dragArea, _floor, _iconFactory);
                 EventManager.TriggerEvent(ICON_SPAWNED_EVENT, new Dictionary<string, object> { { ICON_SPAWNED_EVENT_KEY, floorIcon } });
+                EventManager.TriggerEvent(SELECTION_EVENT, new Dictionary<string, object> { { ICON_INFO, floorIcon.IconInfo } });
             }
 
         }

@@ -8,15 +8,26 @@ namespace KaizenApp
 {
     public class KaizenAppManager : MonoBehaviour
     {
-
         public UIDocument RootDocument;
+        [SerializeField] private VisualTreeAsset FloorPlanner;
+        [SerializeField] private VisualTreeAsset LandingPage;
         private VisualElement _root;
+        
         private FloorPlanner _floorPlan;
         private IconSpawner _iconSpawner;
         
         public KaizenEvents KaizenEvents;
         private EventManager _eventManager;
         private SelectionInspector _selectionInspector;
+
+        private int _maxPixelsPerMeter;
+        public int DefaultPixelsPerMeter {
+            get { return _maxPixelsPerMeter; }
+            set { _maxPixelsPerMeter = value; } }
+     
+        public int PixelsPerMeter => _floorPlan.PixelsPerMeter;
+        public float FloorWidthMeters => _floorPlan.FloorWidthMeters;
+        public float FloorHeightMeters => _floorPlan.FloorHeightMeters;
 
         public static KaizenAppManager _instance;
         private void Awake()
@@ -30,13 +41,16 @@ namespace KaizenApp
                 _instance = this;
             }
 
+            //RootDocument.visualTreeAsset = LandingPage;
             _root = RootDocument.rootVisualElement;
+            
            
             //InitializeFloorPlan();
             InitializeIconSpawner();
             InitializeEventManager();
             InitializeFloorPlan();
             InitializeSelectionInspector();
+            
         }
 
         private void InitializeSelectionInspector()

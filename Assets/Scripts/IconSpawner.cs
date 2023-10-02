@@ -21,6 +21,9 @@ namespace KaizenApp
         private const string SELECTION_EVENT = "IconSelected";
         private const string ICON_INFO = "iconInfo";
 
+        private const string ICON_REMOVED_EVENT = "IconRemoved";
+        private const string FLOOR_ICON_EVENT_KEY = "floorIcon";
+
         private VisualElement _dragArea;
         private VisualElement _floor;
         private List<VisualElement> _iconDraggables = new List<VisualElement>();
@@ -36,7 +39,16 @@ namespace KaizenApp
             SetVisualElements(root);
             _iconFactory.Factory += GetIcon;
             _iconFactory.PreReturn += ReturnIcon;
+            EventManager.StartListening(ICON_REMOVED_EVENT, OnIconRemoved);
             
+        }
+
+        private void OnIconRemoved(Dictionary<string, object> dictionary)
+        {
+            var icon = dictionary[FLOOR_ICON_EVENT_KEY] as FloorIcon;
+            var iconInfo = icon.IconInfo;
+            var iconElement = iconInfo.IconElement;
+            ReturnIcon(iconElement);
         }
 
         private void SetVisualElements(VisualElement root)
@@ -56,7 +68,6 @@ namespace KaizenApp
 
         private void OnIconSelected(PointerDownEvent evt)
         {
-            Debug.Log("Icon selected");
             VisualElement icon = evt.currentTarget as VisualElement;
             string iconName = icon.Q<Label>().text;
             VisualElement iconImage = icon.Q<VisualElement>(ICON_IMAGE);
@@ -95,7 +106,6 @@ namespace KaizenApp
       
         private void OnIconDropped(Vector2 dropPosition, VisualElement droppedIcon)
         {
-            Debug.Log("spawner on icon dropped");
             var position = _floor.WorldToLocal(dropPosition);
             bool floorContainsIcon = _floor.ContainsPoint(position);
 
@@ -130,7 +140,7 @@ namespace KaizenApp
             {
                 _iconMover.UnregisterDropAction(DropIcon);
                 _iconMover = null;
-                FloorIcon floorIcon = new FloorIcon(droppedIcon, _dragArea, _floor, _iconFactory);
+                FloorIcon floorIcon = new FloorIcon(droppedIcon, _dragArea, _floor);
                 EventManager.TriggerEvent(ICON_SPAWNED_EVENT, new Dictionary<string, object> { { ICON_SPAWNED_EVENT_KEY, floorIcon } });
                 EventManager.TriggerEvent(SELECTION_EVENT, new Dictionary<string, object> { { ICON_INFO, floorIcon.IconInfo } });
             }

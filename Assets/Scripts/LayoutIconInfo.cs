@@ -15,7 +15,9 @@ namespace KaizenApp
         public float Height;
         public float Rotation;
         public Vector2 Position;
+        public Vector2 LocalPosition;
         public VisualElement IconElement;
+        public FloorIcon FloorIcon;
 
         public LayoutIconInfo(IconType iconType)
         {

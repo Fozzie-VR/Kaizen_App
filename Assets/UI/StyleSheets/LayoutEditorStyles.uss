@@ -123,3 +123,12 @@ VisualElement {
     background-image: url('project://database/Assets/UI/Sprites/text.png?fileID=2800000&guid=229807b06dc5ebc4489e5e382601b719&type=3#text');
     -unity-background-scale-mode: stretch-to-fill;
 }
+
+.unity-base-field__label{
+    min-width: 50px;
+}
+
+.unity-base-text-field__input{
+    min-width: 32px;
+    max-width: 64px;
+}

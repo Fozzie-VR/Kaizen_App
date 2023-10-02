@@ -2,31 +2,34 @@
     <Style src="project://database/Assets/UI/StyleSheets/LayoutEditorStyles.uss?fileID=7433441132597879392&amp;guid=8ae92a8b5f9424e42a8849c5c201882e&amp;type=3#LayoutEditorStyles" />
     <Style src="project://database/Assets/UI/StyleSheets/FloorIconStyles.uss?fileID=7433441132597879392&amp;guid=273822ff3b16a7343a5b859dd5c6f3b8&amp;type=3#FloorIconStyles" />
     <ui:VisualElement name="ve_floor_plan_screen" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1;">
-        <ui:VisualElement name="ve_inspector" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 20%; flex-direction: row; visibility: hidden; overflow: hidden; display: flex;">
+        <ui:VisualElement name="ve_inspector" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; visibility: hidden; overflow: hidden; display: flex;">
             <ui:VisualElement name="ve_floor_specs" class="skyblue_background" style="flex-grow: 1; overflow: hidden; width: 30%; visibility: visible; border-right-width: 5px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);">
                 <ui:Label tabindex="-1" text="Floor Area" display-tooltip-when-elided="true" style="font-size: 24px; -unity-text-align: upper-center;" />
-                <ui:FloatField label="Height" value="42.2" name="float_floor_height" class="inspector_float_field" style="width: 35%; justify-content: space-around;" />
-                <ui:FloatField label="Width" value="42.2" name="float_floor_width" class="inspector_float_field" style="width: 35%;" />
+                <ui:VisualElement name="ve_container" style="flex-grow: 0; width: 70%; align-self: center;">
+                    <ui:FloatField label="Height (meters)" value="5" name="float_floor_height" class="inspector_float_field" style="width: 100%; flex-shrink: 1; flex-grow: 0; justify-content: center;" />
+                    <ui:FloatField label="Width (meters)" value="5" name="float_floor_width" class="inspector_float_field" style="width: 100%; justify-content: center;" />
+                </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="ve_selection_inspector" class="skyblue_background" style="flex-grow: 1; overflow: hidden; width: 50%; visibility: visible;">
                 <ui:Label tabindex="-1" text="Current Selection" display-tooltip-when-elided="true" style="font-size: 24px; -unity-text-align: upper-center;" />
-                <ui:VisualElement name="ve_inspector_container" style="flex-direction: row; padding-bottom: 40px;">
+                <ui:VisualElement name="ve_inspector_container" style="padding-bottom: 40px; flex-direction: row;">
                     <ui:VisualElement name="ve_left_fields" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 40%; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-right-width: 1px;">
-                        <ui:FloatField label="Height" value="42.2" name="float_height" class="inspector_float_field" style="width: 50%;" />
-                        <ui:FloatField label="Width" value="42.2" name="float_width" class="inspector_float_field" style="width: 50%;" />
+                        <ui:FloatField label="Height (m)" value="0" name="float_height" />
+                        <ui:FloatField label="Width (m) " value="0" name="float_width" />
                     </ui:VisualElement>
                     <ui:VisualElement name="ve_right_fields" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 60%;">
                         <ui:Vector2Field label="Position" name="v2_position" style="padding-right: 10px;" />
-                        <ui:Slider picking-mode="Ignore" label="Rotation" value="42" high-value="180" low-value="-180" inverted="false" name="slider_rotation" style="padding-right: 20px;" />
+                        <ui:Slider picking-mode="Ignore" label="Rotation" value="42" high-value="180" low-value="-180" inverted="false" name="slider_rotation" style="max-width: 75%; flex-grow: 1;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:Button text="Delete" display-tooltip-when-elided="true" name="btn_delete" style="width: 25%; align-self: center; -unity-font-style: bold;" />
+                <ui:Button text="Delete" display-tooltip-when-elided="true" name="btn_delete" style="width: 25%; align-self: flex-start; -unity-font-style: bold;" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="ve_layout_container" focusable="true" style="background-color: rgb(255, 255, 255); flex-grow: 1; height: 60%; min-height: auto; min-width: auto; align-items: center; justify-content: center;">
-            <ui:VisualElement name="ve_layout_area" focusable="true" class="white_background" style="flex-grow: 1; width: 1024px; height: 480px; flex-shrink: 1; -unity-background-scale-mode: scale-to-fit; max-height: none;" />
+        <ui:VisualElement name="ve_layout_container" focusable="true" style="background-color: rgb(255, 255, 255); flex-grow: 1; align-items: center; justify-content: center; height: 60%;">
+            <ui:VisualElement name="ve_layout_area" style="flex-grow: 1;" />
+            <ui:ScrollView name="scroll_layout_area" style="flex-grow: 1; justify-content: center; align-self: center; display: none;" />
         </ui:VisualElement>
-        <ui:ScrollView name="ve_icons" class="skyblue_background" style="padding-top: 20px; height: 20%;">
+        <ui:ScrollView name="ve_icons" class="skyblue_background" style="padding-top: 20px;">
             <ui:VisualElement name="ve_row_1" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; padding-bottom: 30px;">
                 <ui:VisualElement name="ve_worker_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
                     <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">

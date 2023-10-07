@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:VisualElement name="ve_container" style="flex-grow: 1; background-color: rgb(253, 253, 253);">
         <ui:Label tabindex="-1" text="まずやってみる" display-tooltip-when-elided="true" style="align-self: center;" />
-        <ui:Button text="Make Kaizen Sheet" display-tooltip-when-elided="true" />
+        <ui:Button text="Pre Kaizen Layout" display-tooltip-when-elided="true" name="btn_pre_kaizen_layout" />
     </ui:VisualElement>
 </ui:UXML>

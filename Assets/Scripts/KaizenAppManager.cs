@@ -41,16 +41,29 @@ namespace KaizenApp
                 _instance = this;
             }
 
-            //RootDocument.visualTreeAsset = LandingPage;
+            RootDocument.visualTreeAsset = LandingPage;
             _root = RootDocument.rootVisualElement;
+            Button preKaizenLayout = _root.Q<Button>("btn_pre_kaizen_layout");
+            preKaizenLayout.clicked += () => { 
+                
+                RootDocument.visualTreeAsset = FloorPlanner;
+                _root = RootDocument.rootVisualElement;
+                InitializeLayoutTool(); 
             
+            };
+
            
             //InitializeFloorPlan();
+           
+            
+        }
+
+        private void InitializeLayoutTool()
+        {
             InitializeIconSpawner();
             InitializeEventManager();
             InitializeFloorPlan();
             InitializeSelectionInspector();
-            
         }
 
         private void InitializeSelectionInspector()

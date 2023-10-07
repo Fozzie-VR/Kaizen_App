@@ -71,7 +71,7 @@ namespace KaizenApp
        
         private void SetData(Dictionary<string, object> selectionEvent)
         {
-            _pixelsPerMeter = KaizenAppManager._instance.PixelsPerMeter;
+           // _pixelsPerMeter = KaizenAppManager._instance.PixelsPerMeter;
             _iconInfo = selectionEvent[ICON_INFO] as LayoutIconInfo;
             _widthField.SetValueWithoutNotify(_iconInfo.Width/_pixelsPerMeter);
             _heightField.SetValueWithoutNotify(_iconInfo.Height/_pixelsPerMeter);

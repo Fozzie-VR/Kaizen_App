@@ -376,6 +376,8 @@ namespace KaizenApp
                 icon.transform.position = Vector3.zero;
                 float xPos = floorIcon.IconInfo.LocalPosition.x / 2;
                 float yPos = floorIcon.IconInfo.LocalPosition.y / 2;
+                xPos -= floorIcon.IconInfo.Width / 2;
+                yPos -= floorIcon.IconInfo.Height / 2;
                 icon.style.translate = new Translate(xPos, yPos);
 
                 //floorIcon.RescaleIcon();
@@ -390,6 +392,8 @@ namespace KaizenApp
                 icon.transform.position = Vector3.zero;
                 float xPos = floorIcon.IconInfo.LocalPosition.x / 2;
                 float yPos = floorIcon.IconInfo.LocalPosition.y / 2;
+                xPos -= floorIcon.IconInfo.Width / 2;
+                yPos -= floorIcon.IconInfo.Height / 2;
                 icon.style.translate = new Translate(xPos, yPos);
                 Debug.Log("post kaizen icon position: " + icon.transform.position);
             }

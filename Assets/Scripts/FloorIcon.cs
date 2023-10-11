@@ -46,11 +46,19 @@ namespace KaizenApp
        
         private void SetIconInfo()
         {
+            Debug.Log("Set icon info");
             _iconInfo.Position = _icon.transform.position;
             _iconInfo.LocalPosition = _floor.WorldToLocal(_iconInfo.Position);
             _iconInfo.Rotation = 0f;
-            _iconInfo.Width = _icon.resolvedStyle.width;
-            _iconInfo.Height = _icon.resolvedStyle.height;
+            if(_iconInfo.Width == 0f)
+            {
+                _iconInfo.Width = _icon.resolvedStyle.width;
+            }
+            if(_iconInfo.Height == 0f)
+            {
+                _iconInfo.Height = _icon.resolvedStyle.height;
+            }
+            
             _defaultIconHeight = _iconInfo.Height;
             _defaultIconWidth = _iconInfo.Width;
             _iconInfo.IconElement = _icon;
@@ -74,8 +82,9 @@ namespace KaizenApp
             RescaleIcon();
         }
 
-        private void RescaleIcon()
+        public void RescaleIcon()
         {
+            Debug.Log("RescaleIcon");
             float scaleFactor = (float)_pixelsPerMeter / _defaultPixelsPerMeter;
             float newScale = scaleFactor / _iconScale;
            
@@ -97,7 +106,7 @@ namespace KaizenApp
             //TODO need a helper class to check if the icon is on the floor
 
             var position = _floor.WorldToLocal(dropPosition);
-            
+            Debug.Log("icon local position = " + position);
             bool floorContainsIcon = _floor.ContainsPoint(position);
 
             float xOffset = droppedIcon.resolvedStyle.width / 2;
@@ -127,6 +136,7 @@ namespace KaizenApp
             if (floorContainsIcon)
             {
                 _iconInfo.Position = _icon.transform.position;
+                Debug.Log("icon position: " + _iconInfo.Position);
                 _iconInfo.LocalPosition = position;
                 EventManager.TriggerEvent(SELECTION_EVENT, new Dictionary<string, object> { { ICON_INFO, _iconInfo } });
             }
@@ -135,7 +145,6 @@ namespace KaizenApp
                 EventManager.TriggerEvent(ICON_REMOVED_EVENT, new Dictionary<string, object> { { FLOOR_ICON_EVENT_KEY, this } });
             }
         }
-
 
     }
 

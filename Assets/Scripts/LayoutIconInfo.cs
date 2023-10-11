@@ -11,6 +11,7 @@ namespace KaizenApp
     public class LayoutIconInfo
     {
         public IconType Type;
+        public string styleClass;
         public float Width;
         public float Height;
         public float Rotation;
@@ -23,6 +24,21 @@ namespace KaizenApp
         {
             Type = iconType;
            
+        }
+
+        public LayoutIconInfo GetClone()
+        {
+            LayoutIconInfo clone = new LayoutIconInfo(Type);
+            clone.styleClass = styleClass;
+            clone.Width = Width;
+            clone.Height = Height;
+            clone.Rotation = Rotation;
+            clone.Position = Position;
+            clone.LocalPosition = LocalPosition;
+            clone.IconElement = null;
+            clone.FloorIcon = null;
+            return clone;
+
         }
     }
 

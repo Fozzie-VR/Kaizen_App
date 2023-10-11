@@ -19,19 +19,34 @@ namespace KaizenApp
     public class FloorPlanner
 
     {
+        private const string DRAG_AREA = "ve_floor_plan_screen";
         private const string FLOOR_PARENT = "ve_layout_container";
-        private const string FLOOR = "ve_layout_area";
+        private const string PRE_KAIZEN_FLOOR = "ve_pre_kaizen_layout_area";
+        private const string POST_KAIZEN_FLOOR = "ve_post_kaizen_layout_area";
         private const string SCROLL_VIEW = "scroll_layout_area";
+       
 
         private const string ICON_SPAWNED_EVENT = "IconSpawned";
         private const string FLOOR_ICON_EVENT_KEY = "floorIcon";
         private const string ICON_REMOVED_EVENT = "IconRemoved";
 
+        private const string SWITCH_KAIZEN_LAYOUT_CLICKED = "post_kaizen_layout_clicked";
+        private const string POST_KAIZEN_LAYOUT_EVENT_KEY = "post_kaizen";
+
         private const string PIXELS_PER_METER_EVENT = "PixelsPerMeterChanged";
         private const string PIXELS_PER_METER_EVENT_KEY = "pixelsPerMeter";
 
+        private const string ICON_CLONE_EVENT = "SpawnIcon";
+        private const string ICON_CLONE_EVENT_KEY = "icon";
+
+        private const string COMPARE_LAYOUTS_EVENT = "compare_layouts";
+
         private const float DEFAULT_FLOOR_WIDTH = 4; //meters
         private const float DEFAULT_FLOOR_HEIGHT = 4; //meters
+
+        private bool _isPostKaizenLayout = false;
+        private bool _comparingLayouts = false;
+
         private int _minPixelsPerMeter = 32;
         private int _maxPixelsPerMeter = 384;//height/width
         private float _floorWidthMeters;
@@ -43,26 +58,31 @@ namespace KaizenApp
         private int _pixelsPerMeter;
         public int PixelsPerMeter => _pixelsPerMeter;
 
+        private VisualElement _preKaizenFloor;
+        private VisualElement _postKaizenFloor;
         private VisualElement _floor;
         private VisualElement _container;
-        private ScrollView _scrollView;
+       
         private VisualElement _floorInspector;
         private FloatField _floorHeight;
         private FloatField _floorWidth;
 
-        private List<FloorIcon> _floorIcons = new();
+        private List<FloorIcon> _preKaizenFloorIcons = new();
+        private List<FloorIcon> _postKaizenFloorIcons = new();
 
         private Texture2D _gridTexture;
 
         public FloorPlanner(VisualElement root)
         {
-            _floor = root.Q(FLOOR);
+            _preKaizenFloor = root.Q(PRE_KAIZEN_FLOOR);
+            _postKaizenFloor = root.Q(POST_KAIZEN_FLOOR);
+            //_dragArea = root.Q(DRAG_AREA);
+            _postKaizenFloor.AddToClassList("hidden");
+            _floor = _preKaizenFloor;
             _container = root.Q(FLOOR_PARENT); 
-            _scrollView = root.Q<ScrollView>(SCROLL_VIEW);
-           
-            //_floor.style.height = _container.style.height;
-            //_floor.style.width = 1024;
-            //_floor.RegisterCallback<OnEnable>(SetDimensions);
+            //_scrollView = root.Q<ScrollView>(SCROLL_VIEW);
+
+         
             _floorInspector = root.Q("ve_floor_specs");
             _floorHeight = _floorInspector.Q<FloatField>("float_floor_height");
             _floorWidth = _floorInspector.Q<FloatField>("float_floor_width");
@@ -79,13 +99,21 @@ namespace KaizenApp
             //KaizenAppManager._instance.KaizenEvents.FloorIconSpawned += AddIcon;
             EventManager.StartListening(ICON_SPAWNED_EVENT, AddIcon);
             EventManager.StartListening(ICON_REMOVED_EVENT, RemoveIcon);
+            EventManager.StartListening(SWITCH_KAIZEN_LAYOUT_CLICKED, OnSwitchKaizenLayoutClicked);
+            EventManager.StartListening(COMPARE_LAYOUTS_EVENT, ComparePrePostLayouts);
             _container.RegisterCallback<GeometryChangedEvent>(OnContainerGeometryChanged);
-            
-            
         }
+
+       
+
         private void OnContainerGeometryChanged(GeometryChangedEvent evt)
         {
-            Debug.Log(_container.resolvedStyle.width);
+           
+            if(_comparingLayouts)
+            {
+                return;
+            }
+            Debug.Log("container geometry changed");
             if (_container.resolvedStyle.width > _container.resolvedStyle.height)
             {
                 _maxPixelsPerMeter = Mathf.RoundToInt(_container.resolvedStyle.height / 5);
@@ -96,14 +124,16 @@ namespace KaizenApp
                 _maxPixelsPerMeter = Mathf.RoundToInt(_container.resolvedStyle.width / 5);
                 _minPixelsPerMeter = Mathf.RoundToInt(_container.resolvedStyle.width / 10);
             }
-            Debug.Log(_maxPixelsPerMeter);
-            Debug.Log(_minPixelsPerMeter);
+            //Debug.Log(_maxPixelsPerMeter);
+            //Debug.Log(_minPixelsPerMeter);
             KaizenAppManager._instance.DefaultPixelsPerMeter = _maxPixelsPerMeter;
             SetPixelsPerMeter();
 
             int heightPixels = Mathf.RoundToInt(_pixelsPerMeter * _floorHeightMeters);
-            _floor.style.height = heightPixels;
-            _floor.style.width = heightPixels;
+            _preKaizenFloor.style.height = heightPixels;
+            _preKaizenFloor.style.width = heightPixels;
+            _postKaizenFloor.style.height = heightPixels;
+            _postKaizenFloor.style.width = heightPixels;
             int widthPixels = heightPixels;
             int pixelsPerMeter = Mathf.RoundToInt(widthPixels / _floorWidthMeters);
 
@@ -148,7 +178,7 @@ namespace KaizenApp
         {
             _floorHeightMeters = _floorHeight.value;
             _floorWidthMeters = _floorWidth.value;
-            Debug.Log(_container.resolvedStyle.width);
+            //Debug.Log(_container.resolvedStyle.width);
             if(_container.resolvedStyle.width > _container.resolvedStyle.height)
             {
                 float pixels = _floorHeightMeters * _pixelsPerMeter;
@@ -202,12 +232,9 @@ namespace KaizenApp
                     {
                         _pixelsPerMeter = _maxPixelsPerMeter;
                     }
-
                 }
             }
-
             EventManager.TriggerEvent(PIXELS_PER_METER_EVENT, new Dictionary<string, object> { { PIXELS_PER_METER_EVENT_KEY, _pixelsPerMeter } });
-
         }   
        
         
@@ -246,23 +273,153 @@ namespace KaizenApp
             _gridTexture.Apply();
             _floor.style.backgroundImage = _gridTexture;
             _floor.style.unityBackgroundScaleMode = ScaleMode.ScaleToFit;
-            //_floor.style.backgroundRepeat = new BackgroundRepeat(Repeat.Repeat, Repeat.Repeat);
 
         }
-
 
         public void AddIcon(Dictionary<string, object> message)
         {
             var icon = (FloorIcon)message[FLOOR_ICON_EVENT_KEY];
-            _floorIcons.Add(icon);
+            if(_isPostKaizenLayout)
+            {
+                _postKaizenFloorIcons.Add(icon);
+                
+            }
+            else
+            {
+                _preKaizenFloorIcons.Add(icon);
+                
+            }
+          
         }
 
         public void RemoveIcon(Dictionary<string, object> message)
         {
             var icon = (FloorIcon)message[FLOOR_ICON_EVENT_KEY];
-            _floorIcons.Remove(icon);
+            _preKaizenFloorIcons.Remove(icon);
         }
 
+        private void OnSwitchKaizenLayoutClicked(Dictionary<string, object> switchEvent)
+        {
+            _isPostKaizenLayout = (bool)switchEvent[POST_KAIZEN_LAYOUT_EVENT_KEY];
+            if (_isPostKaizenLayout)
+            {
+               
+
+                _postKaizenFloor.style.height = _preKaizenFloor.style.height.value;
+                _postKaizenFloor.style.width = _preKaizenFloor.style.width.value;
+               
+                _postKaizenFloor.style.backgroundImage = _gridTexture;
+                _postKaizenFloor.style.unityBackgroundScaleMode = ScaleMode.ScaleToFit;
+               
+                _floor = _postKaizenFloor;
+               
+
+                if(_postKaizenFloorIcons.Count <= 0 && _preKaizenFloorIcons.Count > 0)
+                {
+                    foreach (var floorIcon in _preKaizenFloorIcons)
+                    {
+                       EventManager.TriggerEvent(ICON_CLONE_EVENT, new Dictionary<string, object> { { ICON_CLONE_EVENT_KEY, floorIcon.IconInfo.IconElement } });
+                    }
+                }
+
+                foreach (var floorIcon in _postKaizenFloorIcons)
+                {
+                    floorIcon.IconInfo.IconElement.RemoveFromClassList("hidden");
+                }
+
+                foreach (var floorIcon in _preKaizenFloorIcons)
+                {
+                    floorIcon.IconInfo.IconElement.AddToClassList("hidden");
+                }
+
+                _preKaizenFloor.AddToClassList("hidden");
+                _postKaizenFloor.RemoveFromClassList("hidden");
+
+            }
+            else
+            {
+                _postKaizenFloor.AddToClassList("hidden");
+                _preKaizenFloor.RemoveFromClassList("hidden");
+
+                _floor = _preKaizenFloor;
+                _floor.style.backgroundImage = _gridTexture;
+                _floor.style.unityBackgroundScaleMode = ScaleMode.ScaleToFit;
+                foreach (var floorIcon in _postKaizenFloorIcons)
+                {
+                    floorIcon.IconInfo.IconElement.AddToClassList("hidden");
+                }
+
+                foreach(var floorIcon in _preKaizenFloorIcons)
+                {
+                    floorIcon.IconInfo.IconElement.RemoveFromClassList("hidden");
+                }
+            }
+        }
+
+
+        private void ComparePrePostLayouts(Dictionary<string, object> message)
+        {
+            _comparingLayouts = true;
+            _preKaizenFloor.RemoveFromClassList("hidden");
+
+            SetFloorSizesForComparison();
+            //_preKaizenFloor.AddToClassList("comparison_container");
+            //_postKaizenFloor.AddToClassList("comparison_container");
+            //need to resize the floor containers to be the same size
+
+            //all icons will need to reposition themselves inside the respective floor containers
+            foreach(var floorIcon in _preKaizenFloorIcons)
+            {
+                VisualElement icon = floorIcon.IconInfo.IconElement;
+                icon.RemoveFromClassList("hidden");
+                _preKaizenFloor.Add(icon);
+                icon.transform.position = Vector3.zero;
+                float xPos = floorIcon.IconInfo.LocalPosition.x / 2;
+                float yPos = floorIcon.IconInfo.LocalPosition.y / 2;
+                icon.style.translate = new Translate(xPos, yPos);
+
+                //floorIcon.RescaleIcon();
+                Debug.Log("pre kaizen icon position: " + icon.transform.position);
+            }
+
+            foreach(var floorIcon in _postKaizenFloorIcons)
+            {
+                VisualElement icon = floorIcon.IconInfo.IconElement;
+                icon.RemoveFromClassList("hidden");
+                _postKaizenFloor.Add(icon);
+                icon.transform.position = Vector3.zero;
+                float xPos = floorIcon.IconInfo.LocalPosition.x / 2;
+                float yPos = floorIcon.IconInfo.LocalPosition.y / 2;
+                icon.style.translate = new Translate(xPos, yPos);
+                Debug.Log("post kaizen icon position: " + icon.transform.position);
+            }
+
+
+
+        }
+
+        private void SetFloorSizesForComparison()
+        {
+            _pixelsPerMeter = Mathf.RoundToInt(_pixelsPerMeter / 2);
+            //Debug.Log(_maxPixelsPerMeter);
+            //Debug.Log(_minPixelsPerMeter);
+            //KaizenAppManager._instance.DefaultPixelsPerMeter = _maxPixelsPerMeter;
+            //SetPixelsPerMeter();
+
+            int heightPixels = Mathf.RoundToInt(_pixelsPerMeter * _floorHeightMeters);
+            _preKaizenFloor.style.height = heightPixels;
+            _preKaizenFloor.style.width = heightPixels;
+            _postKaizenFloor.style.height = heightPixels;
+            _postKaizenFloor.style.width = heightPixels;
+           
+            DrawGrid();
+            _preKaizenFloor.style.backgroundImage = _gridTexture;
+            _postKaizenFloor.style.backgroundImage = _gridTexture;
+           
+            EventManager.TriggerEvent(PIXELS_PER_METER_EVENT, new Dictionary<string, object> { { PIXELS_PER_METER_EVENT_KEY, _pixelsPerMeter } });
+        }
     }
+
+    
 }
 

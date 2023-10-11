@@ -22,6 +22,8 @@ namespace KaizenApp
         private const string ICON_REMOVED_EVENT = "IconRemoved";
         private const string FLOOR_ICON_EVENT_KEY = "floorIcon";
 
+        private const string COMPARE_LAYOUTS_EVENT = "compare_layouts";
+
         private const string PIXELS_PER_METER_EVENT = "PixelsPerMeterChanged";
         private const string PIXELS_PER_METER_EVENT_KEY = "pixelsPerMeter";
 
@@ -60,6 +62,7 @@ namespace KaizenApp
         {
             EventManager.StartListening(SELECTION_EVENT, SetData);
             EventManager.StartListening(PIXELS_PER_METER_EVENT, OnPixelsPerMeterChanged);
+            EventManager.StartListening(COMPARE_LAYOUTS_EVENT, OnCompareLayouts);
 
             _widthField.RegisterValueChangedCallback(OnWidthChanged);
             _heightField.RegisterValueChangedCallback(OnHeightChanged);
@@ -134,7 +137,10 @@ namespace KaizenApp
             EventManager.TriggerEvent(ICON_REMOVED_EVENT, new Dictionary<string, object> { { FLOOR_ICON_EVENT_KEY, _iconInfo.FloorIcon } });
         }
 
-
+        private void OnCompareLayouts(Dictionary<string, object> eventMessage)
+        {
+            _selectionInspector.AddToClassList("hidden");
+        }
 
     }
 

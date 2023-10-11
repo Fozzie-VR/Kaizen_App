@@ -12,17 +12,24 @@ namespace KaizenApp
         private const string ICON_DRAGGABLE = "ve_icon_container";
         private const string ICON_IMAGE = "ve_icon_image";
         private const string FLOOR = "ve_layout_area";
+        private const string PRE_KAIZEN_FLOOR = "ve_pre_kaizen_layout_area";
+        private const string POST_KAIZEN_FLOOR = "ve_post_kaizen_layout_area";
         private const string ICON_IMAGE_STYLE = "icon_image";
         private const string ICON_CONTAINER_STYLE = "icon_container";
         private const string ICON_LABEL_STYLE = "icon_label";
         private const string ICON_SPAWNED_EVENT = "IconSpawned";
         private const string ICON_SPAWNED_EVENT_KEY = "floorIcon";
+        private const string ICON_CLONE_EVENT = "SpawnIcon";
+        private const string ICON_CLONE_EVENT_KEY = "icon";
 
         private const string SELECTION_EVENT = "IconSelected";
         private const string ICON_INFO = "iconInfo";
 
         private const string ICON_REMOVED_EVENT = "IconRemoved";
         private const string FLOOR_ICON_EVENT_KEY = "floorIcon";
+
+        private const string SWITCH_KAIZEN_LAYOUT_CLICKED = "post_kaizen_layout_clicked";
+        private const string POST_KAIZEN_LAYOUT_EVENT_KEY = "post_kaizen";
 
         private VisualElement _dragArea;
         private VisualElement _floor;
@@ -40,7 +47,29 @@ namespace KaizenApp
             _iconFactory.Factory += GetIcon;
             _iconFactory.PreReturn += ReturnIcon;
             EventManager.StartListening(ICON_REMOVED_EVENT, OnIconRemoved);
+            EventManager.StartListening(SWITCH_KAIZEN_LAYOUT_CLICKED, OnSwitchKaizenLayoutClicked);
+
+            EventManager.StartListening(ICON_CLONE_EVENT, OnIconClone);
             
+        }
+
+        private void OnIconClone(Dictionary<string, object> eventDictionary)
+        {
+           var icon = eventDictionary[ICON_CLONE_EVENT_KEY] as VisualElement;
+            CloneIcon(icon);
+        }
+
+        private void OnSwitchKaizenLayoutClicked(Dictionary<string, object> dictionary)
+        {
+            bool isPostKaizenLayout = (bool)dictionary[POST_KAIZEN_LAYOUT_EVENT_KEY];
+            if (isPostKaizenLayout)
+            {
+                _floor = _dragArea.Q<VisualElement>(POST_KAIZEN_FLOOR);
+            }
+            else
+            {
+                _floor = _dragArea.Q<VisualElement>(PRE_KAIZEN_FLOOR);
+            }
         }
 
         private void OnIconRemoved(Dictionary<string, object> dictionary)
@@ -55,7 +84,7 @@ namespace KaizenApp
         {
             _dragArea = root.Q<VisualElement>(DRAG_AREA);
 
-            _floor = root.Q<VisualElement>(FLOOR);
+            _floor = root.Q<VisualElement>(PRE_KAIZEN_FLOOR);
 
             _iconDraggables = root.Query<VisualElement>(ICON_DRAGGABLE).ToList();
             foreach (VisualElement iconContainer in _iconDraggables)
@@ -91,6 +120,7 @@ namespace KaizenApp
 
             VisualElement container = draggableIcon.Q<VisualElement>(ICON_DRAGGABLE);
             string containerClass = GetFloorIconContainerStyle(info.Type);
+            info.styleClass = containerClass;
             container.AddToClassList(containerClass);
 
             //Set icon position to mouse position
@@ -102,6 +132,23 @@ namespace KaizenApp
            //create icon mover
             _iconMover = new IconMover(draggableIcon, _dragArea, DropIcon);
             _iconMover.StartDragging(evt);
+        }
+
+        private void CloneIcon(VisualElement icon)
+        {
+            VisualElement clone = GetIcon();
+            LayoutIconInfo iconInfo = icon.userData as LayoutIconInfo;
+            LayoutIconInfo cloneInfo = iconInfo.GetClone();
+            clone.userData = cloneInfo;
+            clone.transform.position = icon.transform.position;
+            clone.transform.rotation = icon.transform.rotation;
+            clone.style.width = icon.resolvedStyle.width;
+            clone.style.height = icon.resolvedStyle.height;
+            Debug.Log("clone width: " + clone.style.width.value);
+            clone.AddToClassList(iconInfo.styleClass);
+
+            FloorIcon floorIcon = new FloorIcon(clone, _dragArea, _floor);
+            EventManager.TriggerEvent(ICON_SPAWNED_EVENT, new Dictionary<string, object> { { ICON_SPAWNED_EVENT_KEY, floorIcon } });
         }
       
         private void OnIconDropped(Vector2 dropPosition, VisualElement droppedIcon)
@@ -150,19 +197,8 @@ namespace KaizenApp
         private VisualElement GetIcon()
         {
             VisualElement iconContainer = new VisualElement();
-            //iconContainer.AddToClassList("icon_container");
             iconContainer.style.position = new StyleEnum<Position>(Position.Absolute);
             iconContainer.name = ICON_DRAGGABLE;
-
-            //VisualElement iconImage = new VisualElement();
-            //iconImage.AddToClassList(ICON_IMAGE_STYLE);
-            //iconImage.name = ICON_IMAGE;
-            //iconImage.pickingMode = PickingMode.Ignore;
-            //iconContainer.Add(iconImage);
-
-            //Label iconLabel = new Label();
-            //iconLabel.AddToClassList(ICON_LABEL_STYLE);
-            //iconContainer.Add(iconLabel);
 
             iconContainer.usageHints = UsageHints.DynamicTransform;
 

@@ -1,0 +1,22 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="ve_root_element" style="flex-grow: 1; background-color: rgb(144, 144, 144); justify-content: center;">
+        <ui:VisualElement name="ve_floor_specs" class="skyblue_background" style="flex-grow: 1; overflow: hidden; visibility: visible; align-self: center; justify-content: flex-start; height: 60%; max-height: 60%; background-color: rgb(203, 231, 255);">
+            <ui:Label tabindex="-1" text="Please Enter Kaizen Area Dimensions" display-tooltip-when-elided="true" style="font-size: 24px; -unity-text-align: upper-center;" />
+            <ui:VisualElement name="ve_container" style="flex-grow: 0; align-self: center; flex-direction: row; width: 90%; height: 60%; padding-top: 10%;">
+                <ui:VisualElement name="ve_floor_length" style="justify-content: center; align-self: auto; padding-right: 10px;">
+                    <ui:Label tabindex="-1" text="Length" display-tooltip-when-elided="true" style="-unity-text-align: upper-center;" />
+                    <ui:FloatField value="4" name="float_floor_length" style="height: 20%;" />
+                    <ui:Label tabindex="-1" text="meters" display-tooltip-when-elided="true" style="-unity-text-align: upper-center;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_floor" style="flex-grow: 1; background-color: rgb(255, 255, 255); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;" />
+                <ui:VisualElement style="min-width: 10%;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="ve_floor_width" style="flex-grow: 0; width: 70%; align-self: center; flex-direction: row; justify-content: center; padding-top: 10px; padding-bottom: 10px;">
+                <ui:Label tabindex="-1" text="Width" display-tooltip-when-elided="true" style="-unity-text-align: middle-center;" />
+                <ui:FloatField value="5.5" name="float_floor_width" class="inspector_float_field" style="justify-content: center;" />
+                <ui:Label tabindex="-1" text="meters" display-tooltip-when-elided="true" style="-unity-text-align: middle-center;" />
+            </ui:VisualElement>
+            <ui:Button text="Finished" display-tooltip-when-elided="true" style="max-width: 25%; align-self: flex-end; background-color: rgb(203, 231, 255); border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

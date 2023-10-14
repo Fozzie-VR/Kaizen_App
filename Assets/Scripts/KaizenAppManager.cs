@@ -20,6 +20,7 @@ namespace KaizenApp
         public UIDocument RootDocument;
         [SerializeField] private VisualTreeAsset FloorPlanner;
         [SerializeField] private VisualTreeAsset LandingPage;
+        [SerializeField] private VisualTreeAsset FloorDimensionsInputPage;
         private VisualElement _root;
         private VisualElement _iconsContainer;
         private Button _nextButton;
@@ -72,6 +73,15 @@ namespace KaizenApp
 
         private void OnPreKaizenLayoutClicked()
         {
+            RootDocument.visualTreeAsset = FloorDimensionsInputPage;
+            _root = RootDocument.rootVisualElement;
+            Button finished = _root.Q<Button>("btn_finished");
+            finished.clicked += OnFloorInputFinished;
+            InitializeFloorDimensionsInputPage();
+        }
+
+        private void OnFloorInputFinished()
+        {
             RootDocument.visualTreeAsset = FloorPlanner;
             _root = RootDocument.rootVisualElement;
             _layoutHeaderText = _root.Q<Label>("lbl_layout_header");
@@ -116,6 +126,11 @@ namespace KaizenApp
                 
             }
             EventManager.TriggerEvent(SWITCH_KAIZEN_LAYOUT_CLICKED, new Dictionary<string, object> { { POST_KAIZEN_LAYOUT_EVENT_KEY, _isPostKaizenLayout } });
+        }
+
+        private void InitializeFloorDimensionsInputPage()
+        {
+            
         }
 
         private void InitializeLayoutTool()

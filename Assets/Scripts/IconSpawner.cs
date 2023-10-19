@@ -134,6 +134,55 @@ namespace KaizenApp
             _iconMover.StartDragging(evt);
         }
 
+        private string GetFloorIconContainerStyle(IconType iconType)
+        {
+            switch (iconType)
+            {
+                case IconType.CustomItem:
+                    return "floor_custom_item";
+                    break;
+                case IconType.CustomLabel:
+                    return "floor_custom_label";
+                    break;
+                case IconType.ProductFlow:
+                    return "floor_product_flow";
+                    break;
+                case IconType.WorkerMovement:
+                    return "floor_worker_movement";
+                    break;
+                case IconType.TransportFlow:
+                    return "floor_transport_flow";
+                    break;
+                case IconType.Product:
+                    return "floor_product";
+                    break;
+                case IconType.Kanban:
+                    return "floor_kanban";
+                    break;
+                case IconType.PartsShelf:
+                    return "floor_parts_shelf";
+                    break;
+                case IconType.Table:
+                    return "floor_table";
+                    break;
+                case IconType.Worker:
+                    return "floor_worker";
+                    break;
+                case IconType.Machine:
+                    return "floor_machine";
+                    break;
+                case IconType.Trolley:
+                    return "floor_trolley";
+                    break;
+                case IconType.Conveyor:
+                    return "floor_conveyor";
+                    break;
+                default:
+                    return "floor_table";
+
+            }
+        }
+
         private void CloneIcon(VisualElement icon)
         {
             VisualElement clone = GetIcon();
@@ -315,56 +364,6 @@ namespace KaizenApp
 
             }
         }
-
-        private string GetFloorIconContainerStyle(IconType iconType)
-        {
-            switch(iconType)
-            {
-                case IconType.CustomItem:
-                    return "floor_custom_item";
-                    break;
-                case IconType.CustomLabel:
-                    return "floor_custom_label";
-                    break;
-                case IconType.ProductFlow:
-                    return "floor_product_flow";
-                    break;
-                case IconType.WorkerMovement:
-                    return "floor_worker_movement";
-                    break;
-                case IconType.TransportFlow:
-                    return "floor_transport_flow";
-                    break;
-                case IconType.Product:
-                    return "floor_product";
-                    break;
-                case IconType.Kanban:
-                    return "floor_kanban";
-                    break;
-                case IconType.PartsShelf:
-                    return "floor_parts_shelf";
-                    break;
-                case IconType.Table:
-                    return "floor_table";
-                    break;
-                case IconType.Worker:
-                    return "floor_worker";
-                    break;
-                case IconType.Machine:
-                    return "floor_machine";
-                    break;
-                case IconType.Trolley:
-                    return "floor_trolley";
-                    break;
-                case IconType.Conveyor:
-                    return "floor_conveyor";
-                    break;
-                default:
-                    return "floor_table";
-
-            }
-        }
-
         private string GetIconLabelText(IconType type)
         {
             switch (type)

@@ -459,7 +459,7 @@ MonoBehaviour:
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 5b95894a29874b7488e18957b518a1b1,
     type: 3}
-  m_SortingOrder: 1
+  m_SortingOrder: 0
 --- !u!114 &696446682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -474,6 +474,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RootDocument: {fileID: 696446681}
   FloorPlannerDocument: {fileID: 112897692}
+  LayoutComparisonDocument: {fileID: 1666770645}
+  FloorDimensionsInputDocument: {fileID: 1499619361}
+  LandingPageDocument: {fileID: 1785130021}
   RootContainer: {fileID: 9197481963319205126, guid: 8b7dcbe582cbd6943a166ff1631daeef,
     type: 3}
   FloorPlannerTree: {fileID: 9197481963319205126, guid: 538b7e4cf22adb940bf8c0cd29528e90,

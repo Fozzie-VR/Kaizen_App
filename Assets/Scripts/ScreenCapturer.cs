@@ -8,13 +8,13 @@ namespace KaizenApp
     public static class ScreenCapturer
     {
         //TODO: This is a hack to get the correct y offset for the screen capture.  It should be calculated based on the height of the toolbar.
-        private static int _yOffset = 30;
+       
         public static Texture2D GetScreenCapturer(VisualElement container, float widthMultiplier, float heightMultiplier)
         {
-            Debug.Log("screen width: " + Screen.width);
-            Debug.Log("screen height " + Screen.height);
-            _yOffset = Mathf.RoundToInt(heightMultiplier * _yOffset);
-
+            Debug.Log("height multiplier: " + heightMultiplier);
+            Debug.Log("width multiplier: " + widthMultiplier);
+            int _yOffset = Mathf.RoundToInt(heightMultiplier * 40);
+            Debug.Log("y offset = " + _yOffset);
             Vector2 captureAreaPos = container.worldBound.position;
             captureAreaPos.x *= widthMultiplier;
             captureAreaPos.y *= heightMultiplier;

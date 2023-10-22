@@ -232,6 +232,9 @@ namespace KaizenApp
             float rootHeight = _root.resolvedStyle.height;  
             float screenWidth = Screen.width;
             float screenHeight = Screen.height;
+            float scaleFactor = FloorPlannerDocument.panelSettings.scale;
+            Debug.Log("scal factor: " + scaleFactor);
+
             float widthMultiplier = screenWidth / rootWidth;
             float heightMultiplier = screenHeight / rootHeight;
 
@@ -249,6 +252,9 @@ namespace KaizenApp
             float rootHeight = _root.resolvedStyle.height;
             float screenWidth = Screen.width;
             float screenHeight = Screen.height;
+            float scaleFactor = FloorPlannerDocument.panelSettings.scale;
+
+
             float widthMultiplier = screenWidth / rootWidth;
             float heightMultiplier = screenHeight / rootHeight;
             PostKaizenLayout = ScreenCapturer.GetScreenCapturer(_floorPlanner.Floor, widthMultiplier, heightMultiplier);

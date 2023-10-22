@@ -193,7 +193,7 @@ namespace KaizenApp
             clone.transform.rotation = icon.transform.rotation;
             clone.style.width = icon.resolvedStyle.width;
             clone.style.height = icon.resolvedStyle.height;
-            Debug.Log("clone width: " + clone.style.width.value);
+            //Debug.Log("clone width: " + clone.style.width.value);
             clone.AddToClassList(iconInfo.styleClass);
 
             FloorIcon floorIcon = new FloorIcon(clone, _dragArea, _floor);

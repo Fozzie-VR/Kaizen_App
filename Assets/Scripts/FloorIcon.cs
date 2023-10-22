@@ -46,7 +46,7 @@ namespace KaizenApp
        
         private void SetIconInfo()
         {
-            Debug.Log("Set icon info");
+            //Debug.Log("Set icon info");
             _iconInfo.Position = _icon.transform.position;
             _iconInfo.LocalPosition = _floor.WorldToLocal(_iconInfo.Position);
             _iconInfo.Rotation = 0f;
@@ -84,7 +84,7 @@ namespace KaizenApp
 
         public void RescaleIcon()
         {
-            Debug.Log("RescaleIcon");
+            //Debug.Log("RescaleIcon");
             float scaleFactor = (float)_pixelsPerMeter / _defaultPixelsPerMeter;
             float newScale = scaleFactor / _iconScale;
            
@@ -136,7 +136,7 @@ namespace KaizenApp
             if (floorContainsIcon)
             {
                 _iconInfo.Position = _icon.transform.position;
-                Debug.Log("icon position: " + _iconInfo.Position);
+                //Debug.Log("icon position: " + _iconInfo.Position);
                 _iconInfo.LocalPosition = position;
                 EventManager.TriggerEvent(SELECTION_EVENT, new Dictionary<string, object> { { ICON_INFO, _iconInfo } });
             }

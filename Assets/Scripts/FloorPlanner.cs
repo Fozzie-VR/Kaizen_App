@@ -295,7 +295,7 @@ namespace KaizenApp
         {
             
             _isPostKaizenLayout = (bool)switchEvent[POST_KAIZEN_LAYOUT_EVENT_KEY];
-            Debug.Log("switching layouts");
+            //Debug.Log("switching layouts");
             DisplayIconsForCurrentLayout();
             
         }

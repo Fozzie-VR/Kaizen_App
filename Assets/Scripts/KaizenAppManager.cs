@@ -89,6 +89,8 @@ namespace KaizenApp
             _root = LandingPageDocument.rootVisualElement;
             Button preKaizenLayout = _root.Q<Button>("btn_pre_kaizen_layout");
             preKaizenLayout.clicked += OnPreKaizenLayoutClicked;
+
+            PhotoIconController photoIconController = new PhotoIconController(_root);
             
         }
 
@@ -98,8 +100,6 @@ namespace KaizenApp
             LandingPageDocument.enabled = false;
             LandingPageDocument.enabled = false;
             FloorPlannerDocument.enabled = false;
-
-
 
             //RootDocument.visualTreeAsset = FloorDimensionsInputPageTree;
             _root = FloorDimensionsInputDocument.rootVisualElement;

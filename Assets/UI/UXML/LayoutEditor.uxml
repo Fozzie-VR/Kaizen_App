@@ -116,10 +116,10 @@
                         <ui:Label tabindex="-1" text="Parts Shelf" display-tooltip-when-elided="true" class="icon_label" />
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement name="ve_table_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; visibility: hidden;">
+                <ui:VisualElement name="ve_photo_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; visibility: visible; background-image: none;">
                     <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
-                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="table_icon icon_image" />
-                        <ui:Label tabindex="-1" text="Table" display-tooltip-when-elided="true" class="icon_label" />
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="table_icon icon_image" style="background-image: url(&apos;project://database/Assets/UI/Sprites/PictureIcon.png?fileID=21300000&amp;guid=501cac3b619809e4cae9622b0a485491&amp;type=3#PictureIcon&apos;); width: 48px; height: 48px; -unity-background-scale-mode: scale-to-fit;" />
+                        <ui:Label tabindex="-1" text="Photo" display-tooltip-when-elided="true" class="icon_label" />
                     </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="ve_trolley_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; visibility: hidden;">

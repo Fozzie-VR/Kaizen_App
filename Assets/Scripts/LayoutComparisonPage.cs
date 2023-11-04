@@ -16,7 +16,6 @@ namespace KaizenApp
 
         private Button _backToLayoutButton;
 
-
         public LayoutComparisonPage(VisualElement container)
         {
             container.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);

@@ -6,7 +6,7 @@
             <ui:VisualElement name="btn_container" class="ButtonContainer">
                 <ui:Button text="Pre Kaizen Layout" display-tooltip-when-elided="true" name="btn_pre_kaizen_layout" style="width: 50%; background-color: rgb(203, 231, 255); border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0); border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; height: 10%; font-size: 24px; flex-grow: 1;" />
             </ui:VisualElement>
-            <ui:VisualElement name="btn_container" class="ButtonContainer">
+            <ui:VisualElement name="btn_container" class="ButtonContainer" style="display: none;">
                 <ui:Button text="Photo Test" display-tooltip-when-elided="true" name="btn_photo_test" style="width: 50%; background-color: rgb(203, 231, 255); border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0); border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; height: 10%; font-size: 24px; flex-grow: 1;" />
             </ui:VisualElement>
         </ui:VisualElement>

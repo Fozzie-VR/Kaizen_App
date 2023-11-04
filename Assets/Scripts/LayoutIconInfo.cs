@@ -7,7 +7,7 @@ namespace KaizenApp
 {
 
     public enum IconType { Worker, CustomItem, CustomLabel, ProductFlow, WorkerMovement, 
-        TransportFlow, Product, Table, Trolley, Machine, Conveyor, Kanban, PartsShelf }
+        TransportFlow, Product, Table, Trolley, Machine, Conveyor, Kanban, PartsShelf, Photo }
     public class LayoutIconInfo
     {
         public IconType Type;
@@ -19,11 +19,11 @@ namespace KaizenApp
         public Vector2 LocalPosition;
         public VisualElement IconElement;
         public FloorIcon FloorIcon;
+        public Texture2D PhotoTexture;
 
         public LayoutIconInfo(IconType iconType)
         {
             Type = iconType;
-           
         }
 
         public LayoutIconInfo GetClone()
@@ -37,8 +37,8 @@ namespace KaizenApp
             clone.LocalPosition = LocalPosition;
             clone.IconElement = null;
             clone.FloorIcon = null;
+            clone.PhotoTexture = null;
             return clone;
-
         }
     }
 

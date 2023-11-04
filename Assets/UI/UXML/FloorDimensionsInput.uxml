@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:VisualElement name="ve_root_element" style="flex-grow: 1; background-color: rgb(144, 144, 144); justify-content: center;">
-        <ui:VisualElement name="ve_floor_specs" class="skyblue_background" style="flex-grow: 1; overflow: hidden; visibility: visible; align-self: center; justify-content: flex-start; height: 60%; max-height: 60%; background-color: rgb(203, 231, 255); width: 80%; max-width: 80%;">
+        <ui:VisualElement name="ve_floor_specs" class="skyblue_background" style="flex-grow: 1; overflow: hidden; visibility: visible; align-self: center; justify-content: flex-start; height: 60%; max-height: 80%; background-color: rgb(203, 231, 255); width: 80%; max-width: 80%; min-height: 60%;">
             <ui:Label tabindex="-1" text="Please Enter Kaizen Area Dimensions" display-tooltip-when-elided="true" style="font-size: 24px; -unity-text-align: upper-center; padding-top: 20px;" />
             <ui:VisualElement name="ve_container" style="flex-grow: 0; align-self: center; flex-direction: row; width: 90%; height: 60%; padding-top: 10%;">
                 <ui:VisualElement name="ve_floor_length" style="justify-content: center; align-self: auto; padding-right: 10px;">

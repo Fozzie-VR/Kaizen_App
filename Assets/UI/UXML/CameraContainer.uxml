@@ -1,8 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="ve_camera_root" style="flex-grow: 1; justify-content: flex-end; background-color: rgb(253, 253, 253);">
-        <ui:VisualElement name="ve_image_root" style="flex-grow: 1;">
-            <ui:VisualElement name="ve_image_container" style="flex-grow: 1; align-self: center;" />
-        </ui:VisualElement>
-        <ui:Button text="Take Picture" display-tooltip-when-elided="true" name="btn_take_picture" style="background-color: rgb(203, 231, 255);" />
+    <ui:VisualElement name="ve_camera_root" style="flex-grow: 1; justify-content: flex-start; background-color: rgb(253, 253, 253);">
+        <ui:VisualElement name="ve_image_container" style="align-self: center; justify-content: center; width: 100%; height: 100%;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="ve_buttons_container" style="justify-content: space-around; flex-direction: row; flex-grow: 1; font-size: 32px; -unity-font-style: bold;">
+        <ui:Button text="Close" display-tooltip-when-elided="true" name="btn_close" style="background-color: rgb(203, 231, 255); flex-shrink: 1; flex-grow: 1;" />
+        <ui:Button text="Take Picture" display-tooltip-when-elided="true" name="btn_take_picture" style="background-color: rgb(203, 231, 255); flex-shrink: 1; flex-grow: 1;" />
     </ui:VisualElement>
 </ui:UXML>

@@ -8,23 +8,28 @@ namespace KaizenApp
    
     public class PhotoIconController
     {
-        Image imageElement;
-        Button photoTestButton;
-        WebCamTexture cameraTexture;
+        private Image _imageElement;
+        private Button _takePhotoButton;
+        private WebCamTexture _cameraTexture;
+        private UIDocument _cameraDocument;
+        private VisualElement _imageContainer;
 
-        public PhotoIconController(VisualElement container)
+        public PhotoIconController(UIDocument cameraDocument)
         {
-            photoTestButton = container.Q<Button>("btn_photo_test");
-            photoTestButton.clicked += OnIconPressed;
             //photoIcon.RegisterCallback<PointerDownEvent>(OnIconPressed);
-            imageElement = new Image();
-            imageElement.BringToFront();
-            container.Add(imageElement);
+            _cameraDocument = cameraDocument;
+            _imageElement = new Image();
 
+            VisualElement cameraContainer = cameraDocument.rootVisualElement;
+            _imageContainer = cameraContainer.Q<VisualElement>("ve_image_container");
+            _takePhotoButton = cameraContainer.Q<Button>("btn_take_picture");
+            _takePhotoButton.clicked += TakePhoto;
+            _imageContainer.Add(_imageElement);
         }
 
-        private void OnIconPressed()
+        public void OnIconPressed()
         {
+            _cameraDocument.sortingOrder = 2;
             if (!Application.HasUserAuthorization(UserAuthorization.WebCam))
             {
                 Application.RequestUserAuthorization(UserAuthorization.WebCam);
@@ -34,29 +39,26 @@ namespace KaizenApp
             if (Application.HasUserAuthorization(UserAuthorization.WebCam))
             {
                 // Create a new instance of the device camera
-                cameraTexture = new WebCamTexture();
-                
-                imageElement.image = cameraTexture;
-                imageElement.style.backgroundImage = new Texture2D(1, 1);
-                cameraTexture.Play();
+                _cameraTexture = new WebCamTexture();
+                _imageElement.image = _cameraTexture;
+                _cameraTexture.Play();
+                _imageContainer.style.width = _imageContainer.parent.resolvedStyle.width / 3;
             }
             else
             {
                 Debug.LogError("User has not granted permission to use the camera.");
             }
-            photoTestButton.clicked -= OnIconPressed;
-            photoTestButton.clicked += TakePhoto;
+            
         }
 
         private void TakePhoto()
         {
             // Take a photo
-            Texture2D photo = new Texture2D(cameraTexture.width, cameraTexture.height);
-            photo.SetPixels(cameraTexture.GetPixels());
+            Texture2D photo = new Texture2D(_cameraTexture.width, _cameraTexture.height);
+            photo.SetPixels(_cameraTexture.GetPixels());
             photo.Apply();
-            cameraTexture.Stop();
-            imageElement.style.backgroundImage = photo;
-
+            _cameraTexture.Stop();
+            _imageElement.style.backgroundImage = photo;
         }
 
     }

@@ -27,7 +27,9 @@ namespace KaizenApp
         public UIDocument LayoutComparisonDocument;
         public UIDocument FloorDimensionsInputDocument;
         public UIDocument LandingPageDocument;
+        public UIDocument CameraDocument;
         [SerializeField] private VisualTreeAsset RootContainer;
+        [SerializeField] private VisualTreeAsset CameraContainer;
         [SerializeField] private VisualTreeAsset FloorPlannerTree;
         [SerializeField] private VisualTreeAsset LandingPageTree;
         [SerializeField] private VisualTreeAsset FloorDimensionsInputPageTree;
@@ -84,14 +86,18 @@ namespace KaizenApp
             FloorPlannerDocument.enabled = false;
             LayoutComparisonDocument.enabled = false;
             RootDocument.enabled = false;
+            CameraDocument.enabled = true;
+            LandingPageDocument.sortingOrder = 1;
+            CameraDocument.sortingOrder = 0;
 
             //RootDocument.visualTreeAsset = LandingPageTree;
             _root = LandingPageDocument.rootVisualElement;
             Button preKaizenLayout = _root.Q<Button>("btn_pre_kaizen_layout");
             preKaizenLayout.clicked += OnPreKaizenLayoutClicked;
 
-            PhotoIconController photoIconController = new PhotoIconController(_root);
-            
+            PhotoIconController photoIconController = new PhotoIconController(CameraDocument);
+            Button photoTestButton = _root.Q<Button>("btn_photo_test");
+            photoTestButton.clicked += photoIconController.OnIconPressed;
         }
 
         private void OnPreKaizenLayoutClicked()

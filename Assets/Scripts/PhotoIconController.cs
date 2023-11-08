@@ -16,12 +16,14 @@ namespace KaizenApp
         private const string PHOTO_TAKEN_EVENT_KEY = "photoTexture";
 
         private Image _imageElement;
+        private Image _overlayImageElement;
         private Button _takePhotoButton;
         private Button _closeWindowButton;
         private WebCamTexture _cameraTexture;
         private UIDocument _cameraDocument;
         private VisualElement _imageContainer;
         private VisualElement _cameraContainer;
+        private Slider _opacitySlider;
 
         private LayoutIconInfo _iconInfo;
 
@@ -29,6 +31,9 @@ namespace KaizenApp
         {
             _cameraDocument = cameraDocument;
             _imageElement = new Image();
+            _imageElement.name = "img_camera";
+            _overlayImageElement = new Image();
+            _overlayImageElement.name = "img_overlay";
             EventManager.StartListening(TAKE_PHOTO_EVENT, OnTakePhotoEvent);
         }
 
@@ -39,6 +44,11 @@ namespace KaizenApp
 
             _imageContainer = _cameraContainer.Q<VisualElement>("ve_image_container");
             _imageContainer.Add(_imageElement);
+            _imageContainer.Add(_overlayImageElement);
+            _imageContainer.RegisterCallback<GeometryChangedEvent>(ImageContainerGeometryChanged);
+            _imageElement.style.position = Position.Absolute;
+            _overlayImageElement.style.position = Position.Absolute;    
+            
 
             _iconInfo = dictionary[TAKE_PHOTO_EVENT_KEY] as LayoutIconInfo;
             _cameraDocument.enabled = true;
@@ -48,8 +58,41 @@ namespace KaizenApp
             _closeWindowButton = _cameraContainer.Q<Button>("btn_close");
             _closeWindowButton.clicked += CloseWindow;
 
+            _opacitySlider = _cameraContainer.Q<Slider>("slider_opacity");
+            _opacitySlider.RegisterValueChangedCallback(OnOpacitySliderChanged);
+            _opacitySlider.AddToClassList("hidden");
+
+
             OnIconPressed();
         }
+
+       
+        private void ImageContainerGeometryChanged(GeometryChangedEvent evt)
+        {
+            Debug.Log("image container size = " + _imageContainer.resolvedStyle.width + 
+                ", " + _imageContainer.resolvedStyle.height);   
+
+            //set container size to a 4:3 ratio
+            float width = _imageContainer.resolvedStyle.width;
+            float height = _imageContainer.resolvedStyle.height;
+            int heightUnit = Mathf.RoundToInt(height / 3f);
+            int adjustedWidth = heightUnit * 4;
+            int adjustedHeight = heightUnit * 3;
+            _imageContainer.style.width = new Length(adjustedWidth);
+            _imageContainer.style.height = new Length(adjustedHeight);
+            _imageElement.style.width = new Length(adjustedWidth);
+            _imageElement.style.height = new Length(adjustedHeight);
+            _overlayImageElement.style.width = new Length(adjustedWidth);
+            _overlayImageElement.style.height = new Length(adjustedHeight);
+
+        }
+
+        private void OnOpacitySliderChanged(ChangeEvent<float> evt)
+        {
+            float opacity = evt.newValue;
+            _overlayImageElement.style.opacity = opacity;
+        }
+
 
         public void OnIconPressed()
         {
@@ -65,16 +108,32 @@ namespace KaizenApp
                 // Create a new instance of the device camera
                 _cameraTexture = new WebCamTexture();
                 _imageElement.image = _cameraTexture;
+                if(_iconInfo.PhotoTexture != null && KaizenAppManager.Instance.IsPostKaizenLayout)
+                {
+                    _overlayImageElement.style.backgroundImage = _iconInfo.PhotoTexture;
+                    _overlayImageElement.style.opacity = _opacitySlider.value;
+                    _opacitySlider.RemoveFromClassList("hidden");
+                }
+                else
+                {
+                    _overlayImageElement.style.opacity = 0f;
+                    _opacitySlider.AddToClassList("hidden");
+                    
+                }
                 _cameraTexture.Play();
+                
                 _imageElement.style.width = new Length(Screen.width);
                 _imageElement.style.height = new Length(Screen.height);
-                //_imageContainer.style.width = new StyleLength(640);
-                //_imageContainer.style.height = new StyleLength(720);
+               
+                _overlayImageElement.style.width = new Length(Screen.width);
+                _overlayImageElement.style.height = new Length(Screen.height);
+                Debug.Log("Camera texture size = " + _cameraTexture.width + ", " + _cameraTexture.height);
+                Debug.Log("image contianer size = " + _imageContainer.resolvedStyle.width + ", " + _imageContainer.resolvedStyle.height);
                
             }
             else
             {
-                Debug.LogError("User has not granted permission to use the camera.");
+                Debug.LogError("User has not granted permission to use the camera");
             }
         }
 

@@ -51,7 +51,7 @@ namespace KaizenApp
         private VisualElement _icon;
         private LayoutIconInfo _iconInfo;
 
-        private int _pixelsPerMeter = KaizenAppManager._instance.PixelsPerMeter;
+        private int _pixelsPerMeter = KaizenAppManager.Instance.PixelsPerMeter;
 
         public SelectionInspector(VisualElement root)
         {
@@ -117,7 +117,7 @@ namespace KaizenApp
             _heightField.SetValueWithoutNotify(_iconInfo.Height / _pixelsPerMeter);
 
             float positionX = _iconInfo.LocalPosition.x / _pixelsPerMeter;
-            float positionY = KaizenAppManager._instance.FloorHeightMeters - _iconInfo.LocalPosition.y / _pixelsPerMeter;
+            float positionY = KaizenAppManager.Instance.FloorHeightMeters - _iconInfo.LocalPosition.y / _pixelsPerMeter;
             Vector2 positionMeters = new Vector2(positionX, positionY);
             _positionField.SetValueWithoutNotify(positionMeters);
             _rotationSlider.SetValueWithoutNotify(_iconInfo.Rotation);

@@ -34,14 +34,14 @@ namespace KaizenApp
             _postKaizenLayoutContainer.style.width = _preKaizenLayoutContainer.style.width;
             _postKaizenLayoutContainer.style.height = _preKaizenLayoutContainer.style.height;
 
-            _preKaizenLayoutContainer.style.backgroundImage = KaizenAppManager._instance.PreKaizenLayout;
-            _postKaizenLayoutContainer.style.backgroundImage = KaizenAppManager._instance.PostKaizenLayout;
+            _preKaizenLayoutContainer.style.backgroundImage = KaizenAppManager.Instance.PreKaizenLayout;
+            _postKaizenLayoutContainer.style.backgroundImage = KaizenAppManager.Instance.PostKaizenLayout;
         }
 
 
         private void ReturnToPostKaizenLayout()
         {
-            KaizenAppManager._instance.BackFromComparisonPage();
+            KaizenAppManager.Instance.BackFromComparisonPage();
         }
     }
 

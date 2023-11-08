@@ -37,7 +37,7 @@ namespace KaizenApp
             clone.LocalPosition = LocalPosition;
             clone.IconElement = null;
             clone.FloorIcon = null;
-            clone.PhotoTexture = null;
+            clone.PhotoTexture = PhotoTexture;
             return clone;
         }
     }

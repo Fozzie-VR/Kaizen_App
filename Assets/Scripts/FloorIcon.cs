@@ -21,7 +21,7 @@ namespace KaizenApp
         private LayoutIconInfo _iconInfo;
         private IconMover _mover;
        
-        private int _defaultPixelsPerMeter = KaizenAppManager._instance.DefaultPixelsPerMeter;
+        private int _defaultPixelsPerMeter = KaizenAppManager.Instance.DefaultPixelsPerMeter;
         private int _pixelsPerMeter;
 
         private float _defaultIconWidth;
@@ -37,7 +37,7 @@ namespace KaizenApp
             _floor = floor;
             _iconInfo = _icon.userData as LayoutIconInfo;
             _mover = new IconMover(_icon, dragArea, OnIconDropped);
-            _pixelsPerMeter = KaizenAppManager._instance.PixelsPerMeter;
+            _pixelsPerMeter = KaizenAppManager.Instance.PixelsPerMeter;
             _iconScale = 1f;
             EventManager.StartListening(PIXELS_PER_METER_EVENT, OnPixelsPerMeterChanged);
             SetIconInfo();

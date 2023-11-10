@@ -68,7 +68,10 @@ namespace KaizenApp
         private FloatField _floorWidth;
 
         private List<FloorIcon> _preKaizenFloorIcons = new();
+        public List<FloorIcon> PreKaizenFloorIcons => _preKaizenFloorIcons;
+
         private List<FloorIcon> _postKaizenFloorIcons = new();
+        public List<FloorIcon> PostKaizenFloorIcons => _postKaizenFloorIcons;
 
         private Texture2D _gridTexture;
 
@@ -122,7 +125,7 @@ namespace KaizenApp
             }
             //Debug.Log(_maxPixelsPerMeter);
             //Debug.Log(_minPixelsPerMeter);
-            KaizenAppManager._instance.DefaultPixelsPerMeter = _maxPixelsPerMeter;
+            KaizenAppManager.Instance.DefaultPixelsPerMeter = _maxPixelsPerMeter;
             SetPixelsPerMeter();
 
             int heightPixels = Mathf.RoundToInt(_pixelsPerMeter * _floorHeightMeters);
@@ -288,7 +291,16 @@ namespace KaizenApp
         public void RemoveIcon(Dictionary<string, object> message)
         {
             var icon = (FloorIcon)message[FLOOR_ICON_EVENT_KEY];
-            _preKaizenFloorIcons.Remove(icon);
+            if (_isPostKaizenLayout)
+            {
+                _postKaizenFloorIcons.Remove(icon);
+
+            }
+            else
+            {
+                _preKaizenFloorIcons.Remove(icon);
+
+            }
         }
 
         private void OnSwitchKaizenLayoutClicked(Dictionary<string, object> switchEvent)

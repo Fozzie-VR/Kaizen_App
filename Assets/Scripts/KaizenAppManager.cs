@@ -27,7 +27,9 @@ namespace KaizenApp
         public UIDocument LayoutComparisonDocument;
         public UIDocument FloorDimensionsInputDocument;
         public UIDocument LandingPageDocument;
+        public UIDocument CameraDocument;
         [SerializeField] private VisualTreeAsset RootContainer;
+        [SerializeField] private VisualTreeAsset CameraContainer;
         [SerializeField] private VisualTreeAsset FloorPlannerTree;
         [SerializeField] private VisualTreeAsset LandingPageTree;
         [SerializeField] private VisualTreeAsset FloorDimensionsInputPageTree;
@@ -51,6 +53,7 @@ namespace KaizenApp
         public KaizenEvents KaizenEvents;
         private EventManager _eventManager;
         private SelectionInspector _selectionInspector;
+        private PhotoIconController _photoIconController;
 
         private int _maxPixelsPerMeter;
         public int DefaultPixelsPerMeter {
@@ -63,20 +66,21 @@ namespace KaizenApp
 
         private bool _isPostKaizenLayout = false;
         private bool _isComparisonLayout = false;
+        public bool IsPostKaizenLayout => _isPostKaizenLayout;
 
         public Texture2D PreKaizenLayout;
         public Texture2D PostKaizenLayout;
 
-        public static KaizenAppManager _instance;
+        public static KaizenAppManager Instance;
         private void Awake()
         {
-            if(_instance != null)
+            if(Instance != null)
             {
                 Destroy(this);
             }
             else
             {
-                _instance = this;
+                Instance = this;
             }
             _isPostKaizenLayout = false;
             LandingPageDocument.enabled = true;
@@ -84,12 +88,14 @@ namespace KaizenApp
             FloorPlannerDocument.enabled = false;
             LayoutComparisonDocument.enabled = false;
             RootDocument.enabled = false;
+            CameraDocument.enabled = false;
 
-            //RootDocument.visualTreeAsset = LandingPageTree;
             _root = LandingPageDocument.rootVisualElement;
+            
             Button preKaizenLayout = _root.Q<Button>("btn_pre_kaizen_layout");
             preKaizenLayout.clicked += OnPreKaizenLayoutClicked;
-            
+
+            _photoIconController = new PhotoIconController(CameraDocument);
         }
 
         private void OnPreKaizenLayoutClicked()
@@ -99,13 +105,9 @@ namespace KaizenApp
             LandingPageDocument.enabled = false;
             FloorPlannerDocument.enabled = false;
 
-
-
-            //RootDocument.visualTreeAsset = FloorDimensionsInputPageTree;
             _root = FloorDimensionsInputDocument.rootVisualElement;
             _floorDimensionsPage = new FloorDimensionsPage(_root);
-            //Button finishedButton = _root.Q<Button>("btn_finished");
-            //finishedButton.clicked += OnFinishedClicked;
+            _isPostKaizenLayout = false;
             EventManager.StartListening(FLOOR_DIMENSIONS_SET_EVENT, OnFloorDimensionsSet);
         }
 
@@ -117,11 +119,8 @@ namespace KaizenApp
 
         private void OnFloorInputFinished()
         {
-            //RootDocument.visualTreeAsset = FloorPlannerTree;
             FloorDimensionsInputDocument.enabled = false;
             FloorPlannerDocument.enabled = true;
-
-
             _root = FloorPlannerDocument.rootVisualElement;
             _layoutHeaderText = _root.Q<Label>("lbl_layout_header");
             _nextButton = _root.Q<Button>(NEXT_BUTTON);
@@ -138,7 +137,6 @@ namespace KaizenApp
             else
             {
                 Debug.Log("Floor planner is not null");
-                //_floorPlanner.ResetFloorPlan();
             }
         }
 
@@ -156,11 +154,6 @@ namespace KaizenApp
                 _isPostKaizenLayout = false;
                 _isComparisonLayout = true;
                 StartCoroutine(CapturePostKaizenLayout());
-
-                //_iconsContainer.AddToClassList("hidden");
-                //_layoutHeaderText.text = "Layout Comparison";
-                //Debug.Log("compare event triggered");
-                //EventManager.TriggerEvent(COMPARE_LAYOUTS_EVENT, new Dictionary<string, object>());
             }
         }
 
@@ -180,7 +173,6 @@ namespace KaizenApp
             else if(_isComparisonLayout)
             { 
                 _isPostKaizenLayout = true;
-                //EventManager.TriggerEvent(RESET_FLOOR_PLAN_EVENT, new Dictionary<string, object>());
                 return;
             }
             EventManager.TriggerEvent(SWITCH_KAIZEN_LAYOUT_CLICKED, new Dictionary<string, object> { { POST_KAIZEN_LAYOUT_EVENT_KEY, _isPostKaizenLayout } });
@@ -227,26 +219,51 @@ namespace KaizenApp
         private IEnumerator CapturePreKaizenLayout()
         {
             _floorPlanner.Floor.style.backgroundImage = null;
+            List<FloorIcon> floorIcons = _floorPlanner.PreKaizenFloorIcons;
+            foreach(FloorIcon floorIcon in floorIcons)
+            {
+                if(floorIcon.IconInfo.Type == IconType.Photo)
+                {
+                    floorIcon.IconInfo.IconElement.AddToClassList("hidden");
+                }
+            }
+
             yield return new WaitForEndOfFrame();
             float rootWidth = _root.resolvedStyle.width;
             float rootHeight = _root.resolvedStyle.height;  
             float screenWidth = Screen.width;
             float screenHeight = Screen.height;
-            float scaleFactor = FloorPlannerDocument.panelSettings.scale;
-            Debug.Log("scal factor: " + scaleFactor);
+            //float scaleFactor = FloorPlannerDocument.panelSettings.scale;
+           
 
             float widthMultiplier = screenWidth / rootWidth;
             float heightMultiplier = screenHeight / rootHeight;
 
-
             PreKaizenLayout = ScreenCapturer.GetScreenCapturer(_floorPlanner.Floor, widthMultiplier, heightMultiplier);
             yield return null;
+            foreach (FloorIcon floorIcon in floorIcons)
+            {
+                if (floorIcon.IconInfo.Type == IconType.Photo)
+                {
+                    floorIcon.IconInfo.IconElement.RemoveFromClassList("hidden");
+                }
+            }
             EventManager.TriggerEvent(SWITCH_KAIZEN_LAYOUT_CLICKED, new Dictionary<string, object> { { POST_KAIZEN_LAYOUT_EVENT_KEY, _isPostKaizenLayout } });
         }
 
         private IEnumerator CapturePostKaizenLayout()
         {
             _floorPlanner.Floor.style.backgroundImage = null;
+            List<FloorIcon> floorIcons = _floorPlanner.PostKaizenFloorIcons;
+            foreach (FloorIcon floorIcon in floorIcons)
+            {
+                if (floorIcon.IconInfo.Type == IconType.Photo)
+                {
+                    floorIcon.IconInfo.IconElement.AddToClassList("hidden");
+                }
+            }
+
+
             yield return new WaitForEndOfFrame();
             float rootWidth = _root.resolvedStyle.width;
             float rootHeight = _root.resolvedStyle.height;
@@ -259,6 +276,14 @@ namespace KaizenApp
             float heightMultiplier = screenHeight / rootHeight;
             PostKaizenLayout = ScreenCapturer.GetScreenCapturer(_floorPlanner.Floor, widthMultiplier, heightMultiplier);
             yield return null;
+            foreach (FloorIcon floorIcon in floorIcons)
+            {
+                if (floorIcon.IconInfo.Type == IconType.Photo)
+                {
+                    floorIcon.IconInfo.IconElement.RemoveFromClassList("hidden");
+                }
+            }
+
             InitializeLayoutComparisonPage();
         }
 

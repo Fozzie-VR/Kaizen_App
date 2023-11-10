@@ -1,9 +1,14 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/LandingPageStyles.uss?fileID=7433441132597879392&amp;guid=a5069737d7e90384888db644d55f1ea2&amp;type=3#LandingPageStyles" />
-    <ui:VisualElement name="ve_container" style="flex-grow: 1; background-color: rgb(253, 253, 253);">
+    <ui:VisualElement name="ve_container" style="flex-grow: 1; background-color: rgb(253, 253, 253); align-items: stretch;">
         <ui:Label tabindex="-1" text="Main Menu" display-tooltip-when-elided="true" style="align-self: center; background-color: rgb(203, 231, 255); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 60%; height: 10%; -unity-text-align: middle-center; font-size: 28px;" />
-        <ui:VisualElement name="btn_container" style="flex-grow: 1; padding-top: 10%; align-items: center;">
-            <ui:Button text="Pre Kaizen Layout" display-tooltip-when-elided="true" name="btn_pre_kaizen_layout" style="width: 50%; background-color: rgb(203, 231, 255); border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0); border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; height: 10%; font-size: 24px;" />
+        <ui:VisualElement name="ve_buttons" style="flex-grow: 1; padding-top: 100px;">
+            <ui:VisualElement name="btn_container" class="ButtonContainer">
+                <ui:Button text="Pre Kaizen Layout" display-tooltip-when-elided="true" name="btn_pre_kaizen_layout" style="width: 50%; background-color: rgb(203, 231, 255); border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0); border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; height: 10%; font-size: 24px; flex-grow: 1;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="btn_container" class="ButtonContainer" style="display: none;">
+                <ui:Button text="Photo Test" display-tooltip-when-elided="true" name="btn_photo_test" style="width: 50%; background-color: rgb(203, 231, 255); border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0); border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; height: 10%; font-size: 24px; flex-grow: 1;" />
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

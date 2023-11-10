@@ -177,6 +177,9 @@ namespace KaizenApp
                 case IconType.Conveyor:
                     return "floor_conveyor";
                     break;
+                case IconType.Photo:
+                    return "floor_photo";
+                    break;
                 default:
                     return "floor_table";
 
@@ -309,6 +312,9 @@ namespace KaizenApp
                     break;
                 case "Transport Flow":
                     info = new LayoutIconInfo(IconType.TransportFlow);
+                    break;
+                case "Photo":
+                    info = new LayoutIconInfo(IconType.Photo);
                     break;
                 default:
                     break;

@@ -13,21 +13,30 @@
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="ve_selection_inspector" class="skyblue_background" style="flex-grow: 1; overflow: hidden; width: 50%; visibility: visible;">
-                <ui:Label tabindex="-1" text="Current Selection" display-tooltip-when-elided="true" style="font-size: 24px; -unity-text-align: upper-center;" />
-                <ui:VisualElement name="ve_inspector_container" style="padding-bottom: 40px; flex-direction: row;">
-                    <ui:VisualElement name="ve_left_fields" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-right-width: 1px;">
-                        <ui:FloatField label="Height (m)" value="0" name="float_height" style="align-self: center;" />
-                        <ui:FloatField label="Width (m) " value="0" name="float_width" style="align-self: center;" />
+                <ui:VisualElement name="ve_layout_icon_inspector" style="flex-grow: 1; display: flex; visibility: visible;">
+                    <ui:Label tabindex="-1" text="Current Selection" display-tooltip-when-elided="true" style="font-size: 24px; -unity-text-align: upper-center;" />
+                    <ui:VisualElement name="ve_inspector_container" style="padding-bottom: 40px; flex-direction: row;">
+                        <ui:VisualElement name="ve_left_fields" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-right-width: 1px;">
+                            <ui:FloatField label="Height (m)" value="0" name="float_height" style="align-self: center;" />
+                            <ui:FloatField label="Width (m) " value="0" name="float_width" style="align-self: center;" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="ve_right_fields" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                            <ui:Vector2Field name="v2_position" style="padding-right: 10px; align-self: center;" />
+                        </ui:VisualElement>
                     </ui:VisualElement>
-                    <ui:VisualElement name="ve_right_fields" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-                        <ui:Vector2Field name="v2_position" style="padding-right: 10px; align-self: center;" />
+                    <ui:Slider picking-mode="Ignore" label="Rotation" value="42" high-value="180" low-value="-180" inverted="false" name="slider_rotation" style="max-width: 75%; flex-grow: 1; align-self: center;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_photo_icon_inspector" style="flex-grow: 1; flex-direction: row; display: flex;">
+                    <ui:VisualElement name="ve_photo" style="flex-grow: 1; width: 30%; -unity-background-scale-mode: scale-and-crop;" />
+                    <ui:VisualElement name="ve_photo_buttons" style="flex-grow: 1; justify-content: space-around; width: 70%;">
+                        <ui:Button text="Select Photo" display-tooltip-when-elided="true" name="btn_select_photo" style="background-color: rgb(203, 231, 255); width: 50%; align-self: center;" />
+                        <ui:Button text="Take Photo" display-tooltip-when-elided="true" name="btn_take_photo" style="background-color: rgb(203, 231, 255); width: 50%; align-self: center;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:Slider picking-mode="Ignore" label="Rotation" value="42" high-value="180" low-value="-180" inverted="false" name="slider_rotation" style="max-width: 75%; flex-grow: 1; align-self: center;" />
             </ui:VisualElement>
             <ui:Button text="Next Button" display-tooltip-when-elided="true" name="btn_next" style="font-size: 24px; flex-shrink: 1; background-color: rgb(203, 231, 255);" />
         </ui:VisualElement>
-        <ui:VisualElement name="ve_layout_container" focusable="true" style="background-color: rgb(255, 255, 255); flex-grow: 1; align-items: center; justify-content: center; flex-direction: column;">
+        <ui:VisualElement name="ve_layout_container" focusable="true" style="background-color: rgb(255, 255, 255); flex-grow: 1; align-items: center; justify-content: center; flex-direction: column; min-height: 60%; max-height: 80%;">
             <ui:VisualElement name="ve_pre_kaizen_layout_area" />
             <ui:VisualElement name="ve_post_kaizen_layout_area" />
             <ui:ScrollView name="scroll_layout_area" style="flex-grow: 1; justify-content: center; align-self: center; display: none;" />
@@ -116,10 +125,10 @@
                         <ui:Label tabindex="-1" text="Parts Shelf" display-tooltip-when-elided="true" class="icon_label" />
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement name="ve_table_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; visibility: hidden;">
+                <ui:VisualElement name="ve_photo_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; visibility: visible; background-image: none;">
                     <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
-                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="table_icon icon_image" />
-                        <ui:Label tabindex="-1" text="Table" display-tooltip-when-elided="true" class="icon_label" />
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="table_icon icon_image floor_photo" />
+                        <ui:Label tabindex="-1" text="Photo" display-tooltip-when-elided="true" class="icon_label" />
                     </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="ve_trolley_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; visibility: hidden;">

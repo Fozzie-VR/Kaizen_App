@@ -107,7 +107,7 @@ namespace KaizenApp
 
             _root = FloorDimensionsInputDocument.rootVisualElement;
             _floorDimensionsPage = new FloorDimensionsPage(_root);
-           
+            _isPostKaizenLayout = false;
             EventManager.StartListening(FLOOR_DIMENSIONS_SET_EVENT, OnFloorDimensionsSet);
         }
 

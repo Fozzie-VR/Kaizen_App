@@ -60,7 +60,7 @@ namespace KaizenApp
 
             _opacitySlider = _cameraContainer.Q<Slider>("slider_opacity");
             _opacitySlider.RegisterValueChangedCallback(OnOpacitySliderChanged);
-            _opacitySlider.AddToClassList("hidden");
+            _opacitySlider.style.visibility = Visibility.Hidden;
 
 
             OnIconPressed();
@@ -112,13 +112,14 @@ namespace KaizenApp
                 {
                     _overlayImageElement.style.backgroundImage = _iconInfo.PhotoTexture;
                     _overlayImageElement.style.opacity = _opacitySlider.value;
-                    _opacitySlider.RemoveFromClassList("hidden");
+                    //_opacitySlider.RemoveFromClassList("hidden");
+                    _opacitySlider.style.visibility = Visibility.Visible;
                 }
-                else
+                else if(!KaizenAppManager.Instance.IsPostKaizenLayout)
                 {
                     _overlayImageElement.style.opacity = 0f;
-                    _opacitySlider.AddToClassList("hidden");
-                    
+                    _opacitySlider.style.visibility = Visibility.Hidden;
+
                 }
                 _cameraTexture.Play();
                 

@@ -554,7 +554,7 @@ PlayerSettings:
   enableInternalProfiler: 0
   logObjCUncaughtExceptions: 1
   enableCrashReportAPI: 0
-  cameraUsageDescription: 
+  cameraUsageDescription: Allow access to take before and after photos
   locationUsageDescription: 
   microphoneUsageDescription: 
   bluetoothUsageDescription: 

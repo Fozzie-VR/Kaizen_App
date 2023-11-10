@@ -29,7 +29,7 @@
                 <ui:VisualElement name="ve_photo_icon_inspector" style="flex-grow: 1; flex-direction: row; display: flex;">
                     <ui:VisualElement name="ve_photo" style="flex-grow: 1; width: 30%; -unity-background-scale-mode: scale-and-crop;" />
                     <ui:VisualElement name="ve_photo_buttons" style="flex-grow: 1; justify-content: space-around; width: 70%;">
-                        <ui:Button text="Select Photo" display-tooltip-when-elided="true" name="btn_select_photo" style="background-color: rgb(203, 231, 255); width: 50%; align-self: center;" />
+                        <ui:Button text="Select Photo" display-tooltip-when-elided="true" name="btn_select_photo" style="background-color: rgb(203, 231, 255); width: 50%; align-self: center; visibility: hidden;" />
                         <ui:Button text="Take Photo" display-tooltip-when-elided="true" name="btn_take_photo" style="background-color: rgb(203, 231, 255); width: 50%; align-self: center;" />
                     </ui:VisualElement>
                 </ui:VisualElement>

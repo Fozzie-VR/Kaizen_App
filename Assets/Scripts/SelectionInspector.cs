@@ -126,6 +126,10 @@ namespace KaizenApp
 
         private void ShowPhotoIconInspector()
         {
+           
+            float height = _layoutIconInspector.resolvedStyle.height;
+            
+            _photoIconInspector.style.height = height;
             _photoIconInspector.style.display = DisplayStyle.Flex;
             _layoutIconInspector.style.display = DisplayStyle.None;
             if(_iconInfo.PhotoTexture != null)

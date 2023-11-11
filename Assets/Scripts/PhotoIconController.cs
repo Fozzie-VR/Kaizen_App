@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+
 namespace KaizenApp
 {
    
@@ -69,9 +70,6 @@ namespace KaizenApp
        
         private void ImageContainerGeometryChanged(GeometryChangedEvent evt)
         {
-            Debug.Log("image container size = " + _imageContainer.resolvedStyle.width + 
-                ", " + _imageContainer.resolvedStyle.height);   
-
             //set container size to a 4:3 ratio
             float width = _imageContainer.resolvedStyle.width;
             float height = _imageContainer.resolvedStyle.height;
@@ -84,6 +82,37 @@ namespace KaizenApp
             _imageElement.style.height = new Length(adjustedHeight);
             _overlayImageElement.style.width = new Length(adjustedWidth);
             _overlayImageElement.style.height = new Length(adjustedHeight);
+
+            WebCamDevice[] devices = WebCamTexture.devices;
+            foreach (WebCamDevice device in devices)
+            {
+                Debug.Log("Device name: " + device.name);
+                Debug.Log("Device is front facing: " + device.isFrontFacing);
+                Debug.Log("Device orientation: " + device.kind);
+            }
+
+            Debug.Log("screen orientation = " + Screen.orientation);
+            if(Application.isEditor)
+            {
+                return;
+            }
+
+            if(Screen.orientation == ScreenOrientation.Portrait)
+            {
+                _imageElement.style.rotate = new Rotate(90f);
+            }
+            else if(Screen.orientation == ScreenOrientation.LandscapeLeft)
+            {
+                _imageElement.style.rotate = new Rotate(0f);
+            }
+            else if(Screen.orientation == ScreenOrientation.LandscapeRight)
+            {
+                _imageElement.style.rotate = new Rotate(180f);
+            }
+            else if(Screen.orientation == ScreenOrientation.PortraitUpsideDown)
+            {
+                _imageElement.style.rotate = new Rotate(270f);
+            }
 
         }
 
@@ -107,7 +136,9 @@ namespace KaizenApp
             {
                 // Create a new instance of the device camera
                 _cameraTexture = new WebCamTexture();
+                
                 _imageElement.image = _cameraTexture;
+               
                 if(_iconInfo.PhotoTexture != null && KaizenAppManager.Instance.IsPostKaizenLayout)
                 {
                     _overlayImageElement.style.backgroundImage = _iconInfo.PhotoTexture;
@@ -128,8 +159,6 @@ namespace KaizenApp
                
                 _overlayImageElement.style.width = new Length(Screen.width);
                 _overlayImageElement.style.height = new Length(Screen.height);
-                Debug.Log("Camera texture size = " + _cameraTexture.width + ", " + _cameraTexture.height);
-                Debug.Log("image contianer size = " + _imageContainer.resolvedStyle.width + ", " + _imageContainer.resolvedStyle.height);
                
             }
             else

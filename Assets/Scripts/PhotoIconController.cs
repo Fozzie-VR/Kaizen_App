@@ -99,23 +99,23 @@ namespace KaizenApp
 
             if(Screen.orientation == ScreenOrientation.Portrait)
             {
-                _imageElement.style.rotate = new Rotate(90f);
-                _overlayImageElement.style.rotate = new Rotate(90f);
+                _imageElement.style.rotate = new Rotate(270f);
+                _overlayImageElement.style.rotate = new Rotate(270f);
             }
             else if(Screen.orientation == ScreenOrientation.LandscapeLeft)
-            {
-                _imageElement.style.rotate = new Rotate(0f);
-                _overlayImageElement.style.rotate = new Rotate(0f);
-            }
-            else if(Screen.orientation == ScreenOrientation.LandscapeRight)
             {
                 _imageElement.style.rotate = new Rotate(180f);
                 _overlayImageElement.style.rotate = new Rotate(180f);
             }
+            else if(Screen.orientation == ScreenOrientation.LandscapeRight)
+            {
+                _imageElement.style.rotate = new Rotate(0f);
+                _overlayImageElement.style.rotate = new Rotate(0f);
+            }
             else if(Screen.orientation == ScreenOrientation.PortraitUpsideDown)
             {
-                _imageElement.style.rotate = new Rotate(270f);
-                _overlayImageElement.style.rotate = new Rotate(270f);
+                _imageElement.style.rotate = new Rotate(90f);
+                _overlayImageElement.style.rotate = new Rotate(90f);
             }
 
         }

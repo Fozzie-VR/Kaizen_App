@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.PlasticSCM.Editor.WebApi;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -54,7 +51,6 @@ namespace KaizenApp
             _imageContainer.RegisterCallback<GeometryChangedEvent>(ImageContainerGeometryChanged);
             _imageElement.style.position = Position.Absolute;
             _overlayImageElement.style.position = Position.Absolute;    
-            
 
             _iconInfo = dictionary[TAKE_PHOTO_EVENT_KEY] as LayoutIconInfo;
             _cameraDocument.enabled = true;
@@ -70,7 +66,6 @@ namespace KaizenApp
             _opacitySlider = _cameraContainer.Q<Slider>("slider_opacity");
             _opacitySlider.RegisterValueChangedCallback(OnOpacitySliderChanged);
             _opacitySlider.style.visibility = Visibility.Hidden;
-
 
             OnIconPressed();
         }

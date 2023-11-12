@@ -6,6 +6,7 @@
     <ui:VisualElement name="ve_buttons_container" style="justify-content: space-around; flex-direction: row; flex-grow: 1; font-size: 32px; -unity-font-style: bold; max-height: 10%;">
         <ui:Button text="Close" display-tooltip-when-elided="true" name="btn_close" style="background-color: rgb(203, 231, 255); flex-shrink: 1; flex-grow: 1;" />
         <ui:Button text="Take Picture" display-tooltip-when-elided="true" name="btn_take_picture" style="background-color: rgb(203, 231, 255); flex-shrink: 1; flex-grow: 1;" />
-        <ui:Button text="Rotate" display-tooltip-when-elided="true" name="btn_rotate" style="background-color: rgb(203, 231, 255); flex-shrink: 1; flex-grow: 1; display: none;" />
+        <ui:Button text="Rotate" display-tooltip-when-elided="true" name="btn_rotate" style="background-color: rgb(203, 231, 255); flex-shrink: 1; flex-grow: 1;" />
+        <ui:Button text="Scale" display-tooltip-when-elided="true" name="btn_scale" style="background-color: rgb(203, 231, 255); flex-shrink: 1; flex-grow: 1;" />
     </ui:VisualElement>
 </ui:UXML>

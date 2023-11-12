@@ -27,8 +27,12 @@ namespace KaizenApp
         private LayoutIconInfo _iconInfo;
 
         private Button _rotateButton;
+        private Button _scaleButton;
         int _imageRotation = 0;
+        Vector2 _imageScale = new Vector2(1f, 1f);
         bool _rotationNegative = false;
+        bool _scaleInverted = false;
+
 
         public PhotoIconController(UIDocument cameraDocument)
         {
@@ -60,8 +64,11 @@ namespace KaizenApp
             _closeWindowButton = _cameraContainer.Q<Button>("btn_close");
             _closeWindowButton.clicked += CloseWindow;
 
-            //_rotateButton = _cameraContainer.Q<Button>("btn_rotate");
-            //_rotateButton.clicked += RotateImageElement;
+            _rotateButton = _cameraContainer.Q<Button>("btn_rotate");
+            _rotateButton.clicked += RotateImageElement;
+
+            _scaleButton = _cameraContainer.Q<Button>("btn_scale");
+            _scaleButton.clicked += ScaleImageElement;
 
             _opacitySlider = _cameraContainer.Q<Slider>("slider_opacity");
             _opacitySlider.RegisterValueChangedCallback(OnOpacitySliderChanged);
@@ -100,7 +107,9 @@ namespace KaizenApp
                 return;
             }
 
-            _imageElement.style.scale = new Scale(new Vector2(-1f, 1f));
+            _imageScale.x = -1f;
+            _scaleInverted = true;
+            _imageElement.style.scale = new Scale(_imageScale);
             _overlayImageElement.style.scale = new Scale(new Vector2(-1f, 1f));
 
             if (Screen.orientation == ScreenOrientation.Portrait)
@@ -110,20 +119,40 @@ namespace KaizenApp
             }
             else if (Screen.orientation == ScreenOrientation.LandscapeLeft)
             {
-                _imageElement.style.rotate = new Rotate(0f);
-                _overlayImageElement.style.rotate = new Rotate(0f);
-            }
-            else if (Screen.orientation == ScreenOrientation.LandscapeRight)
-            {
                 _imageElement.style.rotate = new Rotate(180f);
                 _overlayImageElement.style.rotate = new Rotate(180f);
             }
+            else if (Screen.orientation == ScreenOrientation.LandscapeRight)
+            {
+                _imageElement.style.rotate = new Rotate(0f);
+                _overlayImageElement.style.rotate = new Rotate(0f);
+            }
             else if (Screen.orientation == ScreenOrientation.PortraitUpsideDown)
             {
-                _imageElement.style.rotate = new Rotate(270f);
-                _overlayImageElement.style.rotate = new Rotate(270f);
+                _imageElement.style.rotate = new Rotate(90f);
+                _overlayImageElement.style.rotate = new Rotate(90f);
             }
 
+            _rotateButton.text = _imageRotation.ToString();
+            _scaleButton.text = _imageScale.x.ToString();
+
+        }
+
+        private void ScaleImageElement()
+        {
+            if(!_scaleInverted)
+            {
+                _imageScale.x = -1f;
+                _scaleInverted = true;
+            }
+            else
+            {
+                _imageScale.x = 1f;
+                _scaleInverted = false;
+            }
+            _imageElement.style.scale = new Scale(_imageScale);
+            _overlayImageElement.style.scale = new Scale(_imageScale);
+            _scaleButton.text = _imageScale.x.ToString();
         }
 
         private void RotateImageElement()

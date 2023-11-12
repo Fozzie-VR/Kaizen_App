@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.PlasticSCM.Editor.WebApi;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -27,6 +28,10 @@ namespace KaizenApp
         private Slider _opacitySlider;
 
         private LayoutIconInfo _iconInfo;
+
+        private Button _rotateButton;
+        int _imageRotation = 0;
+        bool _rotationNegative = false;
 
         public PhotoIconController(UIDocument cameraDocument)
         {
@@ -58,6 +63,9 @@ namespace KaizenApp
 
             _closeWindowButton = _cameraContainer.Q<Button>("btn_close");
             _closeWindowButton.clicked += CloseWindow;
+
+            //_rotateButton = _cameraContainer.Q<Button>("btn_rotate");
+            //_rotateButton.clicked += RotateImageElement;
 
             _opacitySlider = _cameraContainer.Q<Slider>("slider_opacity");
             _opacitySlider.RegisterValueChangedCallback(OnOpacitySliderChanged);
@@ -97,27 +105,58 @@ namespace KaizenApp
                 return;
             }
 
-            if(Screen.orientation == ScreenOrientation.Portrait)
-            {
-                _imageElement.style.rotate = new Rotate(270f);
-                _overlayImageElement.style.rotate = new Rotate(270f);
-            }
-            else if(Screen.orientation == ScreenOrientation.LandscapeLeft)
-            {
-                _imageElement.style.rotate = new Rotate(180f);
-                _overlayImageElement.style.rotate = new Rotate(180f);
-            }
-            else if(Screen.orientation == ScreenOrientation.LandscapeRight)
-            {
-                _imageElement.style.rotate = new Rotate(0f);
-                _overlayImageElement.style.rotate = new Rotate(0f);
-            }
-            else if(Screen.orientation == ScreenOrientation.PortraitUpsideDown)
+            _imageElement.style.scale = new Scale(new Vector2(-1f, 1f));
+            _overlayImageElement.style.scale = new Scale(new Vector2(-1f, 1f));
+
+            if (Screen.orientation == ScreenOrientation.Portrait)
             {
                 _imageElement.style.rotate = new Rotate(90f);
                 _overlayImageElement.style.rotate = new Rotate(90f);
             }
+            else if (Screen.orientation == ScreenOrientation.LandscapeLeft)
+            {
+                _imageElement.style.rotate = new Rotate(0f);
+                _overlayImageElement.style.rotate = new Rotate(0f);
+            }
+            else if (Screen.orientation == ScreenOrientation.LandscapeRight)
+            {
+                _imageElement.style.rotate = new Rotate(180f);
+                _overlayImageElement.style.rotate = new Rotate(180f);
+            }
+            else if (Screen.orientation == ScreenOrientation.PortraitUpsideDown)
+            {
+                _imageElement.style.rotate = new Rotate(270f);
+                _overlayImageElement.style.rotate = new Rotate(270f);
+            }
 
+        }
+
+        private void RotateImageElement()
+        {
+            if(_imageRotation < 270 && !_rotationNegative )
+            {
+                _imageRotation += 90;
+            }
+            else if(_imageRotation == 270)
+            {
+                _rotationNegative = true;
+                _imageRotation = 0;
+            }
+            else if(_imageRotation > -270 && _rotationNegative)
+            {
+                _imageRotation -= 90;
+               
+            }
+            else if(_imageRotation == -270)
+            {
+                _rotationNegative = false;
+                _imageRotation = 0;
+            }
+            _imageElement.style.rotate = new Rotate(_imageRotation);
+            _overlayImageElement.style.rotate = new Rotate(_imageRotation);
+            _rotateButton.text = _imageRotation.ToString();
+            
+            
         }
 
         private void OnOpacitySliderChanged(ChangeEvent<float> evt)

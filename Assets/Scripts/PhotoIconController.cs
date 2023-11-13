@@ -46,6 +46,7 @@ namespace KaizenApp
 
         private void OnTakePhotoEvent(Dictionary<string, object> dictionary)
         {
+            Debug.Log("subscribing to image container geometry changed event");
             _cameraDocument.enabled = true;
             _cameraContainer = _cameraDocument.rootVisualElement;
 
@@ -54,7 +55,7 @@ namespace KaizenApp
             _imageContainer.Add(_overlayImageElement);
             _imageContainer.RegisterCallback<GeometryChangedEvent>(ImageContainerGeometryChanged);
             _imageElement.style.position = Position.Absolute;
-            _overlayImageElement.style.position = Position.Absolute;    
+            _overlayImageElement.style.position = Position.Absolute;
 
             _iconInfo = dictionary[TAKE_PHOTO_EVENT_KEY] as LayoutIconInfo;
             _cameraDocument.enabled = true;
@@ -64,11 +65,11 @@ namespace KaizenApp
             _closeWindowButton = _cameraContainer.Q<Button>("btn_close");
             _closeWindowButton.clicked += CloseWindow;
 
-            _rotateButton = _cameraContainer.Q<Button>("btn_rotate");
-            _rotateButton.clicked += RotateImageElement;
+            //_rotateButton = _cameraContainer.Q<Button>("btn_rotate");
+            //_rotateButton.clicked += RotateImageElement;
 
-            _scaleButton = _cameraContainer.Q<Button>("btn_scale");
-            _scaleButton.clicked += ScaleImageElement;
+            //_scaleButton = _cameraContainer.Q<Button>("btn_scale");
+            //_scaleButton.clicked += ScaleImageElement;
 
             _opacitySlider = _cameraContainer.Q<Slider>("slider_opacity");
             _opacitySlider.RegisterValueChangedCallback(OnOpacitySliderChanged);
@@ -83,6 +84,13 @@ namespace KaizenApp
             //set container size to a 4:3 ratio
             float width = _imageContainer.resolvedStyle.width;
             float height = _imageContainer.resolvedStyle.height;
+            Debug.Log("width = " + width);
+            Debug.Log("height = " + height); 
+            Debug.Log("screen width = " + Screen.width);
+            Debug.Log("screen height = " + Screen.height);
+
+
+
             int heightUnit = Mathf.RoundToInt(height / 3f);
             int adjustedWidth = heightUnit * 4;
             int adjustedHeight = heightUnit * 3;
@@ -93,49 +101,47 @@ namespace KaizenApp
             _overlayImageElement.style.width = new Length(adjustedWidth);
             _overlayImageElement.style.height = new Length(adjustedHeight);
 
-            WebCamDevice[] devices = WebCamTexture.devices;
-            foreach (WebCamDevice device in devices)
-            {
-                Debug.Log("Device name: " + device.name);
-                Debug.Log("Device is front facing: " + device.isFrontFacing);
-                Debug.Log("Device orientation: " + device.kind);
-            }
-
             Debug.Log("screen orientation = " + Screen.orientation);
-            if(Application.isEditor)
-            {
-                return;
-            }
+            //if(Application.isEditor)
+            //{
+            //    return;
+            //}
 
             _imageScale.x = -1f;
             _scaleInverted = true;
             _imageElement.style.scale = new Scale(_imageScale);
             _overlayImageElement.style.scale = new Scale(new Vector2(-1f, 1f));
 
+           
+
             if (Screen.orientation == ScreenOrientation.Portrait)
             {
-                _imageElement.style.rotate = new Rotate(90f);
-                _overlayImageElement.style.rotate = new Rotate(90f);
+                _imageRotation = 270;
+                
             }
             else if (Screen.orientation == ScreenOrientation.LandscapeLeft)
             {
-                _imageElement.style.rotate = new Rotate(180f);
-                _overlayImageElement.style.rotate = new Rotate(180f);
+                _imageRotation = 180;
+                
             }
             else if (Screen.orientation == ScreenOrientation.LandscapeRight)
             {
-                _imageElement.style.rotate = new Rotate(0f);
-                _overlayImageElement.style.rotate = new Rotate(0f);
+                _imageRotation = 0;
+               
             }
             else if (Screen.orientation == ScreenOrientation.PortraitUpsideDown)
             {
-                _imageElement.style.rotate = new Rotate(90f);
-                _overlayImageElement.style.rotate = new Rotate(90f);
+                _imageRotation = 90;
             }
 
-            _rotateButton.text = _imageRotation.ToString();
-            _scaleButton.text = _imageScale.x.ToString();
+            _imageElement.style.rotate = new Rotate(_imageRotation);
+            _overlayImageElement.style.rotate = new Rotate(_imageRotation);
 
+            _imageElement.style.scale = new Scale(_imageScale);
+            _overlayImageElement.style.scale = new Scale(_imageScale);
+
+            //_rotateButton.text = _imageRotation.ToString();
+            //_scaleButton.text = _imageScale.x.ToString();
         }
 
         private void ScaleImageElement()
@@ -212,6 +218,7 @@ namespace KaizenApp
                     _overlayImageElement.style.opacity = _opacitySlider.value;
                     //_opacitySlider.RemoveFromClassList("hidden");
                     _opacitySlider.style.visibility = Visibility.Visible;
+                    _opacitySlider.BringToFront();
                 }
                 else if(!KaizenAppManager.Instance.IsPostKaizenLayout)
                 {
@@ -246,6 +253,8 @@ namespace KaizenApp
             _imageElement.style.backgroundImage = photo;
             _imageElement.style.backgroundSize = new StyleBackgroundSize();
             _iconInfo.PhotoTexture = photo;
+            _iconInfo.Rotation = _imageRotation;
+            //ToDo:pass on photo rotation and scale so it shows up correctly in the layout
             EventManager.TriggerEvent(PHOTO_TAKEN_EVENT, 
                 new Dictionary<string, object> { { PHOTO_TAKEN_EVENT_KEY, photo } });
 

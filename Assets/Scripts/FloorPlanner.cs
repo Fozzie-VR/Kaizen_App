@@ -112,7 +112,6 @@ namespace KaizenApp
 
         private void OnContainerGeometryChanged(GeometryChangedEvent evt)
         {
-            Debug.Log("container geometry changed");
             if (_container.resolvedStyle.width > _container.resolvedStyle.height)
             {
                 _maxPixelsPerMeter = Mathf.RoundToInt(_container.resolvedStyle.height / 5);

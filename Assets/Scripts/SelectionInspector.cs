@@ -136,7 +136,7 @@ namespace KaizenApp
             {
                 _photoElement.style.backgroundImage = _iconInfo.PhotoTexture;
                 Debug.Log("should be rotating photo by " + _iconInfo.Rotation);
-                _photoElement.style.rotate = new Rotate(_iconInfo.Rotation + 180);
+                _photoElement.style.rotate = new Rotate(_iconInfo.Rotation);
                 //_photoElement.style.scale = new Scale(new Vector2(-1f, 1f));
             }
             else
@@ -155,7 +155,7 @@ namespace KaizenApp
         {
             Texture2D photoTexture = eventDictionary[PHOTO_TAKEN_EVENT_KEY] as Texture2D;
             _photoElement.style.backgroundImage = photoTexture;
-            _photoElement.style.rotate = new Rotate(GetRotation());
+            _photoElement.style.rotate = new Rotate(_iconInfo.Rotation);
             //_photoElement.style.scale = new Scale(new Vector2(-1f, 1f));
             Debug.Log("should be rotating photo by " + _iconInfo.Rotation);
         }

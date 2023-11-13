@@ -107,31 +107,31 @@ namespace KaizenApp
             //    return;
             //}
 
-            _imageScale.x = -1f;
-            _scaleInverted = true;
-            _imageElement.style.scale = new Scale(_imageScale);
-            _overlayImageElement.style.scale = new Scale(new Vector2(-1f, 1f));
+            //_imageScale.x = -1f;
+            //_scaleInverted = true;
+            //_imageElement.style.scale = new Scale(_imageScale);
+            //_overlayImageElement.style.scale = new Scale(new Vector2(-1f, 1f));
 
            
 
             if (Screen.orientation == ScreenOrientation.Portrait)
             {
-                _imageRotation = 270;
+                _imageRotation = 90;
                 
             }
             else if (Screen.orientation == ScreenOrientation.LandscapeLeft)
             {
-                _imageRotation = 180;
+                _imageRotation = 0;
                 
             }
             else if (Screen.orientation == ScreenOrientation.LandscapeRight)
             {
-                _imageRotation = 0;
+                _imageRotation = 180;
                
             }
             else if (Screen.orientation == ScreenOrientation.PortraitUpsideDown)
             {
-                _imageRotation = 90;
+                _imageRotation = 270;
             }
 
             _imageElement.style.rotate = new Rotate(_imageRotation);

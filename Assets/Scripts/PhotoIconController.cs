@@ -65,11 +65,11 @@ namespace KaizenApp
             _closeWindowButton = _cameraContainer.Q<Button>("btn_close");
             _closeWindowButton.clicked += CloseWindow;
 
-            //_rotateButton = _cameraContainer.Q<Button>("btn_rotate");
-            //_rotateButton.clicked += RotateImageElement;
+            _rotateButton = _cameraContainer.Q<Button>("btn_rotate");
+            _rotateButton.clicked += RotateImageElement;
 
-            //_scaleButton = _cameraContainer.Q<Button>("btn_scale");
-            //_scaleButton.clicked += ScaleImageElement;
+            _scaleButton = _cameraContainer.Q<Button>("btn_scale");
+            _scaleButton.clicked += ScaleImageElement;
 
             _opacitySlider = _cameraContainer.Q<Slider>("slider_opacity");
             _opacitySlider.RegisterValueChangedCallback(OnOpacitySliderChanged);
@@ -140,8 +140,8 @@ namespace KaizenApp
             _imageElement.style.scale = new Scale(_imageScale);
             _overlayImageElement.style.scale = new Scale(_imageScale);
 
-            //_rotateButton.text = _imageRotation.ToString();
-            //_scaleButton.text = _imageScale.x.ToString();
+            _rotateButton.text = _imageRotation.ToString();
+            _scaleButton.text = _imageScale.x.ToString();
         }
 
         private void ScaleImageElement()

@@ -47,6 +47,7 @@ namespace KaizenApp
 
         private VisualElement _icon;
         private LayoutIconInfo _iconInfo;
+        private float _selectionInspectorHeight;
 
         private int _pixelsPerMeter = KaizenAppManager.Instance.PixelsPerMeter;
 
@@ -124,9 +125,12 @@ namespace KaizenApp
         private void ShowPhotoIconInspector()
         {
            
-            float height = _layoutIconInspector.resolvedStyle.height;
             
-            _photoIconInspector.style.height = height;
+            if(_selectionInspectorHeight == 0)
+            {
+                _selectionInspectorHeight = _selectionInspector.resolvedStyle.height;
+            }
+            _photoIconInspector.style.height = _selectionInspectorHeight;
             _photoIconInspector.style.display = DisplayStyle.Flex;
             _layoutIconInspector.style.display = DisplayStyle.None;
             if(_iconInfo.PhotoTexture != null)

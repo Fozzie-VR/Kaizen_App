@@ -132,7 +132,7 @@ namespace KaizenApp
             _overlayImageElement.style.rotate = new Rotate(_imageRotation + 180);
 
             _imageElement.style.scale = new Scale(_imageScale);
-            _overlayImageElement.style.scale = new Scale(_imageScale);
+            _overlayImageElement.style.scale = new Scale(new Vector2(_imageScale.x * -1, _imageScale.y));
 
             _rotateButton.text = orientation + ": " + _imageRotation.ToString();
             _scaleButton.text = _imageScale.x.ToString();
@@ -151,7 +151,7 @@ namespace KaizenApp
                 _scaleInverted = false;
             }
             _imageElement.style.scale = new Scale(_imageScale);
-            _overlayImageElement.style.scale = new Scale(_imageScale);
+            _overlayImageElement.style.scale = new Scale(new Vector2(_imageScale.x * -1, _imageScale.y));
             _scaleButton.text = _imageScale.x.ToString();
         }
 

@@ -158,4 +158,5 @@
             </ui:VisualElement>
         </ui:ScrollView>
     </ui:VisualElement>
+    <ui:VisualElement name="ve_bottom_buffer" style="flex-grow: 1; height: 5%; max-height: 5%; min-height: 5%; background-color: rgb(203, 231, 255);" />
 </ui:UXML>

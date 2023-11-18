@@ -9,4 +9,5 @@
         <ui:Button text="Rotate" display-tooltip-when-elided="true" name="btn_rotate" style="background-color: rgb(203, 231, 255); flex-shrink: 1; flex-grow: 1;" />
         <ui:Button text="Scale" display-tooltip-when-elided="true" name="btn_scale" style="background-color: rgb(203, 231, 255); flex-shrink: 1; flex-grow: 1;" />
     </ui:VisualElement>
+    <ui:VisualElement name="ve_bottom_buffer" style="flex-grow: 1; height: 5%; max-height: 5%; min-height: 5%; background-color: rgb(233, 233, 233);" />
 </ui:UXML>

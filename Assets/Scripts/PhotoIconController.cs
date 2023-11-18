@@ -84,16 +84,10 @@ namespace KaizenApp
             //set container size to a 4:3 ratio
             float width = _imageContainer.resolvedStyle.width;
             float height = _imageContainer.resolvedStyle.height;
-            Debug.Log("width = " + width);
-            Debug.Log("height = " + height); 
-            Debug.Log("screen width = " + Screen.width);
-            Debug.Log("screen height = " + Screen.height);
-
-
-
             int heightUnit = Mathf.RoundToInt(height / 3f);
             int adjustedWidth = heightUnit * 4;
             int adjustedHeight = heightUnit * 3;
+
             _imageContainer.style.width = new Length(adjustedWidth);
             _imageContainer.style.height = new Length(adjustedHeight);
             _imageElement.style.width = new Length(adjustedWidth);
@@ -106,12 +100,6 @@ namespace KaizenApp
             //{
             //    return;
             //}
-
-            //_imageScale.x = -1f;
-            //_scaleInverted = true;
-            //_imageElement.style.scale = new Scale(_imageScale);
-            //_overlayImageElement.style.scale = new Scale(new Vector2(-1f, 1f));
-
            
 
             if (Screen.orientation == ScreenOrientation.Portrait)
@@ -214,7 +202,7 @@ namespace KaizenApp
                
                 if(_iconInfo.PhotoTexture != null && KaizenAppManager.Instance.IsPostKaizenLayout)
                 {
-                    _overlayImageElement.style.backgroundImage = _iconInfo.PhotoTexture;
+                    //_overlayImageElement.style.backgroundImage = _iconInfo.PhotoTexture;
                     _overlayImageElement.style.opacity = _opacitySlider.value;
                     //_opacitySlider.RemoveFromClassList("hidden");
                     _opacitySlider.style.visibility = Visibility.Visible;
@@ -252,6 +240,8 @@ namespace KaizenApp
             Debug.Log("Camera texture height: " + _cameraTexture.height);
             _imageElement.style.backgroundImage = photo;
             _imageElement.style.backgroundSize = new StyleBackgroundSize();
+            _overlayImageElement.style.backgroundImage = photo;
+            _overlayImageElement.style.backgroundSize = new StyleBackgroundSize();
             _iconInfo.PhotoTexture = photo;
             _iconInfo.Rotation = _imageRotation;
             //ToDo:pass on photo rotation and scale so it shows up correctly in the layout

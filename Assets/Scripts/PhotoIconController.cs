@@ -101,25 +101,29 @@ namespace KaizenApp
             //    return;
             //}
            
-
+            string orientation = Screen.orientation.ToString();
             if (Screen.orientation == ScreenOrientation.Portrait)
             {
                 _imageRotation = 90;
+                orientation = "P";
                 
             }
             else if (Screen.orientation == ScreenOrientation.LandscapeLeft)
             {
-                _imageRotation = 0;
+                _imageRotation = 180;
+                orientation = "LL";
                 
             }
             else if (Screen.orientation == ScreenOrientation.LandscapeRight)
             {
-                _imageRotation = 180;
+                _imageRotation = 0;
+                orientation = "LR";
                
             }
             else if (Screen.orientation == ScreenOrientation.PortraitUpsideDown)
             {
                 _imageRotation = 270;
+                orientation = "PU";
             }
 
             _imageElement.style.rotate = new Rotate(_imageRotation);
@@ -128,7 +132,7 @@ namespace KaizenApp
             _imageElement.style.scale = new Scale(_imageScale);
             _overlayImageElement.style.scale = new Scale(_imageScale);
 
-            _rotateButton.text = _imageRotation.ToString();
+            _rotateButton.text = orientation + ": " + _imageRotation.ToString();
             _scaleButton.text = _imageScale.x.ToString();
         }
 
@@ -202,7 +206,7 @@ namespace KaizenApp
                
                 if(_iconInfo.PhotoTexture != null && KaizenAppManager.Instance.IsPostKaizenLayout)
                 {
-                    //_overlayImageElement.style.backgroundImage = _iconInfo.PhotoTexture;
+                    _overlayImageElement.style.backgroundImage = _iconInfo.PhotoTexture;
                     _overlayImageElement.style.opacity = _opacitySlider.value;
                     //_opacitySlider.RemoveFromClassList("hidden");
                     _opacitySlider.style.visibility = Visibility.Visible;
@@ -239,9 +243,9 @@ namespace KaizenApp
             Debug.Log("Camera texture width: " + _cameraTexture.width);
             Debug.Log("Camera texture height: " + _cameraTexture.height);
             _imageElement.style.backgroundImage = photo;
-            _imageElement.style.backgroundSize = new StyleBackgroundSize();
+            //_imageElement.style.backgroundSize = new StyleBackgroundSize();
             _overlayImageElement.style.backgroundImage = photo;
-            _overlayImageElement.style.backgroundSize = new StyleBackgroundSize();
+            //_overlayImageElement.style.backgroundSize = new StyleBackgroundSize();
             _iconInfo.PhotoTexture = photo;
             _iconInfo.Rotation = _imageRotation;
             //ToDo:pass on photo rotation and scale so it shows up correctly in the layout

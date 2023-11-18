@@ -92,8 +92,8 @@ namespace KaizenApp
 
             _root = LandingPageDocument.rootVisualElement;
             
-            Button preKaizenLayout = _root.Q<Button>("btn_pre_kaizen_layout");
-            preKaizenLayout.clicked += OnPreKaizenLayoutClicked;
+            //Button preKaizenLayout = _root.Q<Button>("btn_pre_kaizen_layout");
+            //preKaizenLayout.clicked += OnPreKaizenLayoutClicked;
 
             _photoIconController = new PhotoIconController(CameraDocument);
         }

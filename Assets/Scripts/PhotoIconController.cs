@@ -129,10 +129,10 @@ namespace KaizenApp
             }
 
             _imageElement.style.rotate = new Rotate(_imageRotation);
-            _overlayImageElement.style.rotate = new Rotate(_imageRotation);
+            _overlayImageElement.style.rotate = new Rotate(_imageRotation + 180);
 
             _imageElement.style.scale = new Scale(_imageScale);
-            _overlayImageElement.style.scale = new Scale(_imageScale);
+            _overlayImageElement.style.scale = new Scale(_imageScale * -1);
 
             _rotateButton.text = orientation + ": " + _imageRotation.ToString();
             _scaleButton.text = _imageScale.x.ToString();

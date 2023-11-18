@@ -156,25 +156,25 @@ namespace KaizenApp
         {
             Texture2D photoTexture = eventDictionary[PHOTO_TAKEN_EVENT_KEY] as Texture2D;
             _photoElement.style.backgroundImage = photoTexture;
-            _photoElement.style.rotate = new Rotate(_iconInfo.Rotation);
+            _photoElement.style.rotate = new Rotate(GetRotation());
             //_photoElement.style.scale = new Scale(new Vector2(-1f, 1f));
             Debug.Log("should be rotating photo by " + _iconInfo.Rotation);
         }
 
         private float GetRotation()
         {
-            switch (_iconInfo.Rotation)
+            switch (Screen.orientation)
             {
-                case 0:
+                case ScreenOrientation.Portrait:
+                    return 90;
+                case ScreenOrientation.LandscapeLeft:
                     return 0;
-                case 90:
-                    return 270;
-                case 180:
+                case ScreenOrientation.LandscapeRight:
                     return 180;
-                case 270:
+                case ScreenOrientation.PortraitUpsideDown:
                     return 90;
                 default:
-                    return 0;
+                    return 270;
             }
             
         }

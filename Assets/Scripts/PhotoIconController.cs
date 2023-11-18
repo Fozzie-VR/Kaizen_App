@@ -101,24 +101,26 @@ namespace KaizenApp
             //    return;
             //}
            
+            SetImageRotation();
+        }
+
+        private void SetImageRotation()
+        {
             string orientation = Screen.orientation.ToString();
             if (Screen.orientation == ScreenOrientation.Portrait)
             {
                 _imageRotation = 90;
                 orientation = "P";
-                
             }
             else if (Screen.orientation == ScreenOrientation.LandscapeLeft)
             {
                 _imageRotation = 180;
                 orientation = "LL";
-                
             }
             else if (Screen.orientation == ScreenOrientation.LandscapeRight)
             {
                 _imageRotation = 0;
                 orientation = "LR";
-               
             }
             else if (Screen.orientation == ScreenOrientation.PortraitUpsideDown)
             {
@@ -178,7 +180,6 @@ namespace KaizenApp
             _overlayImageElement.style.rotate = new Rotate(_imageRotation);
             _rotateButton.text = _imageRotation.ToString();
             
-            
         }
 
         private void OnOpacitySliderChanged(ChangeEvent<float> evt)
@@ -225,6 +226,7 @@ namespace KaizenApp
                
                 _overlayImageElement.style.width = new Length(Screen.width);
                 _overlayImageElement.style.height = new Length(Screen.height);
+                SetImageRotation();
                
             }
             else
@@ -240,12 +242,11 @@ namespace KaizenApp
             photo.SetPixels(_cameraTexture.GetPixels());
             photo.Apply();
             _cameraTexture.Stop();
-            Debug.Log("Camera texture width: " + _cameraTexture.width);
-            Debug.Log("Camera texture height: " + _cameraTexture.height);
+            
             _imageElement.style.backgroundImage = photo;
-            //_imageElement.style.backgroundSize = new StyleBackgroundSize();
+            
             _overlayImageElement.style.backgroundImage = photo;
-            //_overlayImageElement.style.backgroundSize = new StyleBackgroundSize();
+           
             _iconInfo.PhotoTexture = photo;
             _iconInfo.Rotation = _imageRotation;
             //ToDo:pass on photo rotation and scale so it shows up correctly in the layout
@@ -259,7 +260,7 @@ namespace KaizenApp
             _cameraDocument.enabled = false;
             _cameraTexture.Stop();
             _cameraTexture = null;
-            //_cameraContainer.Remove(_imageElement);
+            
             _cameraContainer = null;
             _imageContainer = null;
             _iconInfo = null;

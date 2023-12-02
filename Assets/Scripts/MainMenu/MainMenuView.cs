@@ -15,7 +15,7 @@ namespace KaizenApp
         private const string MAKE_LAYOUT_BUTTON = "btn_pre_kaizen_layout";
         
         //event strings
-        public const string MAKE_LAYOUT_CLICKED = "makeLayoutClicked";
+        public const string PRE_KAIZEN_LAYOUT_CLICKED = "PreKaizenLayoutClicked";
 
         private VisualElement _menuRoot;
         
@@ -35,8 +35,7 @@ namespace KaizenApp
 
         private void OnMakeLayoutClicked()
         {
-            EventManager.TriggerEvent(MAKE_LAYOUT_CLICKED, null);
+            EventManager.TriggerEvent(PRE_KAIZEN_LAYOUT_CLICKED, null);
         }
     }
-
 }

@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 namespace KaizenApp
 {
-    public class FloorDimensionsPage
+    public class FloorDimensionsPage: IView
     {
         private const string FLOOR_DIMENSIONS_SET_EVENT = "floor_dimensions_set";
         private const string FLOOR_DIMENSIONS_SET_EVENT_KEY = "floor_dimensions";
@@ -19,7 +19,6 @@ namespace KaizenApp
         private float _floorHeightMeters;
         public float FloorHeightMeters => _floorHeightMeters;
 
-
         public FloorDimensionsPage(VisualElement root)
         {
             _floorHeight = root.Q<FloatField>("float_floor_length");
@@ -27,10 +26,7 @@ namespace KaizenApp
 
             Button finished = root.Q<Button>("btn_finished");
             finished.clicked += OnFinishedClicked;
-
-
         }
-
 
         private void OnFinishedClicked()
         {
@@ -39,15 +35,8 @@ namespace KaizenApp
                 FloorHeightMeters = _floorHeight.value,
                 FloorWidthMeters = _floorWidth.value
            };
-
-            EventManager.TriggerEvent(FLOOR_DIMENSIONS_SET_EVENT, new Dictionary<string, object> { { FLOOR_DIMENSIONS_SET_EVENT_KEY, floorDimensions } });
-
+           EventManager.TriggerEvent(FLOOR_DIMENSIONS_SET_EVENT, new Dictionary<string, object> { { FLOOR_DIMENSIONS_SET_EVENT_KEY, floorDimensions } });
         }
-
-
-
-
-
     }
 
     public struct FloorDimensions
@@ -55,5 +44,4 @@ namespace KaizenApp
         public float FloorWidthMeters;
         public float FloorHeightMeters;
     }   
-
 }

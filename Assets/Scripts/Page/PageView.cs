@@ -35,6 +35,8 @@ namespace KaizenApp
             _pageRoot = _pageDocument.rootVisualElement;
             EventManager.StartListening(PAGE_STATE_CHANGE, OnPageStateChange);
             EventManager.StartListening(PAGE_SORT_ORDER_CHANGE, OnPageSortOrderChange);
+
+            TogglePageActivation(_pageState);
         }
 
         //page state change handler

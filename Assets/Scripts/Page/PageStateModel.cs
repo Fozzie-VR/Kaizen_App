@@ -31,10 +31,13 @@ namespace KaizenApp
         private const string PAGE_STATE_CHANGE_REQUEST = "PageStateChanged";
         private const string PAGE_SORT_ORDER_CHANGE_REQUEST = "PageSortOrderChanged";
         public const string PRE_KAIZEN_LAYOUT_CLICKED = "PreKaizenLayoutClicked";
+        private const string FLOOR_DIMENSIONS_SET_EVENT = "floor_dimensions_set";
+       
 
         private const string PAGE_STATE_CHANGE_REQUEST_KEY = "PageStateChangedAction";
         private const string PAGE_SORT_ORDER_CHANGE_REQUEST_KEY = "PageSortOrderChangedAction";
-        
+        private const string FLOOR_DIMENSIONS_SET_EVENT_KEY = "floor_dimensions";
+
         Dictionary<PageType, PageStateEntry> _pageStateModelEntries = new();
 
         private CommandHandler _commandHandler;
@@ -44,19 +47,35 @@ namespace KaizenApp
             EventManager.StartListening(PAGE_STATE_CHANGE_REQUEST, OnPageStateChanged);
             EventManager.StartListening(PAGE_SORT_ORDER_CHANGE_REQUEST, OnPageSortOrderChanged);
             EventManager.StartListening(PRE_KAIZEN_LAYOUT_CLICKED, OnPreKaizenLayoutClicked);
+            EventManager.StartListening(FLOOR_DIMENSIONS_SET_EVENT, OnFloorDimensionsSet);
             _commandHandler = new CommandHandler();
         }
 
+      
         private void OnPreKaizenLayoutClicked(Dictionary<string, object> dictionary)
         {
+            Debug.Log("PreKaizenLayoutClicked");
             if(_pageStateModelEntries.TryGetValue(PageType.FloorDimensionsPage, out PageStateEntry pageStateEntry))
             {
+                Debug.Log("making a page state change command ");
                 PageState newPageState = PageState.Active;
                 PageStateChanger pageStateChanger = new PageStateChanger(PageType.FloorDimensionsPage, pageStateEntry.PageState, newPageState);
                 pageStateEntry.PageState = newPageState;
                 _commandHandler.AddCommand(pageStateChanger);
             }
         }
+
+        private void OnFloorDimensionsSet(Dictionary<string, object> dictionary)
+        {
+            if (_pageStateModelEntries.TryGetValue(PageType.PreKaizenLayout, out PageStateEntry pageStateEntry))
+            {
+                PageState newPageState = PageState.Active;
+                PageStateChanger pageStateChanger = new PageStateChanger(PageType.PreKaizenLayout, pageStateEntry.PageState, newPageState);
+                pageStateEntry.PageState = newPageState;
+                _commandHandler.AddCommand(pageStateChanger);
+            }
+        }
+
 
         private void OnPageSortOrderChanged(Dictionary<string, object> evntMessage)
         {

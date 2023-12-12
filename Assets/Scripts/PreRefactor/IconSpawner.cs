@@ -8,15 +8,14 @@ namespace KaizenApp
 {
     public class IconSpawner
     {
+        //visual element strings
         private const string DRAG_AREA = "ve_floor_plan_screen";
         private const string ICON_DRAGGABLE = "ve_icon_container";
         private const string ICON_IMAGE = "ve_icon_image";
-        private const string FLOOR = "ve_layout_area";
         private const string PRE_KAIZEN_FLOOR = "ve_pre_kaizen_layout_area";
         private const string POST_KAIZEN_FLOOR = "ve_post_kaizen_layout_area";
-        private const string ICON_IMAGE_STYLE = "icon_image";
-        private const string ICON_CONTAINER_STYLE = "icon_container";
-        private const string ICON_LABEL_STYLE = "icon_label";
+       
+        //event strings
         private const string ICON_SPAWNED_EVENT = "IconSpawned";
         private const string ICON_SPAWNED_EVENT_KEY = "floorIcon";
         private const string ICON_CLONE_EVENT = "SpawnIcon";
@@ -28,35 +27,40 @@ namespace KaizenApp
         private const string ICON_REMOVED_EVENT = "IconRemoved";
         private const string FLOOR_ICON_EVENT_KEY = "floorIcon";
 
+        //page state now tracked another way
         private const string SWITCH_KAIZEN_LAYOUT_CLICKED = "post_kaizen_layout_clicked";
         private const string POST_KAIZEN_LAYOUT_EVENT_KEY = "post_kaizen";
 
+        //Visual Elements
         private VisualElement _dragArea;
         private VisualElement _floor;
         private List<VisualElement> _iconDraggables = new List<VisualElement>();
-        private Dictionary<VisualElement, Vector3> _iconPositions = new Dictionary<VisualElement, Vector3>();
+        
         private IconFactory<VisualElement> _iconFactory = new IconFactory<VisualElement>();
 
         public event Action<Vector2, VisualElement> DropIcon;
+        
+        //Icon mover is a controller that handles dragging and dropping icons
         private IconMover _iconMover;
-        private PointerDownEvent _pointerDownEvent;
+        
+
         public IconSpawner(VisualElement root)
         {
             DropIcon += OnIconDropped;
             SetVisualElements(root);
+
             _iconFactory.Factory += GetIcon;
             _iconFactory.PreReturn += ReturnIcon;
+
             EventManager.StartListening(ICON_REMOVED_EVENT, OnIconRemoved);
             EventManager.StartListening(SWITCH_KAIZEN_LAYOUT_CLICKED, OnSwitchKaizenLayoutClicked);
-
             EventManager.StartListening(ICON_CLONE_EVENT, OnIconClone);
-            
         }
 
         private void OnIconClone(Dictionary<string, object> eventDictionary)
         {
            var icon = eventDictionary[ICON_CLONE_EVENT_KEY] as VisualElement;
-            CloneIcon(icon);
+           CloneIcon(icon);
         }
 
         private void OnSwitchKaizenLayoutClicked(Dictionary<string, object> dictionary)
@@ -133,58 +137,7 @@ namespace KaizenApp
             _iconMover = new IconMover(draggableIcon, _dragArea, DropIcon);
             _iconMover.StartDragging(evt);
         }
-
-        private string GetFloorIconContainerStyle(IconType iconType)
-        {
-            switch (iconType)
-            {
-                case IconType.CustomItem:
-                    return "floor_custom_item";
-                    break;
-                case IconType.CustomLabel:
-                    return "floor_custom_label";
-                    break;
-                case IconType.ProductFlow:
-                    return "floor_product_flow";
-                    break;
-                case IconType.WorkerMovement:
-                    return "floor_worker_movement";
-                    break;
-                case IconType.TransportFlow:
-                    return "floor_transport_flow";
-                    break;
-                case IconType.Product:
-                    return "floor_product";
-                    break;
-                case IconType.Kanban:
-                    return "floor_kanban";
-                    break;
-                case IconType.PartsShelf:
-                    return "floor_parts_shelf";
-                    break;
-                case IconType.Table:
-                    return "floor_table";
-                    break;
-                case IconType.Worker:
-                    return "floor_worker";
-                    break;
-                case IconType.Machine:
-                    return "floor_machine";
-                    break;
-                case IconType.Trolley:
-                    return "floor_trolley";
-                    break;
-                case IconType.Conveyor:
-                    return "floor_conveyor";
-                    break;
-                case IconType.Photo:
-                    return "floor_photo";
-                    break;
-                default:
-                    return "floor_table";
-
-            }
-        }
+        
 
         private void CloneIcon(VisualElement icon)
         {
@@ -269,6 +222,7 @@ namespace KaizenApp
 
         }
 
+        #region IconSwitchGetters
         private LayoutIconInfo GetIconInfo(string iconName)
         {
             LayoutIconInfo info = null;
@@ -322,106 +276,60 @@ namespace KaizenApp
             return info;
         }
 
-        private string GetImageIconStyleClass(IconType type)
+        private string GetFloorIconContainerStyle(IconType iconType)
         {
-            switch (type)
+            switch (iconType)
             {
                 case IconType.CustomItem:
-                    return "custom_item_icon";
+                    return "floor_custom_item";
                     break;
                 case IconType.CustomLabel:
-                    return "custom_label_icon";
+                    return "floor_custom_label";
                     break;
                 case IconType.ProductFlow:
-                    return "flow_icon";
+                    return "floor_product_flow";
                     break;
                 case IconType.WorkerMovement:
-                    return "movement_icon";
+                    return "floor_worker_movement";
                     break;
                 case IconType.TransportFlow:
-                    return "transport_icon";
+                    return "floor_transport_flow";
                     break;
                 case IconType.Product:
-                    return "product_icon";
+                    return "floor_product";
                     break;
                 case IconType.Kanban:
-                    return "kanban_icon";
+                    return "floor_kanban";
                     break;
                 case IconType.PartsShelf:
-                    return "parts_shelf_icon";
+                    return "floor_parts_shelf";
                     break;
                 case IconType.Table:
-                    return "table_icon";
+                    return "floor_table";
                     break;
                 case IconType.Worker:
-                    return "worker_icon";
+                    return "floor_worker";
                     break;
                 case IconType.Machine:
-                    return "machine_icon";
+                    return "floor_machine";
                     break;
                 case IconType.Trolley:
-                    return "trolley_icon";
+                    return "floor_trolley";
                     break;
                 case IconType.Conveyor:
-                    return "conveyor_icon";
+                    return "floor_conveyor";
+                    break;
+                case IconType.Photo:
+                    return "floor_photo";
                     break;
                 default:
-                    return "table_icon";
+                    return "floor_table";
 
             }
         }
-        private string GetIconLabelText(IconType type)
-        {
-            switch (type)
-            {
-                case IconType.CustomItem:
-                    return "floor_icon_custom_item";
-                    break;
-                case IconType.CustomLabel:
-                    return "floor_icon_custom_label";
-                    break;
-                case IconType.ProductFlow:
-                    return "floor_icon_product_flow";
-                    break;
-                case IconType.WorkerMovement:
-                    return "floor_icon_worker_movement";
-                    break;
-                case IconType.TransportFlow:
-                    return "floor_icon_transport_flow";
-                    break;
-                case IconType.Product:
-                    return "floor_icon_";
-                    break;
-                case IconType.Kanban:
-                    return "Kanban";
-                    break;
-                case IconType.PartsShelf:
-                    return "Parts Shelf";
-                    break;
-                case IconType.Table:
-                    return "Table";
-                    break;
-                case IconType.Worker:
-                    return "floor_icon_worker_";
-                    break;
-                case IconType.Machine:
-                    return "Machine";
-                    break;
-                case IconType.Trolley:
-                    return "Trolley";
-                    break;
-                case IconType.Conveyor:
-                    return "Conveyor";
-                    break;
-                default:
-                    return "Table";
-
-            }
-        }
-
+        #endregion
 
     }
 
 }
-
 

@@ -67,7 +67,6 @@ namespace KaizenApp
             {
                 RescaleIcon();
             }
-
         }
 
         private void OnPixelsPerMeterChanged(Dictionary<string, object> eventDictionary)

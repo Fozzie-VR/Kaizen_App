@@ -50,30 +50,18 @@ namespace KaizenApp
             EventManager.StartListening(FLOOR_DIMENSIONS_SET_EVENT, OnFloorDimensionsSet);
             _commandHandler = new CommandHandler();
         }
-
       
         private void OnPreKaizenLayoutClicked(Dictionary<string, object> dictionary)
         {
             Debug.Log("PreKaizenLayoutClicked");
-            if(_pageStateModelEntries.TryGetValue(PageType.FloorDimensionsPage, out PageStateEntry pageStateEntry))
-            {
-                Debug.Log("making a page state change command ");
-                PageState newPageState = PageState.Active;
-                PageStateChanger pageStateChanger = new PageStateChanger(PageType.FloorDimensionsPage, pageStateEntry.PageState, newPageState);
-                pageStateEntry.PageState = newPageState;
-                _commandHandler.AddCommand(pageStateChanger);
-            }
+            DeactivatePage(PageType.MainMenu);
+            ActivatePage(PageType.FloorDimensionsPage);
         }
 
         private void OnFloorDimensionsSet(Dictionary<string, object> dictionary)
         {
-            if (_pageStateModelEntries.TryGetValue(PageType.PreKaizenLayout, out PageStateEntry pageStateEntry))
-            {
-                PageState newPageState = PageState.Active;
-                PageStateChanger pageStateChanger = new PageStateChanger(PageType.PreKaizenLayout, pageStateEntry.PageState, newPageState);
-                pageStateEntry.PageState = newPageState;
-                _commandHandler.AddCommand(pageStateChanger);
-            }
+            DeactivatePage(PageType.FloorDimensionsPage);
+            ActivatePage(PageType.PreKaizenLayout);
         }
 
 
@@ -91,6 +79,30 @@ namespace KaizenApp
                     pageStateEntry.PageSortOrder = newSortOrder;
                     _commandHandler.AddCommand(pageSortOrderChanger);
                 }
+            }
+        }
+
+        private void ActivatePage(PageType pageType)
+        {
+            if (_pageStateModelEntries.TryGetValue(pageType, out PageStateEntry pageStateEntry))
+            {
+                Debug.Log("activate page command for type " + pageType);
+                PageState newPageState = PageState.Active;
+                PageStateChanger pageStateChanger = new PageStateChanger(pageType, pageStateEntry.PageState, newPageState);
+                pageStateEntry.PageState = newPageState;
+                _commandHandler.AddCommand(pageStateChanger);
+            }
+        }
+
+        private void DeactivatePage(PageType pageType)
+        {
+            if (_pageStateModelEntries.TryGetValue(pageType, out PageStateEntry pageStateEntry))
+            {
+                Debug.Log("deactivate page command for type " + pageType);
+                PageState newPageState = PageState.Inactive;
+                PageStateChanger pageStateChanger = new PageStateChanger(pageType, pageStateEntry.PageState, newPageState);
+                pageStateEntry.PageState = newPageState;
+                _commandHandler.AddCommand(pageStateChanger);
             }
         }
 

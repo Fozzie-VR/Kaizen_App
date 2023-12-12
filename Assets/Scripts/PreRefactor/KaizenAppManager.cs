@@ -108,15 +108,18 @@ namespace KaizenApp
             _root = FloorDimensionsInputDocument.rootVisualElement;
             _floorDimensionsPage = new FloorDimensionsPage(_root);
             _isPostKaizenLayout = false;
+            //this should be happening in a FloorDimensionsModel class
             EventManager.StartListening(FLOOR_DIMENSIONS_SET_EVENT, OnFloorDimensionsSet);
         }
 
+        //need to move this to floor dimensions model
         private void OnFloorDimensionsSet(Dictionary<string, object> dictionary)
         {
             _floorDimensions = (FloorDimensions)dictionary[FLOOR_DIMENSIONS_SET_EVENT_KEY];
             OnFloorInputFinished();
         }
-
+        
+        //this will be handled by commands and the page state classes
         private void OnFloorInputFinished()
         {
             FloorDimensionsInputDocument.enabled = false;
@@ -140,7 +143,7 @@ namespace KaizenApp
             }
         }
 
-
+        //this will be handled by commands and the page state classes
         private void OnNextClicked()
         {
             if(_isPostKaizenLayout == false)
@@ -157,6 +160,7 @@ namespace KaizenApp
             }
         }
 
+        //this will be handled by commands and the page state classes
         private void OnBackClicked()
         {             
             if (_isPostKaizenLayout == true)
@@ -178,6 +182,7 @@ namespace KaizenApp
             EventManager.TriggerEvent(SWITCH_KAIZEN_LAYOUT_CLICKED, new Dictionary<string, object> { { POST_KAIZEN_LAYOUT_EVENT_KEY, _isPostKaizenLayout } });
         }
 
+        //initialization should be handled by controllers 
         private void InitializeLayoutTool()
         {
             InitializeIconSpawner();
@@ -216,6 +221,7 @@ namespace KaizenApp
             LayoutComparisonPage layoutComparisonPage = new LayoutComparisonPage(_root);
         }
 
+        //doesn't work well due to trouble managing the screen shots, might come back to this later
         private IEnumerator CapturePreKaizenLayout()
         {
             _floorPlanner.Floor.style.backgroundImage = null;

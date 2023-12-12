@@ -13,8 +13,7 @@ namespace KaizenApp
     //Keeps floor measurements and handles scaling
     //could refactor to remove Pointer events related to the icons to a separate class
 
-    public class FloorPlanner
-
+    public class FloorPlanner: IView
     {
         private const string DRAG_AREA = "ve_floor_plan_screen";
         private const string FLOOR_PARENT = "ve_layout_container";
@@ -40,6 +39,7 @@ namespace KaizenApp
 
         private const string COMPARE_LAYOUTS_EVENT = "compare_layouts";
 
+        //all of these floats and ints should be in a model class
         private const float DEFAULT_FLOOR_WIDTH = 4; //meters
         private const float DEFAULT_FLOOR_HEIGHT = 4; //meters
 
@@ -67,12 +67,14 @@ namespace KaizenApp
         private FloatField _floorHeight;
         private FloatField _floorWidth;
 
+        //all floor icon data should be moved to a model class
         private List<FloorIcon> _preKaizenFloorIcons = new();
         public List<FloorIcon> PreKaizenFloorIcons => _preKaizenFloorIcons;
 
         private List<FloorIcon> _postKaizenFloorIcons = new();
         public List<FloorIcon> PostKaizenFloorIcons => _postKaizenFloorIcons;
 
+        //grid texture should be in another class
         private Texture2D _gridTexture;
 
         public FloorPlanner(VisualElement root, FloorDimensions floorDimensions)
@@ -234,6 +236,8 @@ namespace KaizenApp
             EventManager.TriggerEvent(PIXELS_PER_METER_EVENT, new Dictionary<string, object> { { PIXELS_PER_METER_EVENT_KEY, _pixelsPerMeter } });
         }
 
+
+        //could refactor grid drawing to a separate class
         private void DrawGrid()
         {
             //int gridWidth = Mathf.RoundToInt(_floor.resolvedStyle.width);
@@ -271,6 +275,8 @@ namespace KaizenApp
 
         }
 
+
+        //floor icons are data that should be kept in a model class
         public void AddIcon(Dictionary<string, object> message)
         {
             var icon = (FloorIcon)message[FLOOR_ICON_EVENT_KEY];
@@ -302,6 +308,7 @@ namespace KaizenApp
             }
         }
 
+        //
         private void OnSwitchKaizenLayoutClicked(Dictionary<string, object> switchEvent)
         {
             
@@ -364,7 +371,7 @@ namespace KaizenApp
             }
         }
 
-
+        //need to move the icon data to a model class and use it to make the comparizon view
         private void ComparePrePostLayouts(Dictionary<string, object> message)
         {
             _comparingLayouts = true;

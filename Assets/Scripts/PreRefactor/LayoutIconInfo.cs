@@ -6,8 +6,7 @@ using UnityEngine.UIElements;
 namespace KaizenApp
 {
 
-    public enum IconType { Worker, CustomItem, CustomLabel, ProductFlow, WorkerMovement, 
-        TransportFlow, Product, Table, Trolley, Machine, Conveyor, Kanban, PartsShelf, Photo }
+  
     public class LayoutIconInfo
     {
         public IconType Type;

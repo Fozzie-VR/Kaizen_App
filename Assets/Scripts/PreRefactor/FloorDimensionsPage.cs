@@ -7,8 +7,8 @@ namespace KaizenApp
 {
     public class FloorDimensionsPage: IView
     {
-        private const string FLOOR_DIMENSIONS_SET_EVENT = "floor_dimensions_set";
-        private const string FLOOR_DIMENSIONS_SET_EVENT_KEY = "floor_dimensions";
+        public const string FLOOR_DIMENSIONS_SET_EVENT = "floor_dimensions_set";
+        public const string FLOOR_DIMENSIONS_SET_EVENT_KEY = "floor_dimensions";
 
         private FloatField _floorHeight;
         private FloatField _floorWidth;

@@ -13,6 +13,8 @@ namespace KaizenApp
     //Keeps floor measurements and handles scaling
     //could refactor to remove Pointer events related to the icons to a separate class
 
+
+    //need to turn this into a view class that just handles the floor plan UI
     public class FloorPlanner: IView
     {
         private const string DRAG_AREA = "ve_floor_plan_screen";
@@ -38,6 +40,12 @@ namespace KaizenApp
         private const string ICON_CLONE_EVENT_KEY = "icon";
 
         private const string COMPARE_LAYOUTS_EVENT = "compare_layouts";
+
+        public const string FLOOR_HEIGHT_CHANGED_EVENT = "floor_height_changed";
+        public const string FLOOR_HEIGHT_CHANGED_EVENT_KEY = "floor_height";
+
+        public const string FLOOR_WIDTH_CHANGED_EVENT = "floor_width_changed";
+        public const string FLOOR_WIDTH_CHANGED_EVENT_KEY = "floor_width";
 
         //all of these floats and ints should be in a model class
         private const float DEFAULT_FLOOR_WIDTH = 4; //meters
@@ -77,6 +85,8 @@ namespace KaizenApp
         //grid texture should be in another class
         private Texture2D _gridTexture;
 
+
+        
         public FloorPlanner(VisualElement root, FloorDimensions floorDimensions)
         {
             _preKaizenFloor = root.Q(PRE_KAIZEN_FLOOR);
@@ -149,6 +159,9 @@ namespace KaizenApp
             {
                 return;
             }
+            EventManager.TriggerEvent(FLOOR_HEIGHT_CHANGED_EVENT, 
+                new Dictionary<string, object> { { FLOOR_HEIGHT_CHANGED_EVENT_KEY, _floorHeight.value } });
+
             _floorHeightMeters = _floorHeight.value;
             SetPixelsPerMeter();
 
@@ -164,15 +177,18 @@ namespace KaizenApp
             {
                 return;
             }
+            EventManager.TriggerEvent(FLOOR_WIDTH_CHANGED_EVENT, 
+                new Dictionary<string, object> { { FLOOR_WIDTH_CHANGED_EVENT_KEY, _floorWidth.value } });
+            
             _floorWidthMeters = _floorWidth.value;
             SetPixelsPerMeter();
-
 
             _floor.style.width = _pixelsPerMeter * _floorWidthMeters;
             _floor.style.height = _pixelsPerMeter * _floorHeightMeters;
             DrawGrid();
         }
 
+        //need this to scale the floor plan in different contexts (comparison view, etc.)
         private void SetPixelsPerMeter()
         {
             _floorHeightMeters = _floorHeight.value;

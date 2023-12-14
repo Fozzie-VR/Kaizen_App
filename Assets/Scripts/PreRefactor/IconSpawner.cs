@@ -16,10 +16,10 @@ namespace KaizenApp
         private const string POST_KAIZEN_FLOOR = "ve_post_kaizen_layout_area";
        
         //event strings
-        private const string ICON_SPAWNED_EVENT = "IconSpawned";
-        private const string ICON_SPAWNED_EVENT_KEY = "floorIcon";
-        private const string ICON_CLONE_EVENT = "SpawnIcon";
-        private const string ICON_CLONE_EVENT_KEY = "icon";
+        public const string ICON_SPAWNED_EVENT = "IconSpawned";
+        public const string ICON_SPAWNED_EVENT_KEY = "floorIcon";
+        public const string ICON_CLONE_EVENT = "SpawnIcon";
+        public const string ICON_CLONE_EVENT_KEY = "icon";
 
         private const string SELECTION_EVENT = "IconSelected";
         private const string ICON_INFO = "iconInfo";
@@ -192,9 +192,23 @@ namespace KaizenApp
             {
                 _iconMover.UnregisterDropAction(DropIcon);
                 _iconMover = null;
-                FloorIcon floorIcon = new FloorIcon(droppedIcon, _dragArea, _floor);
-                EventManager.TriggerEvent(ICON_SPAWNED_EVENT, new Dictionary<string, object> { { ICON_SPAWNED_EVENT_KEY, floorIcon } });
-                EventManager.TriggerEvent(SELECTION_EVENT, new Dictionary<string, object> { { ICON_INFO, floorIcon.IconInfo } });
+                //FloorIcon floorIcon = new FloorIcon(droppedIcon, _dragArea, _floor);
+
+                int iconWidth = (int)droppedIcon.resolvedStyle.width;
+                int iconHeight = (int)droppedIcon.resolvedStyle.height;
+                LayoutIconInfo iconInfo = droppedIcon.userData as LayoutIconInfo;
+                IconType iconType = iconInfo.Type;
+
+                IconModel iconModel = new IconModel {
+                    Height = iconHeight,
+                    Width = iconWidth,
+                    Type = iconType
+                };
+                var pos = droppedIcon.transform.position;
+                object[] args = new object[] {iconModel, pos };
+
+                EventManager.TriggerEvent(ICON_SPAWNED_EVENT, new Dictionary<string, object> { { ICON_SPAWNED_EVENT_KEY, args } });
+                EventManager.TriggerEvent(SELECTION_EVENT, new Dictionary<string, object> { { ICON_INFO, args } });
             }
 
         }

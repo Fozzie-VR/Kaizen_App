@@ -94,10 +94,18 @@ namespace KaizenApp
             foreach (VisualElement iconContainer in _iconDraggables)
             {
                 iconContainer.RegisterCallback<PointerDownEvent>(OnIconSelected);
-                //SetupSpawnerIcons(iconContainer);
+                SetUserData(iconContainer);
             }
         }
-        
+
+        private void SetUserData(VisualElement iconContainer)
+        {
+            string iconName = iconContainer.Q<Label>().text;
+            IconInfo iconModel = GetIconModel(iconName);
+            iconContainer.userData = iconModel;
+
+        }
+
 
         private void OnIconSelected(PointerDownEvent evt)
         {
@@ -107,14 +115,15 @@ namespace KaizenApp
 
             //Get icon from pool
             VisualElement draggableIcon = GetIcon();
-           
-           
-           //set user data
-            LayoutIconInfo info = GetIconInfo(iconName);
-            draggableIcon.userData = info;
+
+            //set user data
+            IconInfo templateInfo = (IconInfo)icon.userData;
+            IconType iconType = templateInfo.Type;
+            IconInfo draggableInfo = new IconInfo { Type = iconType };
+            
+            draggableIcon.userData = draggableInfo;
 
             //set styles; should only need one style per icon type
-
             if (iconName == "Custom Label")
             {
                 TextField textField = new TextField();
@@ -123,8 +132,8 @@ namespace KaizenApp
             }
 
             VisualElement container = draggableIcon.Q<VisualElement>(ICON_DRAGGABLE);
-            string containerClass = GetFloorIconContainerStyle(info.Type);
-            info.styleClass = containerClass;
+            string containerClass = GetFloorIconContainerStyle(draggableInfo.Type);
+            //info.styleClass = containerClass;
             container.AddToClassList(containerClass);
 
             //Set icon position to mouse position
@@ -196,16 +205,13 @@ namespace KaizenApp
 
                 int iconWidth = (int)droppedIcon.resolvedStyle.width;
                 int iconHeight = (int)droppedIcon.resolvedStyle.height;
-                LayoutIconInfo iconInfo = droppedIcon.userData as LayoutIconInfo;
-                IconType iconType = iconInfo.Type;
-
-                IconModel iconModel = new IconModel {
-                    Height = iconHeight,
-                    Width = iconWidth,
-                    Type = iconType
-                };
+                //LayoutIconInfo iconInfo = droppedIcon.userData as LayoutIconInfo;
+                IconInfo iconInfo = (IconInfo)droppedIcon.userData;
+                iconInfo.Height = iconHeight;
+                iconInfo.Width = iconWidth;
+               
                 var pos = droppedIcon.transform.position;
-                object[] args = new object[] {iconModel, pos };
+                object[] args = new object[] {iconInfo, pos };
 
                 EventManager.TriggerEvent(ICON_SPAWNED_EVENT, new Dictionary<string, object> { { ICON_SPAWNED_EVENT_KEY, args } });
                 EventManager.TriggerEvent(SELECTION_EVENT, new Dictionary<string, object> { { ICON_INFO, args } });
@@ -288,6 +294,61 @@ namespace KaizenApp
                     break;
             }
             return info;
+        }
+
+
+        private IconInfo GetIconModel (string iconName)
+        {
+            IconInfo iconModel;
+            switch (iconName)
+            {
+                case "Table":
+                    iconModel = new IconInfo { Type = IconType.Table };
+                    break;
+                case "Trolley":
+                    iconModel = new IconInfo{ Type = IconType.Trolley };
+                    break;
+                case "Worker":
+                    iconModel = new IconInfo{ Type = IconType.Worker };
+                    break;
+                case "Conveyor":
+                    iconModel = new IconInfo{ Type = IconType.Conveyor };
+                    break;
+                case "Machine":
+                    iconModel = new IconInfo{ Type = IconType.Machine };
+                    break;
+                case "Product":
+                    iconModel = new IconInfo{ Type = IconType.Product };
+                    break;
+                case "Kanban":
+                    iconModel = new IconInfo{ Type = IconType.Kanban };
+                    break;
+                case "Parts Shelf":
+                    iconModel = new IconInfo{ Type = IconType.PartsShelf };
+                    break;
+                case "Custom Item":
+                    iconModel = new IconInfo{ Type = IconType.CustomItem };
+                    break;
+                case "Custom Label":
+                    iconModel = new IconInfo{ Type = IconType.CustomLabel };
+                    break;
+                case "Product Flow":
+                    iconModel = new IconInfo{ Type = IconType.ProductFlow };
+                    break;
+                case "Worker Movement":
+                    iconModel = new IconInfo{ Type = IconType.WorkerMovement };
+                    break;
+                case "Transport Flow":
+                    iconModel = new IconInfo{ Type = IconType.TransportFlow };
+                    break;
+                case "Photo":
+                    iconModel = new IconInfo{ Type = IconType.Photo };
+                    break;
+                default:
+                    return new IconInfo();
+
+            }
+            return iconModel;
         }
 
         private string GetFloorIconContainerStyle(IconType iconType)

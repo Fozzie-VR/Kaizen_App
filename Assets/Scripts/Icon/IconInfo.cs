@@ -10,7 +10,7 @@ namespace KaizenApp
         Worker, CustomItem, CustomLabel, ProductFlow, WorkerMovement,
         TransportFlow, Product, Table, Trolley, Machine, Conveyor, Kanban, PartsShelf, Photo
     }
-    public struct IconModel
+    public struct IconInfo
     {
         public int Id;
         public IconType Type;

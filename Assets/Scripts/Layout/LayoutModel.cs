@@ -58,7 +58,7 @@ namespace KaizenApp
             
 
             object[] objects = (object[])evntArgs[IconSpawner.ICON_SPAWNED_EVENT_KEY];
-            IconModel icon = (IconModel)objects[0];
+            IconInfo icon = (IconInfo)objects[0];
             Vector3 position = (Vector3)objects[1];
             int id = _nextIconId;
             _nextIconId++;
@@ -77,7 +77,7 @@ namespace KaizenApp
 
         private struct LayoutIconInfo
         {
-            public IconModel IconModel;
+            public IconInfo IconModel;
             public Vector3 Position;
             public float RotationAngle;
         }

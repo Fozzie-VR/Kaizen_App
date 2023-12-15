@@ -24,10 +24,7 @@ namespace KaizenApp
         public event Action<PointerDownEvent> PointerDown;
         public IconMover(VisualElement iconElement, VisualElement draggableArea, Action<Vector2, VisualElement> dropAction)
         {
-            LayoutIconInfo iconInfo = iconElement.userData as LayoutIconInfo;
-            //Debug.Log("IconMover constructor for icon " + iconInfo.Type);
             _iconElement = iconElement;
-            //_floorElement = floor;
             _draggableArea = draggableArea;
             DropIcon = dropAction;
             RegisterCallbacks();

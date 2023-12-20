@@ -203,7 +203,7 @@ namespace KaizenApp
 
         private void InitializeFloorPlan()
         {
-           _layoutView = new LayoutView(_root, _floorDimensions);
+           //_layoutView = new LayoutView(_root, _floorDimensions);
         }
 
         private void InitializeIconSpawner()

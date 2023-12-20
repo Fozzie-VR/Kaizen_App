@@ -8,10 +8,8 @@ namespace KaizenApp
     public class PageStateChanger: ICommand
     {
         //Event name constants
-        private const string PAGE_STATE_CHANGE = "PageStateChange";
-
-        //Event action string constants
-        private const string PAGE_STATE_CHANGE_ACTION = "PageStateChangeAction";
+        public const string PAGE_STATE_CHANGE = "PageStateChange";
+        public const string PAGE_STATE_CHANGE_ACTION = "PageStateChangeAction";
        
 
         private PageType _pageType;

@@ -16,7 +16,6 @@ namespace KaizenApp
         //Execute the current command
         public void AddCommand(ICommand command)
         {
-            Debug.Log("Adding command");
             if(_commandIndex < _commandBuffer.Count)
             {
                 _commandBuffer.RemoveRange(_commandIndex, _commandBuffer.Count - _commandIndex);

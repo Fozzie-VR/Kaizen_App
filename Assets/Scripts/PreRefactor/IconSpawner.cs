@@ -12,7 +12,7 @@ namespace KaizenApp
         private const string DRAG_AREA = "ve_floor_plan_screen";
         private const string ICON_DRAGGABLE = "ve_icon_container";
         private const string ICON_IMAGE = "ve_icon_image";
-        private const string PRE_KAIZEN_FLOOR = "ve_pre_kaizen_layout_area";
+        private const string FLOOR_ELEMENT = "ve_floor";
         private const string POST_KAIZEN_FLOOR = "ve_post_kaizen_layout_area";
        
         //event strings
@@ -73,7 +73,7 @@ namespace KaizenApp
             }
             else
             {
-                _floor = _dragArea.Q<VisualElement>(PRE_KAIZEN_FLOOR);
+                _floor = _dragArea.Q<VisualElement>(FLOOR_ELEMENT);
             }
         }
 
@@ -89,7 +89,7 @@ namespace KaizenApp
         {
             _dragArea = root.Q<VisualElement>(DRAG_AREA);
 
-            _floor = root.Q<VisualElement>(PRE_KAIZEN_FLOOR);
+            _floor = root.Q<VisualElement>(FLOOR_ELEMENT);
 
             _iconDraggables = root.Query<VisualElement>(ICON_DRAGGABLE).ToList();
             foreach (VisualElement iconContainer in _iconDraggables)
@@ -211,6 +211,7 @@ namespace KaizenApp
 
                 EventManager.TriggerEvent(ICON_SPAWN_REQUESTED, new Dictionary<string, object> { { ICON_SPAWN_REQUESTED_KEY, args } });
                 EventManager.TriggerEvent(SELECTION_EVENT, new Dictionary<string, object> { { ICON_INFO, args } });
+                ReturnIcon(droppedIcon);
             }
 
         }
@@ -220,7 +221,6 @@ namespace KaizenApp
             VisualElement iconContainer = new VisualElement();
             iconContainer.style.position = new StyleEnum<Position>(Position.Absolute);
             iconContainer.name = ICON_DRAGGABLE;
-
             iconContainer.usageHints = UsageHints.DynamicTransform;
 
             _dragArea.Add(iconContainer);

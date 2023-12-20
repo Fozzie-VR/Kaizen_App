@@ -13,7 +13,7 @@ namespace KaizenApp
         public void DrawGrid(float width, float height, float pixelsPerMeter)
         {
             //int gridWidth = Mathf.RoundToInt(_floor.resolvedStyle.width);
-            int gridWidth = Mathf.RoundToInt(width * height);
+            int gridWidth = Mathf.RoundToInt(width * pixelsPerMeter);
 
             int gridHeight = Mathf.RoundToInt(height * pixelsPerMeter);
 
@@ -44,7 +44,8 @@ namespace KaizenApp
             gridTexture.Apply();
 
             //FloorPlan listens for this event and sets the background image of the floor
-            EventManager.TriggerEvent(GRID_DRAWN_EVENT, new Dictionary<string, object> { { GRID_DRAWN_EVENT_KEY, gridTexture } });
+            EventManager.TriggerEvent(GRID_DRAWN_EVENT, 
+                new Dictionary<string, object> { { GRID_DRAWN_EVENT_KEY, gridTexture } });
 
             //_floor.style.backgroundImage = _gridTexture;
             //_floor.style.unityBackgroundScaleMode = ScaleMode.ScaleToFit;

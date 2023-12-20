@@ -9,10 +9,6 @@ namespace KaizenApp
     //manager initializes the page state model and keeps reference to the model
     public class PageManager : MonoBehaviour
     {
-
-        private const string PAGE_STATE_CHANGE = "PageStateChange";
-        private const string PAGE_STATE_CHANGE_ACTION = "PageStateChangeAction";
-
         public const string PRE_KAIZEN_LAYOUT_PAGE_EVENT = "PreKaizenLayoutEvent";
         public const string PRE_KAIZEN_LAYOUT_PAGE_EVENT_KEY = "PreKaizenLayoutEventKey";
 
@@ -37,23 +33,18 @@ namespace KaizenApp
         private void Awake()
         {
             InitializePageStateModel();
-            //InitializeMainMenuView();
-            EventManager.StartListening(PAGE_STATE_CHANGE, OnPageStateChange);
-            
+            LayoutInitializer layoutInitializer = new LayoutInitializer();
+            EventManager.StartListening(PageStateChanger.PAGE_STATE_CHANGE, OnPageStateChange);
         }
-
         
         private void Start()
         {
             InitializeMainMenuView();
-
-            //TODO: Move this to somewhere than makes more sense...
-            LayoutModel layoutModel = new LayoutModel();
         }
 
         private void OnPageStateChange(Dictionary<string, object> evntMessage)
         {
-            if (evntMessage.TryGetValue(PAGE_STATE_CHANGE_ACTION, out object states))
+            if (evntMessage.TryGetValue(PageStateChanger.PAGE_STATE_CHANGE_ACTION, out object states))
             {
                 List<object> stateList = (List<object>)states;
                 PageType pageType = (PageType)stateList[0];
@@ -64,9 +55,6 @@ namespace KaizenApp
                 }
             }
         }
-
-       
-
 
         private void InitializePageStateModel()
         {
@@ -121,11 +109,21 @@ namespace KaizenApp
         {
            //initialize icon spawner, layout view, layout model, grid drawer, icon view, navigation view, undo/redo view
            PageView pageView = _pages.Find(page => page.PageType == PageType.PreKaizenLayout);
-            
-           IconSpawner iconSpawner = new IconSpawner(pageView.PageRoot);
-           LayoutView layoutView = new LayoutView(pageView.PageRoot, _floorDimensions);
+           VisualElement pageRoot = pageView.PageRoot;
+           pageRoot.RegisterCallback<GeometryChangedEvent>(PreKaizenGeometryChanged);
+           
+        }
 
-
+        private void PreKaizenGeometryChanged(GeometryChangedEvent evt)
+        {
+            VisualElement pageRoot = (VisualElement)evt.target;
+            EventManager.TriggerEvent(PRE_KAIZEN_LAYOUT_PAGE_EVENT, new Dictionary<string, object>
+           {
+               {
+                   PRE_KAIZEN_LAYOUT_PAGE_EVENT_KEY,
+                   pageRoot
+               }
+           });
         }
 
         private void InitializeComparisonPageView()

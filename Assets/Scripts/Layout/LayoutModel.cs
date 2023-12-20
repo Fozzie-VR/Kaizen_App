@@ -40,6 +40,7 @@ namespace KaizenApp
         //will issue commands to view classes to update view
         public LayoutModel()
         {
+            _commandHandler = new CommandHandler();
             RegisterEvents();
         }
 
@@ -72,7 +73,7 @@ namespace KaizenApp
             object[] objects = (object[])evntArgs[IconSpawner.ICON_SPAWN_REQUESTED_KEY];
             IconType iconType = (IconType)objects[0];
             Vector3 position = (Vector3)objects[1];
-            Vector3 localPosition = (Vector3)objects[2];
+            Vector2 localPosition = (Vector2)objects[2];
             int iconHeight = (int)objects[3];
             int iconWidth = (int)objects[4];
             int id = _nextIconId;
@@ -105,7 +106,7 @@ namespace KaizenApp
             public int Height;
             public int Width;
             public Vector3 Position;
-            public Vector3 LocalPosition;
+            public Vector2 LocalPosition;
             public float RotationAngle;
         }
 

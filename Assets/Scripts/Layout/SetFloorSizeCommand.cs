@@ -15,6 +15,7 @@ namespace KaizenApp
         
         public SetFloorSizeCommand(FloorDimensions newDimensions, FloorDimensions oldDimensions)
         {
+            Debug.Log("SetFloorSizeCommand");
             _newDimensions = newDimensions;
             _oldDimensions = oldDimensions;
         }

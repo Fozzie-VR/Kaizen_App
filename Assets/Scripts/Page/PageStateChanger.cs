@@ -9,7 +9,6 @@ namespace KaizenApp
     {
         //Event name constants
         private const string PAGE_STATE_CHANGE = "PageStateChange";
-        
 
         //Event action string constants
         private const string PAGE_STATE_CHANGE_ACTION = "PageStateChangeAction";

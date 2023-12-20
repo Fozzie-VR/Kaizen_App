@@ -8,6 +8,11 @@ namespace KaizenApp
 {
     public class LayoutModel 
     {
+        public const string ICON_ADDED_EVENT = "iconAdded";
+        public const string ICON_ADDED_EVENT_KEY = "iconAddedKey";
+        public const string ICON_REMOVED_EVENT = "iconRemoved";
+        public const string ICON_REMOVED_EVENT_KEY = "iconRemovedKey";
+
         //in meters
         private const float DEFAULT_FLOOR_WIDTH = 4; 
         private const float DEFAULT_FLOOR_HEIGHT = 4; 
@@ -25,7 +30,7 @@ namespace KaizenApp
         private int _pixelsPerMeter;
         public int PixelsPerMeter => _pixelsPerMeter;
 
-        private Dictionary<int, LayoutIconInfo> _icons = new Dictionary<int, LayoutIconInfo>();
+        private Dictionary<int, FloorIconInfo> _icons = new Dictionary<int, FloorIconInfo>();
         private int _nextIconId = 0;
 
         CommandHandler _commandHandler;
@@ -41,7 +46,7 @@ namespace KaizenApp
         private void RegisterEvents()
         {
             EventManager.StartListening(FloorDimensionsPage.FLOOR_DIMENSIONS_SET_EVENT, OnFloorDimensionsSet);
-            EventManager.StartListening(IconSpawner.ICON_SPAWNED_EVENT, OnIconSpawned);
+            EventManager.StartListening(IconSpawner.ICON_SPAWN_REQUESTED, OnIconSpawned);
         }
 
         private void OnFloorDimensionsSet(Dictionary<string, object> evntMessage)
@@ -49,38 +54,62 @@ namespace KaizenApp
             FloorDimensions floorDimensions = 
                 (FloorDimensions)evntMessage[FloorDimensionsPage.FLOOR_DIMENSIONS_SET_EVENT_KEY];
 
+            FloorDimensions oldDimensions = new FloorDimensions 
+            { 
+                FloorWidthMeters = _floorWidthMeters, 
+                FloorHeightMeters = _floorHeightMeters 
+            };
             _floorWidthMeters = floorDimensions.FloorWidthMeters;
             _floorHeightMeters = floorDimensions.FloorHeightMeters;
+
+            SetFloorSizeCommand setFloorSizeCommand = new SetFloorSizeCommand(floorDimensions, oldDimensions);
+            _commandHandler.AddCommand(setFloorSizeCommand);
         }
 
         private void OnIconSpawned(Dictionary<string, object> evntArgs)
         {
             
-
-            object[] objects = (object[])evntArgs[IconSpawner.ICON_SPAWNED_EVENT_KEY];
-            IconInfo icon = (IconInfo)objects[0];
+            object[] objects = (object[])evntArgs[IconSpawner.ICON_SPAWN_REQUESTED_KEY];
+            IconType iconType = (IconType)objects[0];
             Vector3 position = (Vector3)objects[1];
+            Vector3 localPosition = (Vector3)objects[2];
+            int iconHeight = (int)objects[3];
+            int iconWidth = (int)objects[4];
             int id = _nextIconId;
             _nextIconId++;
-            icon.Id = id;
-            LayoutIconInfo iconInfo = new LayoutIconInfo { 
-                IconModel = icon,
+            //create icon info
+            FloorIconInfo iconInfo = new FloorIconInfo
+            {
+                IconType = iconType,
+                iconID = id,
+                Height = iconHeight,
+                Width = iconWidth,
                 Position = position,
-                RotationAngle = 0f
+                LocalPosition = localPosition,
+                RotationAngle = 0
             };
-
+            //set vars
             _icons.Add(id, iconInfo);
 
-            Debug.Log("LayoutModel received icon spawned event for icon " + icon.Type);
-
+            Debug.Log("LayoutModel received icon spawned event for icon " + iconType);
+            object[] iconSpawnedArgs = new object[] { id, iconType, position, localPosition, iconHeight, iconWidth};
+            AddIconCommand addIconCommand = new AddIconCommand(iconSpawnedArgs);
+            _commandHandler.AddCommand(addIconCommand);
         }
 
-        private struct LayoutIconInfo
+        //incorporate Icon info here...
+        private struct FloorIconInfo
         {
-            public IconInfo IconModel;
+            public int iconID;
+            public IconType IconType;
+            public int Height;
+            public int Width;
             public Vector3 Position;
+            public Vector3 LocalPosition;
             public float RotationAngle;
         }
+
+        
     }
 
 }

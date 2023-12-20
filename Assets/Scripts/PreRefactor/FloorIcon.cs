@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 namespace KaizenApp
 {
-    public class FloorIcon
+    public class FloorIcon: IView
     {
         private const string SELECTION_EVENT = "IconSelected";
         private const string ICON_INFO = "iconInfo";

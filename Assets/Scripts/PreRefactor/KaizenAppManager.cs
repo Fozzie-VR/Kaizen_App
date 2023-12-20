@@ -47,7 +47,7 @@ namespace KaizenApp
         private FloorDimensionsPage _floorDimensionsPage;
         private FloorDimensions _floorDimensions;
         
-        private FloorPlanner _floorPlanner;
+        private LayoutView _layoutView;
         private IconSpawner _iconSpawner;
         
         public KaizenEvents KaizenEvents;
@@ -60,9 +60,9 @@ namespace KaizenApp
             get { return _maxPixelsPerMeter; }
             set { _maxPixelsPerMeter = value; } }
      
-        public int PixelsPerMeter => _floorPlanner.PixelsPerMeter;
-        public float FloorWidthMeters => _floorPlanner.FloorWidthMeters;
-        public float FloorHeightMeters => _floorPlanner.FloorHeightMeters;
+        public int PixelsPerMeter => _layoutView.PixelsPerMeter;
+        public float FloorWidthMeters => _layoutView.FloorWidthMeters;
+        public float FloorHeightMeters => _layoutView.FloorHeightMeters;
 
         private bool _isPostKaizenLayout = false;
         private bool _isComparisonLayout = false;
@@ -132,7 +132,7 @@ namespace KaizenApp
             _nextButton.clicked += OnNextClicked;
             _backButton.clicked += OnBackClicked;
             _iconsContainer = _root.Q<VisualElement>(ICONS_CONTAINER);
-            if(_floorPlanner is null)
+            if(_layoutView is null)
             {
                 Debug.Log("Floor planner is null");
                 InitializeLayoutTool();
@@ -203,7 +203,7 @@ namespace KaizenApp
 
         private void InitializeFloorPlan()
         {
-           _floorPlanner = new FloorPlanner(_root, _floorDimensions);
+           _layoutView = new LayoutView(_root, _floorDimensions);
         }
 
         private void InitializeIconSpawner()
@@ -224,73 +224,73 @@ namespace KaizenApp
         //doesn't work well due to trouble managing the screen shots, might come back to this later
         private IEnumerator CapturePreKaizenLayout()
         {
-            _floorPlanner.Floor.style.backgroundImage = null;
-            List<FloorIcon> floorIcons = _floorPlanner.PreKaizenFloorIcons;
-            foreach(FloorIcon floorIcon in floorIcons)
-            {
-                if(floorIcon.IconInfo.Type == IconType.Photo)
-                {
-                    floorIcon.IconInfo.IconElement.AddToClassList("hidden");
-                }
-            }
+            //_floorPlanner.Floor.style.backgroundImage = null;
+            //List<FloorIcon> floorIcons = _floorPlanner.PreKaizenFloorIcons;
+            //foreach(FloorIcon floorIcon in floorIcons)
+            //{
+            //    if(floorIcon.IconInfo.Type == IconType.Photo)
+            //    {
+            //        floorIcon.IconInfo.IconElement.AddToClassList("hidden");
+            //    }
+            //}
 
             yield return new WaitForEndOfFrame();
-            float rootWidth = _root.resolvedStyle.width;
-            float rootHeight = _root.resolvedStyle.height;  
-            float screenWidth = Screen.width;
-            float screenHeight = Screen.height;
-            //float scaleFactor = FloorPlannerDocument.panelSettings.scale;
+            //float rootWidth = _root.resolvedStyle.width;
+            //float rootHeight = _root.resolvedStyle.height;  
+            //float screenWidth = Screen.width;
+            //float screenHeight = Screen.height;
+            ////float scaleFactor = FloorPlannerDocument.panelSettings.scale;
            
 
-            float widthMultiplier = screenWidth / rootWidth;
-            float heightMultiplier = screenHeight / rootHeight;
+            //float widthMultiplier = screenWidth / rootWidth;
+            //float heightMultiplier = screenHeight / rootHeight;
 
-            PreKaizenLayout = ScreenCapturer.GetScreenCapturer(_floorPlanner.Floor, widthMultiplier, heightMultiplier);
-            yield return null;
-            foreach (FloorIcon floorIcon in floorIcons)
-            {
-                if (floorIcon.IconInfo.Type == IconType.Photo)
-                {
-                    floorIcon.IconInfo.IconElement.RemoveFromClassList("hidden");
-                }
-            }
-            EventManager.TriggerEvent(SWITCH_KAIZEN_LAYOUT_CLICKED, new Dictionary<string, object> { { POST_KAIZEN_LAYOUT_EVENT_KEY, _isPostKaizenLayout } });
+            //PreKaizenLayout = ScreenCapturer.GetScreenCapturer(_floorPlanner.Floor, widthMultiplier, heightMultiplier);
+            //yield return null;
+            //foreach (FloorIcon floorIcon in floorIcons)
+            //{
+            //    if (floorIcon.IconInfo.Type == IconType.Photo)
+            //    {
+            //        floorIcon.IconInfo.IconElement.RemoveFromClassList("hidden");
+            //    }
+            //}
+            //EventManager.TriggerEvent(SWITCH_KAIZEN_LAYOUT_CLICKED, new Dictionary<string, object> { { POST_KAIZEN_LAYOUT_EVENT_KEY, _isPostKaizenLayout } });
         }
 
         private IEnumerator CapturePostKaizenLayout()
         {
-            _floorPlanner.Floor.style.backgroundImage = null;
-            List<FloorIcon> floorIcons = _floorPlanner.PostKaizenFloorIcons;
-            foreach (FloorIcon floorIcon in floorIcons)
-            {
-                if (floorIcon.IconInfo.Type == IconType.Photo)
-                {
-                    floorIcon.IconInfo.IconElement.AddToClassList("hidden");
-                }
-            }
+            //_floorPlanner.Floor.style.backgroundImage = null;
+            //List<FloorIcon> floorIcons = _floorPlanner.PostKaizenFloorIcons;
+            //foreach (FloorIcon floorIcon in floorIcons)
+            //{
+            //    if (floorIcon.IconInfo.Type == IconType.Photo)
+            //    {
+            //        floorIcon.IconInfo.IconElement.AddToClassList("hidden");
+            //    }
+            //}
 
 
             yield return new WaitForEndOfFrame();
-            float rootWidth = _root.resolvedStyle.width;
-            float rootHeight = _root.resolvedStyle.height;
-            float screenWidth = Screen.width;
-            float screenHeight = Screen.height;
-            float scaleFactor = FloorPlannerDocument.panelSettings.scale;
+            //float rootWidth = _root.resolvedStyle.width;
+            //float rootHeight = _root.resolvedStyle.height;
+            //float screenWidth = Screen.width;
+            //float screenHeight = Screen.height;
+            //float scaleFactor = FloorPlannerDocument.panelSettings.scale;
 
 
-            float widthMultiplier = screenWidth / rootWidth;
-            float heightMultiplier = screenHeight / rootHeight;
-            PostKaizenLayout = ScreenCapturer.GetScreenCapturer(_floorPlanner.Floor, widthMultiplier, heightMultiplier);
-            yield return null;
-            foreach (FloorIcon floorIcon in floorIcons)
-            {
-                if (floorIcon.IconInfo.Type == IconType.Photo)
-                {
-                    floorIcon.IconInfo.IconElement.RemoveFromClassList("hidden");
-                }
-            }
+            //float widthMultiplier = screenWidth / rootWidth;
+            //float heightMultiplier = screenHeight / rootHeight;
+            //PostKaizenLayout = ScreenCapturer.GetScreenCapturer(_floorPlanner.Floor, widthMultiplier, heightMultiplier);
+            //yield return null;
+            //foreach (FloorIcon floorIcon in floorIcons)
+            //{
+            //    if (floorIcon.IconInfo.Type == IconType.Photo)
+            //    {
+            //        floorIcon.IconInfo.IconElement.RemoveFromClassList("hidden");
+            //    }
+            //}
 
-            InitializeLayoutComparisonPage();
+            //InitializeLayoutComparisonPage();
         }
 
         public void BackFromComparisonPage()

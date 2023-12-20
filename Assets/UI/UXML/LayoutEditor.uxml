@@ -37,7 +37,7 @@
             <ui:Button text="Next Button" display-tooltip-when-elided="true" name="btn_next" style="font-size: 24px; flex-shrink: 1; background-color: rgb(203, 231, 255);" />
         </ui:VisualElement>
         <ui:VisualElement name="ve_layout_container" focusable="true" style="background-color: rgb(255, 255, 255); flex-grow: 1; align-items: center; justify-content: center; flex-direction: column; min-height: 60%; max-height: 80%;">
-            <ui:VisualElement name="ve_pre_kaizen_layout_area" />
+            <ui:VisualElement name="ve_floor" />
             <ui:VisualElement name="ve_post_kaizen_layout_area" />
             <ui:ScrollView name="scroll_layout_area" style="flex-grow: 1; justify-content: center; align-self: center; display: none;" />
         </ui:VisualElement>

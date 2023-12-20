@@ -23,7 +23,6 @@ namespace KaizenApp
         {
             _floorHeight = root.Q<FloatField>("float_floor_length");
             _floorWidth = root.Q<FloatField>("float_floor_width");
-
             Button finished = root.Q<Button>("btn_finished");
             finished.clicked += OnFinishedClicked;
         }

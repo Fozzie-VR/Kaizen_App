@@ -16,6 +16,9 @@ namespace KaizenApp
         public IconType Type;
         public float Width;
         public float Height;
+        public Vector3 Position;
+        public Vector3 LocalPosition;
+        public float Rotation;
     }
 
 }

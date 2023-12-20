@@ -13,6 +13,12 @@ namespace KaizenApp
         private const string PAGE_STATE_CHANGE = "PageStateChange";
         private const string PAGE_STATE_CHANGE_ACTION = "PageStateChangeAction";
 
+        public const string PRE_KAIZEN_LAYOUT_PAGE_EVENT = "PreKaizenLayoutEvent";
+        public const string PRE_KAIZEN_LAYOUT_PAGE_EVENT_KEY = "PreKaizenLayoutEventKey";
+
+        public const string POST_KAIZEN_LAYOUT_PAGE_EVENT = "PostKaizenLayoutEvent";
+        public const string POST_KAIZEN_LAYOUT_PAGE_EVENT_KEY = "PostKaizenLayoutEventKey";
+
         //list of all pages
         [SerializeField] List<PageView> _pages;
 
@@ -25,7 +31,7 @@ namespace KaizenApp
         private UIDocument _currentPage;
 
         private PageStateModel _pageStateModel;
-
+        private FloorDimensions _floorDimensions;
 
         //Activate _landingPages and initialize landing page view classes such as MainMenuView
         private void Awake()
@@ -33,11 +39,16 @@ namespace KaizenApp
             InitializePageStateModel();
             //InitializeMainMenuView();
             EventManager.StartListening(PAGE_STATE_CHANGE, OnPageStateChange);
+            
         }
 
+        
         private void Start()
         {
             InitializeMainMenuView();
+
+            //TODO: Move this to somewhere than makes more sense...
+            LayoutModel layoutModel = new LayoutModel();
         }
 
         private void OnPageStateChange(Dictionary<string, object> evntMessage)
@@ -53,6 +64,9 @@ namespace KaizenApp
                 }
             }
         }
+
+       
+
 
         private void InitializePageStateModel()
         {
@@ -106,6 +120,11 @@ namespace KaizenApp
         private void InitializePreKaizenLayoutPageView()
         {
            //initialize icon spawner, layout view, layout model, grid drawer, icon view, navigation view, undo/redo view
+           PageView pageView = _pages.Find(page => page.PageType == PageType.PreKaizenLayout);
+            
+           IconSpawner iconSpawner = new IconSpawner(pageView.PageRoot);
+           LayoutView layoutView = new LayoutView(pageView.PageRoot, _floorDimensions);
+
 
         }
 

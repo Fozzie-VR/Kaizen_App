@@ -20,6 +20,11 @@ namespace KaizenApp
             PixelsPerMeterChanged
         }
 
+        public LayoutChanger(LayoutChangeType layoutChangeType, LayoutIconInfo iconInfo = null)
+        {
+            
+        }
+
         public void Execute()
         {
             

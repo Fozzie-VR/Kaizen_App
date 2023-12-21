@@ -21,26 +21,16 @@ namespace KaizenApp
         private const string DRAG_AREA = "ve_floor_plan_screen";
         private const string FLOOR_PARENT = "ve_layout_container";
         private const string FLOOR = "ve_floor";
-        private const string POST_KAIZEN_FLOOR = "ve_post_kaizen_layout_area";
         private const string SCROLL_VIEW = "scroll_layout_area";
-
-
-        private const string ICON_SPAWNED_EVENT = "IconSpawned";
-        private const string FLOOR_ICON_EVENT_KEY = "floorIcon";
-        private const string ICON_REMOVED_EVENT = "IconRemoved";
-
-        private const string SWITCH_KAIZEN_LAYOUT_CLICKED = "post_kaizen_layout_clicked";
-        private const string POST_KAIZEN_LAYOUT_EVENT_KEY = "post_kaizen";
+       
+        public const string ICON_OFF_FLOOR_EVENT = "IconOffFloor";
+        public const string ICON_OFF_FLOOR_EVENT_KEY = "IconOffFloorKey";
 
         private const string RESET_FLOOR_PLAN_EVENT = "reset_floor_plan";
 
         private const string PIXELS_PER_METER_EVENT = "PixelsPerMeterChanged";
         private const string PIXELS_PER_METER_EVENT_KEY = "pixelsPerMeter";
 
-        private const string ICON_CLONE_EVENT = "SpawnIcon";
-        private const string ICON_CLONE_EVENT_KEY = "icon";
-
-        private const string COMPARE_LAYOUTS_EVENT = "compare_layouts";
 
         public const string FLOOR_HEIGHT_CHANGED_EVENT = "floor_height_changed";
         public const string FLOOR_HEIGHT_CHANGED_EVENT_KEY = "floor_height";
@@ -51,9 +41,6 @@ namespace KaizenApp
         //all of these floats and ints should be in a model class
         private const float DEFAULT_FLOOR_WIDTH = 5; //meters
         private const float DEFAULT_FLOOR_HEIGHT = 5; //meters
-
-        private bool _isPostKaizenLayout = false;
-        private bool _comparingLayouts = false;
 
         private int _minPixelsPerMeter = 32;
         private int _maxPixelsPerMeter = 384;//height/width
@@ -70,6 +57,7 @@ namespace KaizenApp
         private VisualElement _floor;
         public VisualElement Floor => _floor;
         private VisualElement _container;
+        private VisualElement _dragArea;
 
         private VisualElement _floorInspector;
         private FloatField _floorHeight;
@@ -77,7 +65,7 @@ namespace KaizenApp
 
         private IconFactory<VisualElement> _iconFactory = new IconFactory<VisualElement>();
 
-        private List<VisualElement> _iconsOnFloor = new List<VisualElement>();
+        private Dictionary<int, VisualElement> _iconsOnFloor = new ();
         
         public LayoutView()
         {
@@ -87,11 +75,16 @@ namespace KaizenApp
             EventManager.StartListening(GridDrawer.GRID_DRAWN_EVENT, OnGridDrawn);
             EventManager.StartListening(AddIconCommand.ADD_ICON_COMMAND, OnAddIcon);
             EventManager.StartListening(SetFloorSizeCommand.FLOOR_SIZE_SET_EVENT, OnFloorDimensionsSet);
+            EventManager.StartListening(MoveIconCommand.ICON_MOVE_COMMAND, OnIconMoved);
+            EventManager.StartListening(RemoveIconCommand.REMOVE_ICON_COMMAND, RemoveIcon);
         }
+
+        
 
         public void BindElements(VisualElement root)
         {
             Debug.Log("LayoutView.BindElements");
+            _dragArea = root.Q(DRAG_AREA);
             _container = root.Q(FLOOR_PARENT);
             _floor = root.Q(FLOOR);
             _floorInspector = root.Q("ve_floor_specs");
@@ -310,6 +303,8 @@ namespace KaizenApp
             _floor.Add(icon);
             icon.style.translate = new Translate(localPosition.x, localPosition.y);
             icon.RegisterCallback<GeometryChangedEvent>(OnIconGeometryChanged);
+            IconMover iconMover = new IconMover(icon, _dragArea);
+            _iconsOnFloor.Add(id, icon);
         }
 
         private void OnIconGeometryChanged(GeometryChangedEvent evt)
@@ -322,15 +317,41 @@ namespace KaizenApp
 
         }
 
+        private void OnIconMoved(Dictionary<string, object> dictionary)
+        {
+            object[] args = (object[])dictionary[MoveIconCommand.ICON_MOVE_COMMAND_KEY];
+            int id = (int)args[0];
+            Vector3 position = (Vector3)args[1];
+            
+            Vector2 localPosition = (Vector2)args[2];
+            VisualElement icon = _iconsOnFloor[id];
+            if(position != icon.transform.position)
+            {
+                Debug.LogError($"icon position, {position}, different than expected: {icon.transform.position}");
+            }
+
+            int width = Mathf.RoundToInt(icon.resolvedStyle.width);
+            int height = Mathf.RoundToInt(icon.resolvedStyle.height);
+            if(!IconIsOnFloor(localPosition, width, height))
+            {
+                EventManager.TriggerEvent(ICON_OFF_FLOOR_EVENT, 
+                    new Dictionary<string, object> { { ICON_OFF_FLOOR_EVENT_KEY, id } });
+                return;
+            }
+        }
+
+
         public void RemoveIcon(Dictionary<string, object> message)
         {
             object[] args = (object[])message[RemoveIconCommand.REMOVE_ICON_COMMAND_KEY];
             int id = (int)args[0];
+            VisualElement icon = _iconsOnFloor[id];
+            ReturnIcon(icon);
         }
 
         private void ReturnIcon(VisualElement element)
         {
-            
+            Debug.Log("returning icon");
         }
 
         private VisualElement GetIcon()
@@ -382,7 +403,7 @@ namespace KaizenApp
         private bool IconIsOnFloor(Vector2 iconPosition, int width, int height)
         {
             bool floorContainsIcon = _floor.ContainsPoint(iconPosition);
-
+            Debug.Log("floor contains icon" + floorContainsIcon);
             float xOffset = width / 2;
             float yOffset = height / 2;
 
@@ -405,7 +426,7 @@ namespace KaizenApp
             {
                 floorContainsIcon = false;
             }
-
+            Debug.Log("icon is on floor: " + floorContainsIcon);
             return floorContainsIcon;
         }
 
@@ -413,7 +434,7 @@ namespace KaizenApp
         private void OnSwitchKaizenLayoutClicked(Dictionary<string, object> switchEvent)
         {
             
-            _isPostKaizenLayout = (bool)switchEvent[POST_KAIZEN_LAYOUT_EVENT_KEY];
+            //_isPostKaizenLayout = (bool)switchEvent[POST_KAIZEN_LAYOUT_EVENT_KEY];
             //Debug.Log("switching layouts");
             //DisplayIconsForCurrentLayout();
             

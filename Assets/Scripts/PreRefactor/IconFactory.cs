@@ -17,6 +17,7 @@ namespace KaizenApp
 
        public T GetIcon()
        {
+            Debug.Log("GetIcon");
             if(_objectPool.Count > 0)
             {
                 return _objectPool.Dequeue();
@@ -36,6 +37,7 @@ namespace KaizenApp
 
         public void ReturnIcon(T icon)
         {
+            Debug.Log("ReturnIcon");
             PreReturn?.Invoke(icon);
             _objectPool.Enqueue(icon);
         }

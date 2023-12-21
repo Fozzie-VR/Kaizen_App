@@ -9,6 +9,8 @@ namespace KaizenApp
     //used to move any icon, whether it is a floor icon or a spawner icon
     public class IconMover
     {
+        public const string ICON_MOVED_EVENT = "iconMovedEvent";
+        public const string ICON_MOVED_EVENT_KEY = "iconMovedEventKey";
         //needs reference to icon visual element and floor visual element
         //needs reference to layout icon info
         VisualElement _iconElement;
@@ -26,7 +28,16 @@ namespace KaizenApp
         {
             _iconElement = iconElement;
             _draggableArea = draggableArea;
+            _floorElement = draggableArea.Q<VisualElement>("ve_floor");
             DropIcon = dropAction;
+            RegisterCallbacks();
+        }
+
+        public IconMover(VisualElement iconElement, VisualElement draggableArea)
+        {
+            _iconElement = iconElement;
+            _draggableArea = draggableArea;
+            _floorElement = draggableArea.Q<VisualElement>("ve_floor");
             RegisterCallbacks();
         }
 
@@ -73,13 +84,29 @@ namespace KaizenApp
         //need different behavior for floor icons and layout icons; pass through a delegate
         private void OnPointerUp(PointerUpEvent evt)
         {
+            VisualElement icon = evt.target as VisualElement;
             //Debug.Log("On pointer up called");
             _draggableArea.ReleasePointer(evt.pointerId);
             _isDragging = false;
             _draggableArea.UnregisterCallback<PointerMoveEvent>(OnPointerMove);
             _draggableArea.UnregisterCallback<PointerUpEvent>(OnPointerUp);
 
-            DropIcon?.Invoke(evt.position, _iconElement);
+            if(DropIcon != null)
+            {
+                DropIcon?.Invoke(evt.position, _iconElement);
+            }
+            else
+            {
+                int id = (int)_iconElement.userData;
+                Debug.Log("IconMover: OnPointerUp: id = " + id);
+                Vector3 position = _iconElement.transform.position;
+                Debug.Log("IconMover: OnPointerUp: position = " + position);
+                Vector2 localPositon = _floorElement.WorldToLocal(position);
+                object[] args = new object[] { id, position, localPositon };
+                EventManager.TriggerEvent(ICON_MOVED_EVENT,
+                    new Dictionary<string, object> { { ICON_MOVED_EVENT_KEY, args } });
+            }
+          
         }
 
 

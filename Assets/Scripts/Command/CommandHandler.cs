@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,16 @@ namespace KaizenApp
         //index of the current command
         private int _commandIndex = 0;
 
+
+        public CommandHandler()
+        {
+            
+        }
+        public CommandHandler(string undoEvent, string redoEvent)
+        {
+            EventManager.StartListening(undoEvent, UndoCommand);
+            EventManager.StartListening(redoEvent, RedoCommand);
+        }
 
         //Execute the current command
         public void AddCommand(ICommand command)
@@ -30,8 +41,8 @@ namespace KaizenApp
         public void UndoCommand()
         {
             //Undo the last command and update the index
-            if (_commandIndex < 0) return;
-            _commandBuffer[_commandIndex].Undo();
+            if (_commandIndex - 1 < 0) return;
+            _commandBuffer[_commandIndex - 1].Undo();
             _commandIndex--;
         }
 
@@ -43,6 +54,18 @@ namespace KaizenApp
             _commandIndex++;
             _commandBuffer[_commandIndex - 1].Execute();
         }
+
+        private void UndoCommand(Dictionary<string, object> evntArgs)
+        {
+            UndoCommand();
+        }
+
+        private void RedoCommand(Dictionary<string, object> evntArgs)
+        {
+            RedoCommand();
+        }
+
+      
 
     }
 

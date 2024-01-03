@@ -32,6 +32,9 @@ namespace KaizenApp
         private const string PHOTO_TAKEN_EVENT = "PhotoTaken";
         private const string PHOTO_TAKEN_EVENT_KEY = "photoTexture";
 
+        public const string ROTATION_CHANGED_EVENT = "RotationChanged";
+        public const string ROTATION_CHANGED_EVENT_KEY = "rotation";
+
 
         private VisualElement _selectionInspector;
         private VisualElement _photoIconInspector;
@@ -45,18 +48,20 @@ namespace KaizenApp
         private Button _takePhotoButton;
         private Button _choosePhotoButton;
 
-        private VisualElement _icon;
-        private LayoutIconInfo _iconInfo;
+        //private VisualElement _icon;
+        private IconViewInfo _iconInfo;
         private float _selectionInspectorHeight;
 
-        private int _pixelsPerMeter = KaizenAppManager.Instance.PixelsPerMeter;
+        private int _pixelsPerMeter = 384;
+        private LayoutView _layoutView;
 
-        public SelectionInspector(VisualElement root)
+        public SelectionInspector(VisualElement root, LayoutView layoutView)
         {
             _selectionInspector = root.Q(SELECTION_INSPECTOR);
+            _layoutView = layoutView;
             BindElements();
-           
             RegisterCallbacks();
+            
         }
 
         private void BindElements()
@@ -77,7 +82,8 @@ namespace KaizenApp
 
         private void RegisterCallbacks()
         {
-            EventManager.StartListening(SELECTION_EVENT, SetData);
+            //EventManager.StartListening(SELECTION_EVENT, SetData);
+            EventManager.StartListening(IconMover.ICON_CLICKED_EVENT, SetData);
             EventManager.StartListening(PIXELS_PER_METER_EVENT, OnPixelsPerMeterChanged);
             EventManager.StartListening(COMPARE_LAYOUTS_EVENT, OnCompareLayouts);
             EventManager.StartListening(PHOTO_TAKEN_EVENT, OnPhotoTaken);
@@ -91,12 +97,15 @@ namespace KaizenApp
 
         }
 
-       
+
         private void SetData(Dictionary<string, object> selectionEvent)
         {
-           // _pixelsPerMeter = KaizenAppManager._instance.PixelsPerMeter;
-            _iconInfo = selectionEvent[ICON_INFO] as LayoutIconInfo;
-           if(_iconInfo.Type == IconType.Photo)
+            _pixelsPerMeter = _layoutView.PixelsPerMeter;
+            _iconInfo = selectionEvent[IconMover.ICON_CLICKED_EVENT_KEY] as IconViewInfo;
+            int id = _iconInfo.iconID;
+            //_icon = _layoutView.IconsOnFloor[id];
+
+           if(_iconInfo.IconType == IconType.Photo)
             {
                ShowPhotoIconInspector();
            }
@@ -104,28 +113,29 @@ namespace KaizenApp
             {
                ShowLayoutIconInspector();
            }
-            
         }
 
         private void ShowLayoutIconInspector()
         {
             _photoIconInspector.style.display = DisplayStyle.None;
             _layoutIconInspector.style.display = DisplayStyle.Flex;
-            _widthField.SetValueWithoutNotify(_iconInfo.Width / _pixelsPerMeter);
-            _heightField.SetValueWithoutNotify(_iconInfo.Height / _pixelsPerMeter);
-
+            _widthField.SetValueWithoutNotify(_iconInfo.Width / (float)_pixelsPerMeter);
+            _heightField.SetValueWithoutNotify(_iconInfo.Height / (float)_pixelsPerMeter);
+            Debug.Log("icon info width: " + _iconInfo.Width);
+            Debug.Log("icon info height: " + _iconInfo.Height);
+            Debug.Log("pixels per meter: " + _pixelsPerMeter);
+            Debug.Log("width field value: " + _widthField.value);
+            Debug.Log("height field value: " + _heightField.value);
             float positionX = _iconInfo.LocalPosition.x / _pixelsPerMeter;
-            float positionY = KaizenAppManager.Instance.FloorHeightMeters - _iconInfo.LocalPosition.y / _pixelsPerMeter;
+            float positionY = _layoutView.FloorHeightMeters - _iconInfo.LocalPosition.y / _pixelsPerMeter;
             Vector2 positionMeters = new Vector2(positionX, positionY);
             _positionField.SetValueWithoutNotify(positionMeters);
-            _rotationSlider.SetValueWithoutNotify(_iconInfo.Rotation);
-            _icon = _iconInfo.IconElement;
+            _rotationSlider.SetValueWithoutNotify(_iconInfo.RotationAngle);
+            //_icon = _iconInfo.IconElement;
         }
 
         private void ShowPhotoIconInspector()
         {
-           
-            
             if(_selectionInspectorHeight == 0)
             {
                 _selectionInspectorHeight = _selectionInspector.resolvedStyle.height;
@@ -133,17 +143,18 @@ namespace KaizenApp
             _photoIconInspector.style.height = _selectionInspectorHeight;
             _photoIconInspector.style.display = DisplayStyle.Flex;
             _layoutIconInspector.style.display = DisplayStyle.None;
-            if(_iconInfo.PhotoTexture != null)
-            {
-                _photoElement.style.backgroundImage = _iconInfo.PhotoTexture;
-                Debug.Log("should be rotating photo by " + _iconInfo.Rotation);
-                _photoElement.style.rotate = new Rotate(_iconInfo.Rotation);
-                //_photoElement.style.scale = new Scale(new Vector2(-1f, 1f));
-            }
-            else
-            {
-                _photoElement.style.backgroundImage = null;
-            }
+            //TODO: set photo texture and figure out where to save it
+            //if(_iconInfo.PhotoTexture != null)
+            //{
+            //    _photoElement.style.backgroundImage = _iconInfo.PhotoTexture;
+            //    Debug.Log("should be rotating photo by " + _iconInfo.Rotation);
+            //    _photoElement.style.rotate = new Rotate(_iconInfo.Rotation);
+            //    //_photoElement.style.scale = new Scale(new Vector2(-1f, 1f));
+            //}
+            //else
+            //{
+            //    _photoElement.style.backgroundImage = null;
+            //}
 
         }
 
@@ -156,78 +167,62 @@ namespace KaizenApp
         {
             Texture2D photoTexture = eventDictionary[PHOTO_TAKEN_EVENT_KEY] as Texture2D;
             _photoElement.style.backgroundImage = photoTexture;
-            _photoElement.style.rotate = new Rotate(_iconInfo.Rotation);
+            _photoElement.style.rotate = new Rotate(_iconInfo.RotationAngle);
             //_photoElement.style.scale = new Scale(new Vector2(-1f, 1f));
-            Debug.Log("should be rotating photo by " + _iconInfo.Rotation);
-        }
-
-        private float GetRotation()
-        {
-            switch (_iconInfo.Rotation)
-            {
-                case 0:
-                    return 0;
-                case 90:
-                    return 270;
-                case 180:
-                    return 180;
-                case 270:
-                    return 90;
-                default:
-                    return 0;
-            }
-            
+            Debug.Log("should be rotating photo by " + _iconInfo.RotationAngle);
         }
 
 
         private void OnRotationChanged(ChangeEvent<float> evt)
         {
-            if(_icon == null)
-            {
-                return;
-            }   
+           // if(_icon == null)
+           // {
+           //     return;
+           // }   
 
            float rotation = evt.newValue;
-           _icon.style.rotate = new Rotate(rotation);
-           _iconInfo.Rotation = rotation;
+           //_icon.style.rotate = new Rotate(rotation);
+           _iconInfo.RotationAngle = rotation;
+            EventManager.TriggerEvent(ROTATION_CHANGED_EVENT, new Dictionary<string, object> { { ROTATION_CHANGED_EVENT_KEY, _iconInfo } });
         }
 
         private void OnPositionChanged(ChangeEvent<Vector2> evt)
         {
             Debug.Log("pixels per meter: " + _pixelsPerMeter);  
             Vector2 delta = (evt.newValue - evt.previousValue) * _pixelsPerMeter;
-            float newX = _icon.transform.position.x + delta.x;
-            float newY = _icon.transform.position.y - delta.y;
+            //float newX = _icon.transform.position.x + delta.x;
+            //float newY = _icon.transform.position.y - delta.y;
 
-            //_icon.style.translate = new Translate(delta.x, delta.y);
-            _icon.transform.position = new Vector2(newX, newY);
-            _iconInfo.Position = _icon.transform.position;
+            ////_icon.style.translate = new Translate(delta.x, delta.y);
+            //_icon.transform.position = new Vector2(newX, newY);
+            //_iconInfo.Position = _icon.transform.position;
             
         }
 
         private void OnHeightChanged(ChangeEvent<float> evt)
         {
             float height = evt.newValue * _pixelsPerMeter;
-            _icon.style.height = height;
-            _iconInfo.Height = height;
+            //_icon.style.height = height;
+            _iconInfo.Height = Mathf.RoundToInt(height);
         }
 
         private void OnWidthChanged(ChangeEvent<float> evt)
         {
             float width = evt.newValue * _pixelsPerMeter;
-            _icon.style.width = width;
-            _iconInfo.Width = width;   
+            //_icon.style.width = width;
+            _iconInfo.Width = Mathf.RoundToInt(width);   
         }
 
         private void OnPixelsPerMeterChanged(Dictionary<string, object> pixelsPerMeterEvent)
         {
+            Debug.Log("changing pixels per meter");
             _pixelsPerMeter = (int)pixelsPerMeterEvent[PIXELS_PER_METER_EVENT_KEY];
         }
 
         private void OnDeleteClicked()
         {
             Debug.Log("triggering delete event");
-            EventManager.TriggerEvent(ICON_REMOVED_EVENT, new Dictionary<string, object> { { FLOOR_ICON_EVENT_KEY, _iconInfo.FloorIcon } });
+            EventManager.TriggerEvent(ICON_REMOVED_EVENT, new Dictionary<string, object> { { FLOOR_ICON_EVENT_KEY, _iconInfo} });
         }
 
         private void OnCompareLayouts(Dictionary<string, object> eventMessage)

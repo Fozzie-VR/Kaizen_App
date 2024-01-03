@@ -193,7 +193,7 @@ namespace KaizenApp
 
         private void InitializeSelectionInspector()
         {
-            _selectionInspector = new SelectionInspector(_root);
+            //_selectionInspector = new SelectionInspector(_root);
         }
 
         private void InitializeEventManager()

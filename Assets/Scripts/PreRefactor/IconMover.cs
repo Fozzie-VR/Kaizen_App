@@ -11,6 +11,8 @@ namespace KaizenApp
     {
         public const string ICON_MOVED_EVENT = "iconMovedEvent";
         public const string ICON_MOVED_EVENT_KEY = "iconMovedEventKey";
+        public const string ICON_CLICKED_EVENT = "iconClickedEvent";
+        public const string ICON_CLICKED_EVENT_KEY = "iconClickedEventKey";
         //needs reference to icon visual element and floor visual element
         //needs reference to layout icon info
         VisualElement _iconElement;
@@ -66,9 +68,6 @@ namespace KaizenApp
         //select icon for movement
         private void OnPointerDown(PointerDownEvent evt)
         {
-            //Debug.Log("IconMover: OnPointerDown");
-            //_draggableArea.Add(_iconElement);
-            //_iconElement.BringToFront();
             PointerDown?.Invoke(evt);
             _draggableArea.CapturePointer(evt.pointerId);
 
@@ -78,6 +77,14 @@ namespace KaizenApp
             _isDragging = true;
             _draggableArea.RegisterCallback<PointerMoveEvent>(OnPointerMove);
             _draggableArea.RegisterCallback<PointerUpEvent>(OnPointerUp);
+
+            if(_iconElement.userData is IconViewInfo)
+            {
+                IconViewInfo iconViewInfo = (IconViewInfo)_iconElement.userData;
+                EventManager.TriggerEvent(ICON_CLICKED_EVENT,
+                                   new Dictionary<string, object> { { ICON_CLICKED_EVENT_KEY, iconViewInfo } });
+            }
+            
         }
 
         //drop icon
@@ -85,7 +92,6 @@ namespace KaizenApp
         private void OnPointerUp(PointerUpEvent evt)
         {
             VisualElement icon = evt.target as VisualElement;
-            //Debug.Log("On pointer up called");
             _draggableArea.ReleasePointer(evt.pointerId);
             _isDragging = false;
             _draggableArea.UnregisterCallback<PointerMoveEvent>(OnPointerMove);
@@ -95,16 +101,15 @@ namespace KaizenApp
             {
                 DropIcon?.Invoke(evt.position, _iconElement);
             }
-            else
+            else if(_iconElement.userData is IconViewInfo)
             {
-                int id = (int)_iconElement.userData;
-                Debug.Log("IconMover: OnPointerUp: id = " + id);
-                Vector3 position = _iconElement.transform.position;
-                Debug.Log("IconMover: OnPointerUp: position = " + position);
-                Vector2 localPositon = _floorElement.WorldToLocal(position);
-                object[] args = new object[] { id, position, localPositon };
+                IconViewInfo iconViewInfo = (IconViewInfo)_iconElement.userData;
+                int id = iconViewInfo.iconID;
+                iconViewInfo.Position = _iconElement.transform.position;
+                iconViewInfo.LocalPosition = _floorElement.WorldToLocal(evt.position);
+                
                 EventManager.TriggerEvent(ICON_MOVED_EVENT,
-                    new Dictionary<string, object> { { ICON_MOVED_EVENT_KEY, args } });
+                    new Dictionary<string, object> { { ICON_MOVED_EVENT_KEY, iconViewInfo } });
             }
           
         }

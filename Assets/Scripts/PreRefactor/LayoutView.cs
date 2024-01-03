@@ -28,8 +28,8 @@ namespace KaizenApp
 
         private const string RESET_FLOOR_PLAN_EVENT = "reset_floor_plan";
 
-        private const string PIXELS_PER_METER_EVENT = "PixelsPerMeterChanged";
-        private const string PIXELS_PER_METER_EVENT_KEY = "pixelsPerMeter";
+        public const string PIXELS_PER_METER_EVENT = "PixelsPerMeterChanged";
+        public const string PIXELS_PER_METER_EVENT_KEY = "pixelsPerMeter";
 
 
         public const string FLOOR_HEIGHT_CHANGED_EVENT = "floor_height_changed";
@@ -66,10 +66,12 @@ namespace KaizenApp
         private IconFactory<VisualElement> _iconFactory = new IconFactory<VisualElement>();
 
         private Dictionary<int, VisualElement> _iconsOnFloor = new ();
+        public Dictionary<int, VisualElement> IconsOnFloor { get => _iconsOnFloor; }
         
         public LayoutView()
         {
             _iconFactory.Factory += GetIcon;
+            _iconFactory.PreGet += PreGetIcon;
             _iconFactory.PreReturn += ReturnIcon;
 
             EventManager.StartListening(GridDrawer.GRID_DRAWN_EVENT, OnGridDrawn);
@@ -77,13 +79,13 @@ namespace KaizenApp
             EventManager.StartListening(SetFloorSizeCommand.FLOOR_SIZE_SET_EVENT, OnFloorDimensionsSet);
             EventManager.StartListening(MoveIconCommand.ICON_MOVE_COMMAND, OnIconMoved);
             EventManager.StartListening(RemoveIconCommand.REMOVE_ICON_COMMAND, RemoveIcon);
+            EventManager.StartListening(RotateIconCommand.ICON_ROTATE_COMMAND, OnIconRotated);
         }
 
-        
+       
 
         public void BindElements(VisualElement root)
         {
-            Debug.Log("LayoutView.BindElements");
             _dragArea = root.Q(DRAG_AREA);
             _container = root.Q(FLOOR_PARENT);
             _floor = root.Q(FLOOR);
@@ -114,8 +116,6 @@ namespace KaizenApp
         {
             _floorWidthMeters = floorDimensions.FloorWidthMeters;
             _floorHeightMeters = floorDimensions.FloorHeightMeters;
-            Debug.Log("LayoutView floor width: " + _floorWidthMeters);
-            Debug.Log("LayoutView floor height: " + _floorHeightMeters);
             _pixelsPerMeter = _maxPixelsPerMeter;
 
             if(_floor != null)
@@ -149,25 +149,14 @@ namespace KaizenApp
                 _maxPixelsPerMeter = Mathf.RoundToInt(_container.resolvedStyle.width / 5);
                 _minPixelsPerMeter = Mathf.RoundToInt(_container.resolvedStyle.width / 10);
             }
-            Debug.Log(_maxPixelsPerMeter);
-            Debug.Log(_minPixelsPerMeter);
             //KaizenAppManager.Instance.DefaultPixelsPerMeter = _maxPixelsPerMeter;
             SetPixelsPerMeter();
-            Debug.Log("pixels per meter: " + _pixelsPerMeter);
             int heightPixels = Mathf.RoundToInt(_pixelsPerMeter * _floorHeightMeters);
             _floor.style.height = heightPixels;
             _floor.style.width = heightPixels;
 
-            int widthPixels = heightPixels;
-            int pixelsPerMeter = Mathf.RoundToInt(widthPixels / _floorWidthMeters);
-
-            float heightMeters = heightPixels / pixelsPerMeter;
-            float widthMeters = widthPixels / pixelsPerMeter;
-
-            Debug.Log("height meters: " + heightMeters);
-            Debug.Log("width meters: " + widthMeters);
             GridDrawer gridDrawer = new GridDrawer();
-            gridDrawer.DrawGrid(widthMeters, heightMeters, pixelsPerMeter);
+            gridDrawer.DrawGrid(_floorWidthMeters, _floorHeightMeters, _pixelsPerMeter);
         }
         
 
@@ -183,15 +172,15 @@ namespace KaizenApp
             _floorHeightMeters = _floorHeight.value;
             SetPixelsPerMeter();
 
-            float heightMeters = _pixelsPerMeter * _floorHeightMeters;
-            _floor.style.height = heightMeters;
+            float heightPixels = _pixelsPerMeter * _floorHeightMeters;
+            _floor.style.height = heightPixels;
 
-            float widthMeters = _pixelsPerMeter * _floorWidthMeters;
-            _floor.style.width = widthMeters;
+            float widthPixels = _pixelsPerMeter * _floorWidthMeters;
+            _floor.style.width = widthPixels;
 
             //DrawGrid();
             GridDrawer gridDrawer = new GridDrawer();
-            gridDrawer.DrawGrid(widthMeters, heightMeters, _pixelsPerMeter);
+            gridDrawer.DrawGrid(_floorWidthMeters, _floorHeightMeters, _pixelsPerMeter);
         }
 
         private void ChangeFloorWidth(FocusOutEvent evt)
@@ -208,7 +197,9 @@ namespace KaizenApp
 
             _floor.style.width = _pixelsPerMeter * _floorWidthMeters;
             _floor.style.height = _pixelsPerMeter * _floorHeightMeters;
-            //DrawGrid();
+            
+            GridDrawer gridDrawer = new GridDrawer();
+            gridDrawer.DrawGrid(_floorWidthMeters, _floorHeightMeters, _pixelsPerMeter);
         }
 
         //need this to scale the floor plan in different contexts (comparison view, etc.)
@@ -282,13 +273,13 @@ namespace KaizenApp
         public void OnAddIcon(Dictionary<string, object> evntArgs)
         {
             //unpack event args
-            object[] args = (object[])evntArgs[AddIconCommand.ADD_ICON_COMMAND_KEY];
-            int id = (int)args[0];
-            IconType iconType = (IconType)args[1];
-            Vector3 position = (Vector3)args[2];
-            Vector2 localPosition = (Vector2)args[3];
-            int iconHeight = (int)args[4];
-            int iconWidth = (int)args[5];
+            IconViewInfo iconViewInfo = evntArgs[AddIconCommand.ADD_ICON_COMMAND_KEY] as IconViewInfo;
+            
+            IconType iconType = iconViewInfo.IconType;
+            int id = iconViewInfo.iconID;
+            Vector2 localPosition = iconViewInfo.LocalPosition;
+            int iconHeight = iconViewInfo.Height;
+            int iconWidth = iconViewInfo.Width;
 
             //check if icon is inside the floor container
             if(!IconIsOnFloor(localPosition, iconWidth, iconHeight))
@@ -296,8 +287,8 @@ namespace KaizenApp
                 return;
             }
 
-            VisualElement icon = GetIcon();
-            icon.userData = id;
+            VisualElement icon = _iconFactory.GetIcon();
+            icon.userData = iconViewInfo;
             string iconStyleClass = GetFloorIconContainerStyle(iconType);
             icon.AddToClassList(iconStyleClass);
             _floor.Add(icon);
@@ -305,6 +296,7 @@ namespace KaizenApp
             icon.RegisterCallback<GeometryChangedEvent>(OnIconGeometryChanged);
             IconMover iconMover = new IconMover(icon, _dragArea);
             _iconsOnFloor.Add(id, icon);
+            EventManager.TriggerEvent(IconMover.ICON_CLICKED_EVENT, new Dictionary<string, object> { { IconMover.ICON_CLICKED_EVENT_KEY, iconViewInfo } });
         }
 
         private void OnIconGeometryChanged(GeometryChangedEvent evt)
@@ -317,17 +309,22 @@ namespace KaizenApp
 
         }
 
-        private void OnIconMoved(Dictionary<string, object> dictionary)
+        private void OnIconMoved(Dictionary<string, object> evntArgs)
         {
-            object[] args = (object[])dictionary[MoveIconCommand.ICON_MOVE_COMMAND_KEY];
-            int id = (int)args[0];
-            Vector3 position = (Vector3)args[1];
+            //object[] args = (object[])dictionary[MoveIconCommand.ICON_MOVE_COMMAND_KEY];
+            IconViewInfo iconViewInfo = evntArgs[MoveIconCommand.ICON_MOVE_COMMAND_KEY] as IconViewInfo;
+            int id = iconViewInfo.iconID;
+            Vector3 position = iconViewInfo.Position;
             
-            Vector2 localPosition = (Vector2)args[2];
+            Vector2 localPosition = iconViewInfo.LocalPosition;
             VisualElement icon = _iconsOnFloor[id];
             if(position != icon.transform.position)
             {
                 Debug.LogError($"icon position, {position}, different than expected: {icon.transform.position}");
+                float xOffset = iconViewInfo.Width / 2;
+                float yOffset = iconViewInfo.Height / 2;
+
+                icon.style.translate = new Translate(localPosition.x - xOffset, localPosition.y - yOffset);
             }
 
             int width = Mathf.RoundToInt(icon.resolvedStyle.width);
@@ -340,18 +337,41 @@ namespace KaizenApp
             }
         }
 
-
-        public void RemoveIcon(Dictionary<string, object> message)
+        private void OnIconRotated(Dictionary<string, object> evntArgs)
         {
-            object[] args = (object[])message[RemoveIconCommand.REMOVE_ICON_COMMAND_KEY];
-            int id = (int)args[0];
+           IconViewInfo iconViewInfo = evntArgs[RotateIconCommand.ICON_ROTATE_COMMAND_KEY] as IconViewInfo;
+            int id = iconViewInfo.iconID;
             VisualElement icon = _iconsOnFloor[id];
-            ReturnIcon(icon);
+            icon.style.rotate = new Rotate(iconViewInfo.RotationAngle);
         }
 
-        private void ReturnIcon(VisualElement element)
+
+        public void RemoveIcon(Dictionary<string, object> evntArgs)
         {
-            Debug.Log("returning icon");
+            //object[] args = (object[])message[RemoveIconCommand.REMOVE_ICON_COMMAND_KEY];
+            IconViewInfo iconViewInfo = evntArgs[RemoveIconCommand.REMOVE_ICON_COMMAND_KEY] as IconViewInfo;
+            
+            int id = iconViewInfo.iconID;
+            IconType iconType = iconViewInfo.IconType;
+            VisualElement icon = _iconsOnFloor[id];
+            string iconStyleClass = GetFloorIconContainerStyle(iconType);
+            icon.RemoveFromClassList(iconStyleClass);
+            _iconFactory.ReturnIcon(icon);
+        }
+
+        private void ReturnIcon(VisualElement icon)
+        {
+            if (icon.parent == _floor)
+            {
+                _floor.Remove(icon);
+            }
+            icon.userData = null;
+            icon.AddToClassList("hidden");
+        }
+
+        private void PreGetIcon(VisualElement icon)
+        {
+            icon.RemoveFromClassList("hidden");
         }
 
         private VisualElement GetIcon()
@@ -403,7 +423,6 @@ namespace KaizenApp
         private bool IconIsOnFloor(Vector2 iconPosition, int width, int height)
         {
             bool floorContainsIcon = _floor.ContainsPoint(iconPosition);
-            Debug.Log("floor contains icon" + floorContainsIcon);
             float xOffset = width / 2;
             float yOffset = height / 2;
 
@@ -426,7 +445,6 @@ namespace KaizenApp
             {
                 floorContainsIcon = false;
             }
-            Debug.Log("icon is on floor: " + floorContainsIcon);
             return floorContainsIcon;
         }
 

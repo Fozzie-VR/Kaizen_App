@@ -30,7 +30,7 @@ namespace KaizenApp
         private int _pixelsPerMeter;
         public int PixelsPerMeter => _pixelsPerMeter;
 
-        private Dictionary<int, FloorIconInfo> _icons = new Dictionary<int, FloorIconInfo>();
+        private Dictionary<int, IconModelInfo> _icons = new Dictionary<int, IconModelInfo>();
         private int _nextIconId = 0;
 
         CommandHandler _commandHandler;
@@ -40,7 +40,7 @@ namespace KaizenApp
         //will issue commands to view classes to update view
         public LayoutModel()
         {
-            _commandHandler = new CommandHandler();
+            _commandHandler = new CommandHandler(UndoRedoView.UNDO_EVENT, UndoRedoView.REDO_EVENT);
             RegisterEvents();
         }
 
@@ -50,8 +50,21 @@ namespace KaizenApp
             EventManager.StartListening(IconSpawner.ICON_SPAWN_REQUESTED, OnIconSpawned);
             EventManager.StartListening(IconMover.ICON_MOVED_EVENT, OnIconMoved);
             EventManager.StartListening(LayoutView.ICON_OFF_FLOOR_EVENT, OnIconOffFloor);
+            EventManager.StartListening(SelectionInspector.ROTATION_CHANGED_EVENT, OnRotationChanged);
         }
-       
+
+        private void OnRotationChanged(Dictionary<string, object> evntArgs)
+        {
+            IconViewInfo iconViewInfo = (IconViewInfo)evntArgs[SelectionInspector.ROTATION_CHANGED_EVENT_KEY];
+            int iconID = iconViewInfo.iconID;
+            IconViewInfo oldIconViewInfo = ConvertModelInfoToViewInfo(_icons[iconID]);
+            RotateIconCommand rotateIconCommand = new RotateIconCommand(iconViewInfo, oldIconViewInfo);
+            _commandHandler.AddCommand(rotateIconCommand);
+            IconModelInfo iconInfo = _icons[iconID];
+            UpdateModelInfoFromView(iconViewInfo, iconInfo);
+
+        }
+
         private void OnFloorDimensionsSet(Dictionary<string, object> evntMessage)
         {
             FloorDimensions floorDimensions = 
@@ -75,12 +88,12 @@ namespace KaizenApp
             IconType iconType = (IconType)objects[0];
             Vector3 position = (Vector3)objects[1];
             Vector2 localPosition = (Vector2)objects[2];
-            int iconHeight = (int)objects[3];
-            int iconWidth = (int)objects[4];
+            int iconWidth = (int)objects[3];
+            int iconHeight = (int)objects[4];
             int id = _nextIconId;
             _nextIconId++;
             //create icon info
-            FloorIconInfo iconInfo = new FloorIconInfo
+            IconModelInfo iconInfo = new IconModelInfo
             {
                 IconType = iconType,
                 iconID = id,
@@ -91,30 +104,33 @@ namespace KaizenApp
                 RotationAngle = 0,
                 IsActive = true
             };
-            //set vars
+            
             _icons.Add(id, iconInfo);
 
-            Debug.Log("LayoutModel received icon spawned event for icon " + iconType);
-            object[] iconSpawnedArgs = new object[] { id, iconType, position, localPosition, iconHeight, iconWidth};
-            AddIconCommand addIconCommand = new AddIconCommand(iconSpawnedArgs);
+            IconViewInfo iconViewInfo = ConvertModelInfoToViewInfo(iconInfo);
+
+            //object[] iconSpawnedArgs = new object[] { id, iconType, position, localPosition, iconHeight, iconWidth};
+            AddIconCommand addIconCommand = new AddIconCommand(iconViewInfo);
             _commandHandler.AddCommand(addIconCommand);
+
         }
 
         private void OnIconMoved(Dictionary<string, object> eventArgs)
         {
-            object[] objects = (object[])eventArgs[IconMover.ICON_MOVED_EVENT_KEY];
-            int iconID = (int)objects[0];
-            Vector3 position = (Vector3)objects[1];
-            Vector2 localPosition = (Vector2)objects[2];
-            Vector2 oldLocalPosition = _icons[iconID].LocalPosition;
-            Vector3 oldPosition = _icons[iconID].Position;
+            //object[] objects = (object[])eventArgs[IconMover.ICON_MOVED_EVENT_KEY];
+            IconViewInfo iconViewInfo = (IconViewInfo)eventArgs[IconMover.ICON_MOVED_EVENT_KEY];
+            int iconID = iconViewInfo.iconID;
+           
+            IconViewInfo oldIconViewInfo = ConvertModelInfoToViewInfo(_icons[iconID]);
+
+            
             //issue move command for views
-            MoveIconCommand moveIconCommand = new MoveIconCommand(iconID, position, localPosition, oldPosition, oldLocalPosition);
+            MoveIconCommand moveIconCommand = new MoveIconCommand(iconViewInfo, oldIconViewInfo);
             _commandHandler.AddCommand(moveIconCommand);
             //use id to update icon info
-            FloorIconInfo iconInfo = _icons[iconID];
-            iconInfo.Position = position;
-            iconInfo.LocalPosition = localPosition;
+            IconModelInfo iconInfo = _icons[iconID];
+            UpdateModelInfoFromView(iconViewInfo, iconInfo);
+            
             _icons[iconID] = iconInfo;
         }
 
@@ -126,15 +142,40 @@ namespace KaizenApp
             var floorIconInfo = _icons[iconID];
             floorIconInfo.IsActive = false;
             //issue remove command for views with same args as for add command
-
-            object[] iconRemovedArgs = new object[] {
-                iconID, floorIconInfo.IconType, floorIconInfo.Position, floorIconInfo.LocalPosition, floorIconInfo.Height, floorIconInfo.Width };
-            RemoveIconCommand removeIconCommand = new RemoveIconCommand(iconRemovedArgs);
+            IconViewInfo iconViewInfo = ConvertModelInfoToViewInfo(floorIconInfo);
+            
+            RemoveIconCommand removeIconCommand = new RemoveIconCommand(iconViewInfo);
             _commandHandler.AddCommand(removeIconCommand);
+        }
+       
+
+        private void UpdateModelInfoFromView(IconViewInfo iconViewInfo, IconModelInfo iconModelInfo)
+        {
+            iconModelInfo.iconID = iconViewInfo.iconID;
+            iconModelInfo.IconType = iconViewInfo.IconType;
+            iconModelInfo.Height = iconViewInfo.Height;
+            iconModelInfo.Width = iconViewInfo.Width;
+            iconModelInfo.Position = iconViewInfo.Position;
+            iconModelInfo.LocalPosition = iconViewInfo.LocalPosition;
+            iconModelInfo.RotationAngle = iconViewInfo.RotationAngle;
+
+        }
+
+        private IconViewInfo ConvertModelInfoToViewInfo(IconModelInfo iconModelInfo)
+        {
+            IconViewInfo iconViewInfo = new IconViewInfo();
+            iconViewInfo.iconID = iconModelInfo.iconID;
+            iconViewInfo.IconType = iconModelInfo.IconType;
+            iconViewInfo.Height = iconModelInfo.Height;
+            iconViewInfo.Width = iconModelInfo.Width;
+            iconViewInfo.Position = iconModelInfo.Position;
+            iconViewInfo.LocalPosition = iconModelInfo.LocalPosition;
+            iconViewInfo.RotationAngle = iconModelInfo.RotationAngle;
+            return iconViewInfo;
         }
 
         //incorporate Icon info here...
-        private struct FloorIconInfo
+        private struct IconModelInfo
         {
             public int iconID;
             public IconType IconType;
@@ -145,6 +186,17 @@ namespace KaizenApp
             public float RotationAngle;
             public bool IsActive;
         }
+    }
+
+    public class IconViewInfo
+    {
+        public int iconID;
+        public IconType IconType;
+        public int Height;
+        public int Width;
+        public Vector3 Position;
+        public Vector2 LocalPosition;
+        public float RotationAngle;
     }
 
 }

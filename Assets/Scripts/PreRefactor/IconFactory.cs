@@ -17,27 +17,29 @@ namespace KaizenApp
 
        public T GetIcon()
        {
-            Debug.Log("GetIcon");
             if(_objectPool.Count > 0)
             {
-                return _objectPool.Dequeue();
+                var icon = _objectPool.Dequeue();
+                PreGet?.Invoke(icon);
+                return icon;
             }
+
             T ret;
             if(Factory != null)
             {
                 ret = Factory();
+                AddToPool(1);
             }
             else
             {
                 ret = default;
             }
-            PreGet?.Invoke(ret);
+            
             return ret;
         }
 
         public void ReturnIcon(T icon)
         {
-            Debug.Log("ReturnIcon");
             PreReturn?.Invoke(icon);
             _objectPool.Enqueue(icon);
         }

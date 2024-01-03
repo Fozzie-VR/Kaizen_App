@@ -50,6 +50,7 @@ namespace KaizenApp
             SetVisualElements(root);
 
             _iconFactory.Factory += GetIcon;
+            _iconFactory.PreGet += PreGetIcon;
             _iconFactory.PreReturn += ReturnIcon;
 
             EventManager.StartListening(ICON_REMOVED_EVENT, OnIconRemoved);
@@ -115,7 +116,7 @@ namespace KaizenApp
             VisualElement iconImage = icon.Q<VisualElement>(ICON_IMAGE);
 
             //Get icon from pool
-            VisualElement draggableIcon = GetIcon();
+            VisualElement draggableIcon = _iconFactory.GetIcon();
 
             //set user data
             IconType iconType = (IconType)icon.userData;
@@ -167,7 +168,6 @@ namespace KaizenApp
         {
             var localPos = _floor.WorldToLocal(dropPosition);
             bool floorContainsIcon = _floor.ContainsPoint(localPos);
-
             float xOffset = droppedIcon.resolvedStyle.width / 2;
             float yOffset = droppedIcon.resolvedStyle.height / 2;
 
@@ -193,7 +193,7 @@ namespace KaizenApp
 
             if(!floorContainsIcon)
             {
-                ReturnIcon(droppedIcon);
+               _iconFactory.ReturnIcon(droppedIcon);
             }
             else
             {
@@ -210,10 +210,15 @@ namespace KaizenApp
                 object[] args = new object[] {iconType, pos, localPos, iconWidth, iconHeight };
 
                 EventManager.TriggerEvent(ICON_SPAWN_REQUESTED, new Dictionary<string, object> { { ICON_SPAWN_REQUESTED_KEY, args } });
-                EventManager.TriggerEvent(SELECTION_EVENT, new Dictionary<string, object> { { ICON_INFO, args } });
+                
                 ReturnIcon(droppedIcon);
             }
 
+        }
+
+        private void PreGetIcon(VisualElement icon)
+        {
+            icon.RemoveFromClassList("hidden");
         }
        
         private VisualElement GetIcon()
@@ -256,7 +261,7 @@ namespace KaizenApp
                     iconType = IconType.Conveyor;
                     break;
                 case "Machine":
-                        ;
+                    iconType = IconType.Machine;
                     break;
                 case "Product":
                     iconType = IconType.Product;

@@ -11,10 +11,11 @@ namespace KaizenApp
         FloorDimensions _floorDimensions;
         VisualElement _preKaizenLayoutContainer = null;
         LayoutView _layoutView = null;
+        LayoutModel _layoutModel = null;
 
         public LayoutInitializer()
         {
-            LayoutModel layoutModel = new LayoutModel();
+            _layoutModel = new LayoutModel();
             _layoutView = new LayoutView();
             EventManager.StartListening(PageManager.PRE_KAIZEN_LAYOUT_PAGE_EVENT, OnPreKaizenLayoutEvent);
         }
@@ -27,6 +28,8 @@ namespace KaizenApp
                 _preKaizenLayoutContainer = pageRoot;
                 _layoutView.BindElements(_preKaizenLayoutContainer);
                 IconSpawner iconSpawner = new IconSpawner(pageRoot);
+                SelectionInspector selectionInspector = new SelectionInspector(pageRoot, _layoutView);
+                UndoRedoView undoRedoView = new UndoRedoView(pageRoot);
             }
         }
     }

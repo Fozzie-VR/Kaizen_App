@@ -9,37 +9,28 @@ namespace KaizenApp
     {
         public const string ICON_MOVE_COMMAND = "iconMoveCommand";
         public const string ICON_MOVE_COMMAND_KEY = "iconMoveCommandKey";
-
-
-        private int _iconID;
-        private Vector3 _newPosition;
-        private Vector2 _newLocalPosition;
-        private Vector3 _oldPosition;
-        private Vector2 _oldLocalPosition;
+       
+        private IconViewInfo _newInfo;
+        private IconViewInfo _oldInfo;
         
 
-        public MoveIconCommand(int iconID, Vector3 position, Vector2 localPosition,
-            Vector3 oldPosition, Vector2 oldLocalPosition)
+        public MoveIconCommand(IconViewInfo newInfo, IconViewInfo oldInfo)
         {
-            _iconID = iconID;
-            _newPosition = position;
-            _newLocalPosition = localPosition;
-            _oldLocalPosition = oldLocalPosition;
-            _oldPosition = oldPosition;
+            _newInfo = newInfo;
+            _oldInfo = oldInfo;
         }
 
         public void Execute()
         {
-            object[] args = new object[] {_iconID, _newPosition, _newLocalPosition};
+            
             EventManager.TriggerEvent(ICON_MOVE_COMMAND, 
-                new Dictionary<string, object> { { ICON_MOVE_COMMAND_KEY,args } });
+                new Dictionary<string, object> { { ICON_MOVE_COMMAND_KEY,_newInfo } });
         }
 
         public void Undo()
         {
-            object[] args = new object[] {_iconID, _oldPosition, _oldLocalPosition};
-            EventManager.TriggerEvent(ICON_MOVE_COMMAND, 
-                               new Dictionary<string, object> { { ICON_MOVE_COMMAND_KEY,args } });
+            EventManager.TriggerEvent(ICON_MOVE_COMMAND,
+                new Dictionary<string, object> { { ICON_MOVE_COMMAND_KEY, _oldInfo } });
         }
     }
 

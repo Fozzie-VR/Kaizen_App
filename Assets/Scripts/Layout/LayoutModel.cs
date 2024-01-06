@@ -51,7 +51,14 @@ namespace KaizenApp
             EventManager.StartListening(IconMover.ICON_MOVED_EVENT, OnIconMoved);
             EventManager.StartListening(LayoutView.ICON_OFF_FLOOR_EVENT, OnIconOffFloor);
             EventManager.StartListening(SelectionInspector.ROTATION_CHANGED_EVENT, OnRotationChanged);
+            EventManager.StartListening(SelectionInspector.ICON_DIMENSIONS_CHANGED_EVENT, OnIconDimensionsChanged);
+            EventManager.StartListening(MoveIconCommand.ICON_MOVE_COMMAND_UNDO, OnMoveIconUndo);
+            EventManager.StartListening(RotateIconCommand.ICON_ROTATE_COMMAND_UNDO, OnRotateIconUndo);
+            EventManager.StartListening(ResizeIconCommand.UNDO_RESIZE_ICON_COMMAND, OnResizeIconUndo);
+
         }
+
+       
 
         private void OnRotationChanged(Dictionary<string, object> evntArgs)
         {
@@ -63,6 +70,35 @@ namespace KaizenApp
             IconModelInfo iconInfo = _icons[iconID];
             UpdateModelInfoFromView(iconViewInfo, iconInfo);
 
+        }
+
+        private void OnRotateIconUndo(Dictionary<string, object> dictionary)
+        {
+           //update model info
+            IconViewInfo iconViewInfo = (IconViewInfo)dictionary[RotateIconCommand.ICON_ROTATE_COMMAND_UNDO_KEY];
+            int iconID = iconViewInfo.iconID;
+            IconModelInfo iconInfo = _icons[iconID];
+            UpdateModelInfoFromView(iconViewInfo, iconInfo);
+        }
+
+        private void OnIconDimensionsChanged(Dictionary<string, object> evntArgs)
+        {
+            IconViewInfo iconViewInfo = (IconViewInfo)evntArgs[SelectionInspector.ICON_DIMENSIONS_CHANGED_EVENT_KEY];
+            int iconID = iconViewInfo.iconID;
+            IconViewInfo oldIconViewInfo = ConvertModelInfoToViewInfo(_icons[iconID]);
+            ResizeIconCommand resizeIconCommand = new ResizeIconCommand(iconViewInfo, oldIconViewInfo);
+            _commandHandler.AddCommand(resizeIconCommand);
+            IconModelInfo iconInfo = _icons[iconID];
+            UpdateModelInfoFromView(iconViewInfo, iconInfo);
+            
+        }
+
+        private void OnResizeIconUndo(Dictionary<string, object> dictionary)
+        {
+            IconViewInfo iconViewInfo = (IconViewInfo)dictionary[ResizeIconCommand.UNDO_RESIZE_ICON_COMMAND_KEY];
+            int iconID = iconViewInfo.iconID;
+            IconModelInfo iconInfo = _icons[iconID];
+            UpdateModelInfoFromView(iconViewInfo, iconInfo);
         }
 
         private void OnFloorDimensionsSet(Dictionary<string, object> evntMessage)
@@ -96,7 +132,7 @@ namespace KaizenApp
             IconModelInfo iconInfo = new IconModelInfo
             {
                 IconType = iconType,
-                iconID = id,
+                IconID = id,
                 Height = iconHeight,
                 Width = iconWidth,
                 Position = position,
@@ -131,7 +167,16 @@ namespace KaizenApp
             IconModelInfo iconInfo = _icons[iconID];
             UpdateModelInfoFromView(iconViewInfo, iconInfo);
             
-            _icons[iconID] = iconInfo;
+            //_icons[iconID] = iconInfo;
+        }
+
+        private void OnMoveIconUndo(Dictionary<string, object> evntArgs)
+        {
+            //update model info
+            IconViewInfo iconViewInfo = (IconViewInfo)evntArgs[MoveIconCommand.ICON_MOVE_COMMAND_UNDO_KEY];
+            int iconID = iconViewInfo.iconID;
+            IconModelInfo iconInfo = _icons[iconID];
+            UpdateModelInfoFromView(iconViewInfo, iconInfo);
         }
 
         private void OnIconOffFloor(Dictionary<string, object> eventArgs)
@@ -151,20 +196,25 @@ namespace KaizenApp
 
         private void UpdateModelInfoFromView(IconViewInfo iconViewInfo, IconModelInfo iconModelInfo)
         {
-            iconModelInfo.iconID = iconViewInfo.iconID;
-            iconModelInfo.IconType = iconViewInfo.IconType;
-            iconModelInfo.Height = iconViewInfo.Height;
-            iconModelInfo.Width = iconViewInfo.Width;
-            iconModelInfo.Position = iconViewInfo.Position;
-            iconModelInfo.LocalPosition = iconViewInfo.LocalPosition;
-            iconModelInfo.RotationAngle = iconViewInfo.RotationAngle;
+            IconModelInfo iconInfo = new IconModelInfo 
+            { 
+                IconID = iconViewInfo.iconID,
+                IconType = iconViewInfo.IconType,
+                Height = iconViewInfo.Height,
+                Width = iconViewInfo.Width,
+                Position = iconViewInfo.Position,
+                LocalPosition = iconViewInfo.LocalPosition,
+                RotationAngle = iconViewInfo.RotationAngle,
+                IsActive = true
+            };
+            _icons[iconInfo.IconID] = iconInfo;
 
         }
 
         private IconViewInfo ConvertModelInfoToViewInfo(IconModelInfo iconModelInfo)
         {
             IconViewInfo iconViewInfo = new IconViewInfo();
-            iconViewInfo.iconID = iconModelInfo.iconID;
+            iconViewInfo.iconID = iconModelInfo.IconID;
             iconViewInfo.IconType = iconModelInfo.IconType;
             iconViewInfo.Height = iconModelInfo.Height;
             iconViewInfo.Width = iconModelInfo.Width;
@@ -177,7 +227,7 @@ namespace KaizenApp
         //incorporate Icon info here...
         private struct IconModelInfo
         {
-            public int iconID;
+            public int IconID;
             public IconType IconType;
             public int Height;
             public int Width;

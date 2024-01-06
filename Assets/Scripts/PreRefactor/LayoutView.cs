@@ -80,6 +80,7 @@ namespace KaizenApp
             EventManager.StartListening(MoveIconCommand.ICON_MOVE_COMMAND, OnIconMoved);
             EventManager.StartListening(RemoveIconCommand.REMOVE_ICON_COMMAND, RemoveIcon);
             EventManager.StartListening(RotateIconCommand.ICON_ROTATE_COMMAND, OnIconRotated);
+            EventManager.StartListening(ResizeIconCommand.RESIZE_ICON_COMMAND, OnIconResized);
         }
 
        
@@ -293,6 +294,8 @@ namespace KaizenApp
             icon.AddToClassList(iconStyleClass);
             _floor.Add(icon);
             icon.style.translate = new Translate(localPosition.x, localPosition.y);
+            icon.style.height = iconHeight;
+            icon.style.width = iconWidth;
             icon.RegisterCallback<GeometryChangedEvent>(OnIconGeometryChanged);
             IconMover iconMover = new IconMover(icon, _dragArea);
             _iconsOnFloor.Add(id, icon);
@@ -311,7 +314,6 @@ namespace KaizenApp
 
         private void OnIconMoved(Dictionary<string, object> evntArgs)
         {
-            //object[] args = (object[])dictionary[MoveIconCommand.ICON_MOVE_COMMAND_KEY];
             IconViewInfo iconViewInfo = evntArgs[MoveIconCommand.ICON_MOVE_COMMAND_KEY] as IconViewInfo;
             int id = iconViewInfo.iconID;
             Vector3 position = iconViewInfo.Position;
@@ -320,10 +322,8 @@ namespace KaizenApp
             VisualElement icon = _iconsOnFloor[id];
             if(position != icon.transform.position)
             {
-                Debug.LogError($"icon position, {position}, different than expected: {icon.transform.position}");
                 float xOffset = iconViewInfo.Width / 2;
                 float yOffset = iconViewInfo.Height / 2;
-
                 icon.style.translate = new Translate(localPosition.x - xOffset, localPosition.y - yOffset);
             }
 
@@ -335,6 +335,7 @@ namespace KaizenApp
                     new Dictionary<string, object> { { ICON_OFF_FLOOR_EVENT_KEY, id } });
                 return;
             }
+            icon.userData = iconViewInfo;
         }
 
         private void OnIconRotated(Dictionary<string, object> evntArgs)
@@ -343,6 +344,29 @@ namespace KaizenApp
             int id = iconViewInfo.iconID;
             VisualElement icon = _iconsOnFloor[id];
             icon.style.rotate = new Rotate(iconViewInfo.RotationAngle);
+            icon.userData = iconViewInfo;
+        }
+
+        private void OnIconResized(Dictionary<string, object> dictionary)
+        {
+            IconViewInfo iconViewInfo = dictionary[ResizeIconCommand.RESIZE_ICON_COMMAND_KEY] as IconViewInfo;
+            int id = iconViewInfo.iconID;
+            VisualElement icon = _iconsOnFloor[id];
+            Debug.Log($"changing icon {id} width to {iconViewInfo.Width}");
+            Debug.Log($"changing icon {id} height to {iconViewInfo.Height}");
+            icon.userData = iconViewInfo;
+            if(iconViewInfo.Width != (int)icon.resolvedStyle.width || iconViewInfo.Height != (int)icon.resolvedStyle.height)
+            {
+                icon.style.width = iconViewInfo.Width;
+                icon.style.height = iconViewInfo.Height;
+                float xOffset = iconViewInfo.Width / 2;
+                float yOffset = iconViewInfo.Height / 2;
+                var localPosition = iconViewInfo.LocalPosition;
+                icon.style.translate = new Translate(localPosition.x, localPosition.y);
+
+            }
+
+           
         }
 
 

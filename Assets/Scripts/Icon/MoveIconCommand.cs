@@ -9,6 +9,9 @@ namespace KaizenApp
     {
         public const string ICON_MOVE_COMMAND = "iconMoveCommand";
         public const string ICON_MOVE_COMMAND_KEY = "iconMoveCommandKey";
+
+        public const string ICON_MOVE_COMMAND_UNDO = "iconMoveCommandUndo";
+        public const string ICON_MOVE_COMMAND_UNDO_KEY = "iconMoveCommandUndoKey";
        
         private IconViewInfo _newInfo;
         private IconViewInfo _oldInfo;
@@ -30,7 +33,9 @@ namespace KaizenApp
         public void Undo()
         {
             EventManager.TriggerEvent(ICON_MOVE_COMMAND,
-                new Dictionary<string, object> { { ICON_MOVE_COMMAND_KEY, _oldInfo } });
+                               new Dictionary<string, object> { { ICON_MOVE_COMMAND_KEY, _oldInfo } });
+            EventManager.TriggerEvent(ICON_MOVE_COMMAND_UNDO,
+                new Dictionary<string, object> { { ICON_MOVE_COMMAND_UNDO_KEY, _oldInfo } });
         }
     }
 

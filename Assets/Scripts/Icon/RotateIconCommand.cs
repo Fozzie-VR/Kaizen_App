@@ -10,6 +10,9 @@ namespace KaizenApp
         public const string ICON_ROTATE_COMMAND = "iconRotateCommand";
         public const string ICON_ROTATE_COMMAND_KEY = "iconRotateCommandKey";
 
+        public const string ICON_ROTATE_COMMAND_UNDO = "iconRotateCommandUndo";
+        public const string ICON_ROTATE_COMMAND_UNDO_KEY = "iconRotateCommandUndoKey";
+
         private IconViewInfo _newInfo;
         private IconViewInfo _oldInfo;
 

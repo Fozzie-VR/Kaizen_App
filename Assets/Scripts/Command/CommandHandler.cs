@@ -20,8 +20,8 @@ namespace KaizenApp
         }
         public CommandHandler(string undoEvent, string redoEvent)
         {
-            EventManager.StartListening(undoEvent, UndoCommand);
-            EventManager.StartListening(redoEvent, RedoCommand);
+            EventManager.StartListening(undoEvent, OnUndoCommand);
+            EventManager.StartListening(redoEvent, OnRedoCommand);
         }
 
         //Execute the current command
@@ -35,6 +35,7 @@ namespace KaizenApp
             command.Execute();
             _commandBuffer.Add(command);
             _commandIndex++;
+            //Debug.Log("Command index = " + _commandIndex);
         }
 
 
@@ -44,6 +45,7 @@ namespace KaizenApp
             if (_commandIndex - 1 < 0) return;
             _commandBuffer[_commandIndex - 1].Undo();
             _commandIndex--;
+            Debug.Log("Command index = " + _commandIndex);
         }
 
         public void RedoCommand()
@@ -53,14 +55,15 @@ namespace KaizenApp
 
             _commandIndex++;
             _commandBuffer[_commandIndex - 1].Execute();
+            Debug.Log("Command index = " + _commandIndex);
         }
 
-        private void UndoCommand(Dictionary<string, object> evntArgs)
+        private void OnUndoCommand(Dictionary<string, object> evntArgs)
         {
             UndoCommand();
         }
 
-        private void RedoCommand(Dictionary<string, object> evntArgs)
+        private void OnRedoCommand(Dictionary<string, object> evntArgs)
         {
             RedoCommand();
         }

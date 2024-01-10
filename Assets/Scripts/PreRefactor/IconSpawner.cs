@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -78,14 +78,6 @@ namespace KaizenApp
             }
         }
 
-        private void OnIconRemoved(Dictionary<string, object> dictionary)
-        {
-            var icon = dictionary[FLOOR_ICON_EVENT_KEY] as FloorIcon;
-            var iconInfo = icon.IconInfo;
-            var iconElement = iconInfo.IconElement;
-            ReturnIcon(iconElement);
-        }
-
         private void SetVisualElements(VisualElement root)
         {
             _dragArea = root.Q<VisualElement>(DRAG_AREA);
@@ -100,6 +92,13 @@ namespace KaizenApp
             }
         }
 
+        private void OnIconRemoved(Dictionary<string, object> dictionary)
+        {
+            var icon = dictionary[FLOOR_ICON_EVENT_KEY] as FloorIcon;
+            var iconInfo = icon.IconInfo;
+            var iconElement = iconInfo.IconElement;
+            ReturnIcon(iconElement);
+        }
         private void SetUserData(VisualElement iconContainer)
         {
             string iconName = iconContainer.Q<Label>().text;
@@ -248,46 +247,46 @@ namespace KaizenApp
             IconType iconType = IconType.Table;
             switch (iconName)
             {
-                case "Table":
+                case "作業台":
                     iconType = IconType.Table;
                     break;
-                case "Trolley":
+                case "台車":
                     iconType = IconType.Trolley;
                     break;
-                case "Worker":
+                case "作業者":
                     iconType = IconType.Worker;
                     break;
-                case "Conveyor":
+                case "コンベアーコロコン":
                     iconType = IconType.Conveyor;
                     break;
-                case "Machine":
+                case "機械":
                     iconType = IconType.Machine;
                     break;
-                case "Product":
+                case "製品":
                     iconType = IconType.Product;
                     break;
                 case "Kanban":
                     iconType = IconType.Kanban;
                     break;
-                case "Parts Shelf":
+                case "部品棚・治具棚":
                     iconType = IconType.PartsShelf;
                     break;
-                case "Custom Item":
+                case "フリーボックス":
                     iconType = IconType.CustomItem;
                     break;
-                case "Custom Label":
+                case "フリーテキスト":
                     iconType = IconType.CustomLabel;
                     break;
-                case "Product Flow":
+                case "モノの流れ":
                     iconType = IconType.ProductFlow;
                     break;
-                case "Worker Movement":
+                case "移動":
                     iconType = IconType.WorkerMovement;
                     break;
-                case "Transport Flow":
+                case "運搬":
                     iconType = IconType.TransportFlow;
                     break;
-                case "Photo":
+                case "写真":
                     iconType = IconType.Photo;
                     break;
                 default:

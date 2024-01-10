@@ -4,3 +4,51 @@
     height: 10%;
     margin-bottom: 30px;
 }
+
+.root-element {
+    flex-grow: 1;
+    background-color: rgb(253, 253, 253);
+    align-items: stretch;
+}
+
+.page-header {
+    align-self: center;
+    background-color: rgb(203, 231, 255);
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    width: 60%;
+    height: 10%;
+    -unity-text-align: middle-center;
+    font-size: 28px;
+    -unity-font-definition: url('project://database/Assets/UI/NotoSansJP-VariableFont_wght.ttf?fileID=12800000&guid=62d3f4a7445c7ed48bbc2aabf8e07646&type=3#NotoSansJP-VariableFont_wght');
+    -unity-font-style: bold;
+}
+
+.buttons-container {
+    flex-grow: 1;
+    padding-top: 100px;
+}
+
+.button {
+    width: 50%;
+    background-color: rgb(203, 231, 255);
+    border-left-color: rgba(149, 149, 149, 0);
+    border-right-color: rgba(149, 149, 149, 0);
+    border-top-color: rgba(149, 149, 149, 0);
+    border-bottom-color: rgba(149, 149, 149, 0);
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+    border-bottom-left-radius: 7px;
+    height: 10%;
+    font-size: 24px;
+    flex-grow: 1;
+    -unity-font-definition: url('project://database/Assets/UI/NotoSansJP-VariableFont_wght.ttf?fileID=12800000&guid=62d3f4a7445c7ed48bbc2aabf8e07646&type=3#NotoSansJP-VariableFont_wght');
+    -unity-font-style: bold;
+}

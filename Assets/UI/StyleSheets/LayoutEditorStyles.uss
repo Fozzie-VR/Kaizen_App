@@ -51,6 +51,8 @@ VisualElement {
 
 .icon_label {
     top: 25px;
+    -unity-font-definition: url('project://database/Assets/UI/NotoSansJP-VariableFont_wght.ttf?fileID=12800000&guid=62d3f4a7445c7ed48bbc2aabf8e07646&type=3#NotoSansJP-VariableFont_wght');
+    -unity-font-style: bold;
 }
 
 .worker_icon {

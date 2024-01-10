@@ -1,0 +1,18 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/StyleSheets/DailyInspirations.uss?fileID=7433441132597879392&amp;guid=363e02a69182ed842b34b0fdd198569e&amp;type=3#DailyInspirations" />
+    <ui:VisualElement name="ve_background" class="background">
+        <ui:VisualElement name="ve_date" class="date-container">
+            <ui:VisualElement name="ve_header" class="header-container">
+                <ui:Label tabindex="-1" text="むだとり語録" display-tooltip-when-elided="true" name="lbl_h1" class="h1" />
+                <ui:Label tabindex="-1" text="山田　日登志" display-tooltip-when-elided="true" name="lbl_h2" class="h2" />
+            </ui:VisualElement>
+            <ui:Label tabindex="-1" text="07" display-tooltip-when-elided="true" name="lbl_day" class="day" />
+        </ui:VisualElement>
+        <ui:VisualElement name="ve_inspiration_container" class="inspiration-container">
+            <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="lbl_column1" text="品質が一番良い。" class="text-column" />
+            <ui:Label tabindex="-1" text="リIドタイムが一番短い。" display-tooltip-when-elided="true" name="lbl_column2" class="text-column" />
+            <ui:Label tabindex="-1" text="コストが一番安い。" display-tooltip-when-elided="true" name="lbl_column3" class="text-column" />
+            <ui:Label tabindex="-1" display-tooltip-when-elided="true" name="lbl_column4" text="これが企業として勝つ要素" class="text-column" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

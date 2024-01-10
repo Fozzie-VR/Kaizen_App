@@ -39,7 +39,7 @@ namespace KaizenApp
         
         private void Start()
         {
-            InitializeMainMenuView();
+            //InitializeMainMenuView();
         }
 
         private void OnPageStateChange(Dictionary<string, object> evntMessage)
@@ -83,6 +83,9 @@ namespace KaizenApp
         {
             switch (pageType)
             {
+                case PageType.MainMenu:
+                    InitializeMainMenuView();
+                    break;
                 case PageType.FloorDimensionsPage:
                     InitializeFloorDimensionsPageView();
                     break;

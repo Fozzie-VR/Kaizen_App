@@ -1,0 +1,76 @@
+.background {
+    background-color: rgb(255, 255, 255);
+    flex-grow: 1;
+    align-items: center;
+}
+
+.header-container {
+    flex-grow: 0;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.h1 {
+    -unity-font-definition: url('project://database/Assets/UI/NotoSansJP-VariableFont_wght.ttf?fileID=12800000&guid=62d3f4a7445c7ed48bbc2aabf8e07646&type=3#NotoSansJP-VariableFont_wght');
+    flex-grow: 0;
+    font-size: 48px;
+    -unity-font-style: bold;
+}
+
+.h2 {
+    align-self: auto;
+    -unity-text-align: upper-right;
+    -unity-font-definition: url('project://database/Assets/UI/NotoSansJP-VariableFont_wght.ttf?fileID=12800000&guid=62d3f4a7445c7ed48bbc2aabf8e07646&type=3#NotoSansJP-VariableFont_wght');
+    font-size: 28px;
+    -unity-font-style: normal;
+}
+
+.day {
+    font-size: 120px;
+    -unity-text-align: middle-center;
+    padding-right: 120px;
+    flex-grow: 0;
+}
+
+.image {
+    flex-grow: 1;
+    background-image: url('project://database/Assets/UI/Images/KaizenFactory2.png?fileID=2800000&guid=789e06e41a3041042be301083c62577c&type=3#KaizenFactory2');
+    -unity-background-scale-mode: scale-and-crop;
+    align-self: auto;
+    -unity-slice-left: 0;
+    -unity-slice-bottom: 0;
+    -unity-slice-top: 0;
+    -unity-slice-right: 0;
+    translate: 0 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    height: 40%;
+    width: 40%;
+    max-height: 40%;
+}
+
+.text-column {
+    white-space: normal;
+    font-size: 62px;
+    -unity-font-definition: url('project://database/Assets/UI/NotoSansJP-VariableFont_wght.ttf?fileID=12800000&guid=62d3f4a7445c7ed48bbc2aabf8e07646&type=3#NotoSansJP-VariableFont_wght');
+    -unity-font-style: bold;
+    -unity-text-align: upper-left;
+    align-self: center;
+}
+
+.inspiration-container {
+    flex-grow: 1;
+    flex-direction: column;
+}
+
+.date-container {
+    flex-grow: 1;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    flex-direction: row-reverse;
+    max-height: 25%;
+    margin-top: 100px;
+}

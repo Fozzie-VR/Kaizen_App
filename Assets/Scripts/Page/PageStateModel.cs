@@ -9,6 +9,7 @@ namespace KaizenApp
     //might want to use scriptable objects for this; likely to need a lot of types...
     public enum PageType
     {
+        DailyInspiration,
         MainMenu,
         KaizenForm,
         FloorDimensionsPage,
@@ -46,11 +47,18 @@ namespace KaizenApp
         {
             EventManager.StartListening(PAGE_STATE_CHANGE_REQUEST, OnPageStateChanged);
             EventManager.StartListening(PAGE_SORT_ORDER_CHANGE_REQUEST, OnPageSortOrderChanged);
+            EventManager.StartListening(DailyInspiration.INSPIRATION_PAGE_CLICKED, OnInspirationClicked);
             EventManager.StartListening(PRE_KAIZEN_LAYOUT_CLICKED, OnPreKaizenLayoutClicked);
             EventManager.StartListening(FLOOR_DIMENSIONS_SET_EVENT, OnFloorDimensionsSet);
             _commandHandler = new CommandHandler();
         }
-      
+
+        private void OnInspirationClicked(Dictionary<string, object> dictionary)
+        {
+            DeactivatePage(PageType.DailyInspiration);
+            ActivatePage(PageType.MainMenu);
+        }
+
         private void OnPreKaizenLayoutClicked(Dictionary<string, object> dictionary)
         {
             Debug.Log("PreKaizenLayoutClicked");

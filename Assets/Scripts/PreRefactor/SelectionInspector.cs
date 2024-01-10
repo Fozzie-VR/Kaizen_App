@@ -95,13 +95,10 @@ namespace KaizenApp
             EventManager.StartListening(PIXELS_PER_METER_EVENT, OnPixelsPerMeterChanged);
             EventManager.StartListening(COMPARE_LAYOUTS_EVENT, OnCompareLayouts);
             EventManager.StartListening(PHOTO_TAKEN_EVENT, OnPhotoTaken);
+            EventManager.StartListening(UndoRedoView.UNDO_EVENT, OnUndoRedo);
 
             _widthField.RegisterValueChangedCallback(OnWidthChanged);
             _heightField.RegisterValueChangedCallback(OnHeightChanged);
-            //focus out events for with and height fields
-            _widthField.RegisterCallback<FocusOutEvent>(OnIconDimensionsChanged);
-            _heightField.RegisterCallback<FocusOutEvent>(OnIconDimensionsChanged);
-            
 
             _positionField.RegisterValueChangedCallback(OnPositionChanged);
             _rotationSlider.RegisterValueChangedCallback(OnRotationChanged);
@@ -131,14 +128,32 @@ namespace KaizenApp
            }
         }
 
+        private void OnUndoRedo(Dictionary<string, object> undoRedoEvent)
+        {
+            if(_iconInfo == null)
+            {
+                return;
+            }
+            _currentIcon = _layoutView.IconsOnFloor[_iconInfo.iconID];
+            _iconInfo = _currentIcon.userData as IconViewInfo;
+
+            if (_iconInfo.IconType == IconType.Photo)
+            {
+                ShowPhotoIconInspector();
+            }
+            else
+            {
+                ShowLayoutIconInspector();
+            }
+        }   
+
         private void ShowLayoutIconInspector()
         {
+            Debug.Log("showing layout icon inspector");
             _photoIconInspector.style.display = DisplayStyle.None;
             _layoutIconInspector.style.display = DisplayStyle.Flex;
             _widthField.SetValueWithoutNotify(_iconInfo.Width / (float)_pixelsPerMeter);
             _heightField.SetValueWithoutNotify(_iconInfo.Height / (float)_pixelsPerMeter);
-            Debug.Log($"icon {_iconInfo.iconID} width field value = {_widthField.value}");
-            Debug.Log("icon resolved width = " + _currentIcon.resolvedStyle.width);
             float positionX = _iconInfo.LocalPosition.x / _pixelsPerMeter;
             float positionY = _layoutView.FloorHeightMeters - _iconInfo.LocalPosition.y / _pixelsPerMeter;
             Vector2 positionMeters = new Vector2(positionX, positionY);
@@ -205,15 +220,24 @@ namespace KaizenApp
 
         private void OnPositionChanged(ChangeEvent<Vector2> evt)
         {
-            Debug.Log("pixels per meter: " + _pixelsPerMeter);  
             Vector2 delta = (evt.newValue - evt.previousValue) * _pixelsPerMeter;
-            //float newX = _icon.transform.position.x + delta.x;
-            //float newY = _icon.transform.position.y - delta.y;
+            float newX = _currentIcon.transform.position.x + delta.x;
+            float newY = _currentIcon.transform.position.y - delta.y;
 
-            ////_icon.style.translate = new Translate(delta.x, delta.y);
-            //_icon.transform.position = new Vector2(newX, newY);
-            //_iconInfo.Position = _icon.transform.position;
-            
+            _currentIcon.style.translate = new Translate(delta.x, delta.y);
+            _currentIcon.transform.position = new Vector2(newX, newY);
+            _iconInfo.Position = _currentIcon.transform.position;
+            _iconInfo.LocalPosition = _layoutView.Floor.WorldToLocal(_currentIcon.worldBound.center);
+            _positionField.RegisterCallback<PointerLeaveEvent>(OnPositionChanged);
+
+        }
+
+        private void OnPositionChanged(PointerLeaveEvent evt)
+        {
+            Debug.Log("position changed");
+            EventManager.TriggerEvent(IconMover.ICON_MOVED_EVENT, new Dictionary<string, object> { 
+                { IconMover.ICON_MOVED_EVENT_KEY, _iconInfo } });
+            _positionField.UnregisterCallback<PointerLeaveEvent>(OnPositionChanged);
         }
 
         private void OnHeightChanged(ChangeEvent<float> evt)
@@ -263,15 +287,7 @@ namespace KaizenApp
             _heightField.UnregisterCallback<PointerLeaveEvent>(OnIconHeightChanged);
         }   
 
-        private void OnIconDimensionsChanged(FocusOutEvent evt)
-        {
-            //Debug.Log("icon width changed to: " + _iconInfo.Width);
-            //Debug.Log("icon height changed to: " + _iconInfo.Height);
-            //EventManager.TriggerEvent(ICON_DIMENSIONS_CHANGED_EVENT, new Dictionary<string, object> { 
-            //    { ICON_DIMENSIONS_CHANGED_EVENT_KEY, _iconInfo } 
-            //});
-        }
-
+       
         private void OnPixelsPerMeterChanged(Dictionary<string, object> pixelsPerMeterEvent)
         {
             Debug.Log("changing pixels per meter");

@@ -336,6 +336,7 @@ namespace KaizenApp
                 return;
             }
             icon.userData = iconViewInfo;
+            Debug.Log($"icon {id} position: {icon.transform.position}");
         }
 
         private void OnIconRotated(Dictionary<string, object> evntArgs)

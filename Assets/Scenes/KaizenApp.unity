@@ -150,6 +150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pages:
+  - {fileID: 978965112}
   - {fileID: 834321674}
   - {fileID: 2081572575}
   - {fileID: 1154090929}
@@ -469,9 +470,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99f68245cac1bca40bb90a34a6af2234, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pageType: 0
+  _pageType: 1
   _pageSortOrder: 0
-  _pageState: 0
+  _pageState: 1
   _pageDocument: {fileID: 834321673}
   _pageVisualTreeAsset: {fileID: 9197481963319205126, guid: 5b95894a29874b7488e18957b518a1b1,
     type: 3}
@@ -490,6 +491,88 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &978965110
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 978965113}
+  - component: {fileID: 978965112}
+  - component: {fileID: 978965111}
+  - component: {fileID: 978965114}
+  m_Layer: 0
+  m_Name: DailyInspiration
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &978965111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978965110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: f5399c5c362e1624ab7b21a6b204fa5b, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 0}
+  m_SortingOrder: 0
+--- !u!114 &978965112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978965110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99f68245cac1bca40bb90a34a6af2234, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pageType: 0
+  _pageSortOrder: 0
+  _pageState: 0
+  _pageDocument: {fileID: 978965111}
+  _pageVisualTreeAsset: {fileID: 9197481963319205126, guid: 9c5de805e30298742a1ddd6426dd3a97,
+    type: 3}
+--- !u!4 &978965113
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978965110}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &978965114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978965110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d61b1204501bd34eb66acab00ae93e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InspirationsFile: {fileID: 4900000, guid: 9a5973c3ac778e64bb93c93fa2fee9d5, type: 3}
+  _UIDocument: {fileID: 978965111}
 --- !u!1 &1066144310
 GameObject:
   m_ObjectHideFlags: 0
@@ -580,7 +663,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99f68245cac1bca40bb90a34a6af2234, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pageType: 3
+  _pageType: 4
   _pageSortOrder: 0
   _pageState: 1
   _pageDocument: {fileID: 1154090928}
@@ -647,7 +730,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99f68245cac1bca40bb90a34a6af2234, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pageType: 2
+  _pageType: 3
   _pageSortOrder: 0
   _pageState: 1
   _pageDocument: {fileID: 2081572574}
@@ -679,3 +762,4 @@ SceneRoots:
   - {fileID: 834321675}
   - {fileID: 2081572576}
   - {fileID: 1154090930}
+  - {fileID: 978965113}

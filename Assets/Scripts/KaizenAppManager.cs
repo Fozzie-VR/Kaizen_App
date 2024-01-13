@@ -238,7 +238,7 @@ namespace KaizenApp
 
             float widthMultiplier = screenWidth / rootWidth;
             float heightMultiplier = screenHeight / rootHeight;
-
+            Debug.Log("screen size = " + Screen.width + ", " + Screen.height);
             PreKaizenLayout = ScreenCapturer.GetScreenCapturer(_floorPlanner.Floor, widthMultiplier, heightMultiplier);
             yield return null;
             foreach (FloorIcon floorIcon in floorIcons)

@@ -1,0 +1,31 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/StyleSheets/KaizenForm.uss?fileID=7433441132597879392&amp;guid=a27233d9c91aac44e9e5b70650dc67f4&amp;type=3#KaizenForm" />
+    <ui:VisualElement name="ve_root_container" class="background">
+        <ui:VisualElement name="ve_header_section" style="flex-grow: 1; max-height: 20%; flex-direction: row; margin-top: 50px; margin-right: 30px; margin-left: 30px;">
+            <ui:VisualElement name="ve_theme_container" style="flex-grow: 1; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;">
+                <ui:TextField picking-mode="Ignore" label="改善テーマ" multiline="true" style="flex-wrap: wrap; flex-grow: 1; flex-direction: column;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="ve_details_container" style="flex-grow: 1; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;">
+                <ui:TextField picking-mode="Ignore" label="改善詳細" multiline="true" style="flex-direction: column; flex-grow: 1;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="ve_layout_comparison" style="flex-grow: 1; margin-top: 50px; margin-bottom: 50px; margin-right: 40px; margin-left: 40px; flex-direction: row;">
+            <ui:VisualElement name="ve_pre_kaizen_layout" style="flex-grow: 1; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px;">
+                <ui:Label tabindex="-1" text="改善前" display-tooltip-when-elided="true" style="-unity-font-definition: url(&apos;project://database/Assets/UI/NotoSansJP-VariableFont_wght.ttf?fileID=12800000&amp;guid=62d3f4a7445c7ed48bbc2aabf8e07646&amp;type=3#NotoSansJP-VariableFont_wght&apos;); -unity-font-style: bold;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="ve_post_kaizen_layout" style="flex-grow: 1; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px;">
+                <ui:Label tabindex="-1" text="改善後" display-tooltip-when-elided="true" style="-unity-font-definition: url(&apos;project://database/Assets/UI/NotoSansJP-VariableFont_wght.ttf?fileID=12800000&amp;guid=62d3f4a7445c7ed48bbc2aabf8e07646&amp;type=3#NotoSansJP-VariableFont_wght&apos;); -unity-font-style: bold;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="ve_results_summary" style="flex-grow: 1; margin-bottom: 50px; margin-right: 40px; margin-left: 40px; max-height: 30%;">
+            <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
+                <ui:TextField picking-mode="Ignore" label="問題点" multiline="true" class="footer-text" />
+                <ui:TextField picking-mode="Ignore" label="改善内容" multiline="true" class="footer-text" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row; flex-grow: 1;">
+                <ui:TextField picking-mode="Ignore" label="その他" multiline="true" class="footer-text" />
+                <ui:TextField picking-mode="Ignore" label="改善効果" class="footer-text" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -137,7 +137,7 @@ namespace KaizenApp
             _currentIcon = _layoutView.IconsOnFloor[_iconInfo.iconID];
             _iconInfo = _currentIcon.userData as IconViewInfo;
 
-            if (_iconInfo.IconType == IconType.Photo)
+            if (_iconInfo != null && _iconInfo.IconType == IconType.Photo)
             {
                 ShowPhotoIconInspector();
             }
@@ -149,7 +149,11 @@ namespace KaizenApp
 
         private void ShowLayoutIconInspector()
         {
-            Debug.Log("showing layout icon inspector");
+            //Debug.Log("showing layout icon inspector");
+            if (_iconInfo is null)
+            {
+                return;
+            }
             _photoIconInspector.style.display = DisplayStyle.None;
             _layoutIconInspector.style.display = DisplayStyle.Flex;
             _widthField.SetValueWithoutNotify(_iconInfo.Width / (float)_pixelsPerMeter);

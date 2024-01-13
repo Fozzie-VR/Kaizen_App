@@ -35,7 +35,7 @@ namespace KaizenApp
             command.Execute();
             _commandBuffer.Add(command);
             _commandIndex++;
-            //Debug.Log("Command index = " + _commandIndex);
+            Debug.Log("Command index = " + _commandIndex);
         }
 
 

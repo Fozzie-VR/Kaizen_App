@@ -86,6 +86,9 @@ namespace KaizenApp
                 case PageType.MainMenu:
                     InitializeMainMenuView();
                     break;
+                case PageType.KaizenForm:
+                    InitializeKaizenFormView();
+                    break;
                 case PageType.FloorDimensionsPage:
                     InitializeFloorDimensionsPageView();
                     break;
@@ -103,6 +106,20 @@ namespace KaizenApp
             }
         }
 
+
+        private void InitializeKaizenFormView()
+        {
+            PageView pageView = _pages.Find(page => page.PageType == PageType.KaizenForm);
+            VisualElement pageRoot = pageView.PageRoot;
+            pageRoot.RegisterCallback<GeometryChangedEvent>(KaizenFormGeometryChanged);
+        }
+
+        private void KaizenFormGeometryChanged(GeometryChangedEvent evt)
+        {
+            VisualElement pageRoot = (VisualElement)evt.target;
+            KaizenFormView kaizenFormView = new KaizenFormView(pageRoot);
+           
+        }
         private void InitializePostKaizenLayoutView()
         {
             throw new NotImplementedException();

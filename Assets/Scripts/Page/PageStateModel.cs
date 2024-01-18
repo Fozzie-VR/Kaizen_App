@@ -31,7 +31,7 @@ namespace KaizenApp
         //issues commands to change the page state and sorting order based on events from the page view
         private const string PAGE_STATE_CHANGE_REQUEST = "PageStateChanged";
         private const string PAGE_SORT_ORDER_CHANGE_REQUEST = "PageSortOrderChanged";
-        public const string PRE_KAIZEN_LAYOUT_CLICKED = "PreKaizenLayoutClicked";
+        //public const string PRE_KAIZEN_LAYOUT_CLICKED = "PreKaizenLayoutClicked";
         private const string FLOOR_DIMENSIONS_SET_EVENT = "floor_dimensions_set";
        
 
@@ -48,7 +48,8 @@ namespace KaizenApp
             EventManager.StartListening(PAGE_STATE_CHANGE_REQUEST, OnPageStateChanged);
             EventManager.StartListening(PAGE_SORT_ORDER_CHANGE_REQUEST, OnPageSortOrderChanged);
             EventManager.StartListening(DailyInspiration.INSPIRATION_PAGE_CLICKED, OnInspirationClicked);
-            EventManager.StartListening(PRE_KAIZEN_LAYOUT_CLICKED, OnPreKaizenLayoutClicked);
+            EventManager.StartListening(MainMenuView.MAKE_KAIZEN_FORM_CLICKED, OnMakeKaizenFormClicked);
+            EventManager.StartListening(KaizenFormView.PRE_KAIZEN_LAYOUT_CLICKED, OnPreKaizenLayoutClicked);
             EventManager.StartListening(FLOOR_DIMENSIONS_SET_EVENT, OnFloorDimensionsSet);
             _commandHandler = new CommandHandler();
         }
@@ -59,10 +60,16 @@ namespace KaizenApp
             ActivatePage(PageType.MainMenu);
         }
 
+        private void OnMakeKaizenFormClicked(Dictionary<string, object> dictionary)
+        {
+            DeactivatePage(PageType.MainMenu);
+            ActivatePage(PageType.KaizenForm);
+        }
+
         private void OnPreKaizenLayoutClicked(Dictionary<string, object> dictionary)
         {
             Debug.Log("PreKaizenLayoutClicked");
-            DeactivatePage(PageType.MainMenu);
+            DeactivatePage(PageType.KaizenForm);
             ActivatePage(PageType.FloorDimensionsPage);
         }
 
@@ -71,7 +78,6 @@ namespace KaizenApp
             DeactivatePage(PageType.FloorDimensionsPage);
             ActivatePage(PageType.PreKaizenLayout);
         }
-
 
         private void OnPageSortOrderChanged(Dictionary<string, object> evntMessage)
         {
@@ -146,8 +152,6 @@ namespace KaizenApp
             public PageState PageState;
             public int PageSortOrder;
         }
-
-
     }
 
 }

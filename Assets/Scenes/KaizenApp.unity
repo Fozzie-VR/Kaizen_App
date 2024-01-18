@@ -152,6 +152,7 @@ MonoBehaviour:
   _pages:
   - {fileID: 978965112}
   - {fileID: 834321674}
+  - {fileID: 1445965220}
   - {fileID: 2081572575}
   - {fileID: 1154090929}
 --- !u!4 &178697861
@@ -684,6 +685,73 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1445965218
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1445965221}
+  - component: {fileID: 1445965220}
+  - component: {fileID: 1445965219}
+  m_Layer: 0
+  m_Name: KaizenForm
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1445965219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1445965218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: f5399c5c362e1624ab7b21a6b204fa5b, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 0}
+  m_SortingOrder: 0
+--- !u!114 &1445965220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1445965218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99f68245cac1bca40bb90a34a6af2234, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pageType: 2
+  _pageSortOrder: 0
+  _pageState: 1
+  _pageDocument: {fileID: 1445965219}
+  _pageVisualTreeAsset: {fileID: 9197481963319205126, guid: a70112aa274a79a4181e6040c523e5af,
+    type: 3}
+--- !u!4 &1445965221
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1445965218}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2081572573
 GameObject:
   m_ObjectHideFlags: 0
@@ -763,3 +831,4 @@ SceneRoots:
   - {fileID: 2081572576}
   - {fileID: 1154090930}
   - {fileID: 978965113}
+  - {fileID: 1445965221}

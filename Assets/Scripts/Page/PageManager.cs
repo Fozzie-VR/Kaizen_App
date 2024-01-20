@@ -65,19 +65,7 @@ namespace KaizenApp
             }
         }
 
-        private void InitializeMainMenuView()
-        {
-            PageView mainMenuPage = _pages.Find(page => page.PageType == PageType.MainMenu);
-            _mainMenuView = new MainMenuView(mainMenuPage.PageRoot);
-        }
-
-        //Initialize FloorDimensionsPageView
-        private void InitializeFloorDimensionsPageView()
-        {
-            PageView floorDimensionsPage = _pages.Find(page => page.PageType == PageType.FloorDimensionsPage);
-            FloorDimensionsPage floorDimensionsPageView = new FloorDimensionsPage(floorDimensionsPage.PageRoot);
-        }
-
+      
         //method to initialize a page based on page type, use switch statement
         private void InitializePage(PageType pageType)
         {
@@ -104,6 +92,19 @@ namespace KaizenApp
                 default:
                     break;
             }
+        }
+
+        private void InitializeMainMenuView()
+        {
+            PageView mainMenuPage = _pages.Find(page => page.PageType == PageType.MainMenu);
+            _mainMenuView = new MainMenuView(mainMenuPage.PageRoot);
+        }
+
+        //Initialize FloorDimensionsPageView
+        private void InitializeFloorDimensionsPageView()
+        {
+            PageView floorDimensionsPage = _pages.Find(page => page.PageType == PageType.FloorDimensionsPage);
+            FloorDimensionsPage floorDimensionsPageView = new FloorDimensionsPage(floorDimensionsPage.PageRoot);
         }
 
 

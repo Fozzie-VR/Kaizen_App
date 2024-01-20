@@ -1,7 +1,6 @@
 
-using System;
 using System.Collections.Generic;
-
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -38,6 +37,11 @@ namespace KaizenApp
         public const string FLOOR_WIDTH_CHANGED_EVENT = "floor_width_changed";
         public const string FLOOR_WIDTH_CHANGED_EVENT_KEY = "floor_width";
 
+        public const string BACK_TO_KAIZEN_FORM_EVENT = "back_to_kaizen_form";
+
+        public const string LAYOUT_CAPTURED_EVENT = "layout_captured";
+        public const string LAYOUT_CAPTURED_EVENT_KEY = "layout_captured_key";
+
         //all of these floats and ints should be in a model class
         private const float DEFAULT_FLOOR_WIDTH = 5; //meters
         private const float DEFAULT_FLOOR_HEIGHT = 5; //meters
@@ -62,6 +66,8 @@ namespace KaizenApp
         private VisualElement _floorInspector;
         private FloatField _floorHeight;
         private FloatField _floorWidth;
+
+        private Button _backButton;
 
         private IconFactory<VisualElement> _iconFactory = new IconFactory<VisualElement>();
 
@@ -89,6 +95,8 @@ namespace KaizenApp
         {
             _dragArea = root.Q(DRAG_AREA);
             _container = root.Q(FLOOR_PARENT);
+            _backButton = root.Q<Button>("btn_back");
+            _backButton.clicked += BackButtonClicked;
             _floor = root.Q(FLOOR);
             _floorInspector = root.Q("ve_floor_specs");
             _floorHeight = _floorInspector.Q<FloatField>("float_floor_height");
@@ -103,7 +111,50 @@ namespace KaizenApp
                 _floorWidth.SetValueWithoutNotify(_floorWidthMeters);
                 SetContainerSize();
             }
-        }   
+        }  
+        
+        private async void BackButtonClicked()
+        {
+           await CaptureLayout();
+           EventManager.TriggerEvent(BACK_TO_KAIZEN_FORM_EVENT, null);
+        }
+
+        async Awaitable CaptureLayout()
+        {
+            //hide photo icons
+            foreach (var icon in _iconsOnFloor)
+            {
+                IconViewInfo iconViewInfo = icon.Value.userData as IconViewInfo;
+                if (iconViewInfo.IconType == IconType.Photo)
+                {
+                    icon.Value.AddToClassList("hidden");
+                }
+            }
+
+            //hide grid
+            _floor.style.backgroundImage = null;
+            Debug.Log("hiding grid and photo icons");
+            await Awaitable.EndOfFrameAsync();
+
+            Texture2D layout = ScreenCapturer.GetScreenCapturer(_floor);
+            await Task.Delay(10);
+            Debug.Log("showing grid and photo icons");
+            //show photo icons
+            foreach (var icon in _iconsOnFloor)
+            {
+                IconViewInfo iconViewInfo = icon.Value.userData as IconViewInfo;
+                if (iconViewInfo.IconType == IconType.Photo)
+                {
+                    icon.Value.RemoveFromClassList("hidden");
+                }
+            }
+            EventManager.TriggerEvent(LAYOUT_CAPTURED_EVENT, new Dictionary<string, object> { 
+                { LAYOUT_CAPTURED_EVENT_KEY, layout } 
+            });
+
+
+            
+        }
 
         private void OnFloorDimensionsSet(Dictionary<string, object> eventArgs)
         {

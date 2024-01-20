@@ -7,7 +7,7 @@ namespace KaizenApp
 {
     public static class ScreenCapturer
     {
-        public static Texture2D GetScreenCapturer(VisualElement container, float widthMultiplier, float heightMultiplier)
+        public static Texture2D GetScreenCapturer(VisualElement container)
         {
             int yOffset = GetYOffset(container);
             Vector2 captureAreaPos = container.worldBound.position;
@@ -15,14 +15,17 @@ namespace KaizenApp
 
             Texture2D screenTexture = new Texture2D((int)captureAreaSize.x, (int)captureAreaSize.y, TextureFormat.RGB24, false);
             Rect captureRect = new Rect(captureAreaPos.x, captureAreaPos.y - yOffset, captureAreaSize.x, captureAreaSize.y);
+            Debug.Log("captureRect: " + captureRect);
             screenTexture.ReadPixels(captureRect, 0, 0);
             screenTexture.Apply();
             return screenTexture;
         }
 
-        //get the difference between the distance from the top of the screen to the top of the container
-        //and the distance from the bottom of the screen to the bottom of the container
-        //to account for the difference in how textures set zero y at the bottom and UI Elements set zero y at the top
+        /*
+        get the difference between the distance from the top of the screen to the top of the container,
+        and the distance from the bottom of the screen to the bottom of the container,
+        to account for the difference in how textures set zero y at the bottom and UI Elements set zero y at the top
+        */
         private static int GetYOffset(VisualElement container)
         {
             int screenHeight = Screen.height;

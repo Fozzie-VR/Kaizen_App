@@ -40,6 +40,8 @@ namespace KaizenApp
         private const string FLOOR_DIMENSIONS_SET_EVENT_KEY = "floor_dimensions";
 
         Dictionary<PageType, PageStateEntry> _pageStateModelEntries = new();
+        PageType _activePageType;
+        private bool _preKaizenLayoutActive;
 
         private CommandHandler _commandHandler;
 
@@ -51,6 +53,7 @@ namespace KaizenApp
             EventManager.StartListening(MainMenuView.MAKE_KAIZEN_FORM_CLICKED, OnMakeKaizenFormClicked);
             EventManager.StartListening(KaizenFormView.PRE_KAIZEN_LAYOUT_CLICKED, OnPreKaizenLayoutClicked);
             EventManager.StartListening(FLOOR_DIMENSIONS_SET_EVENT, OnFloorDimensionsSet);
+
             _commandHandler = new CommandHandler();
         }
 
@@ -69,6 +72,15 @@ namespace KaizenApp
         private void OnPreKaizenLayoutClicked(Dictionary<string, object> dictionary)
         {
             Debug.Log("PreKaizenLayoutClicked");
+            _preKaizenLayoutActive = true;
+            DeactivatePage(PageType.KaizenForm);
+            ActivatePage(PageType.FloorDimensionsPage);
+        }
+
+        private void OnPostKaizenLayoutClicked(Dictionary<string, object> dictionary)
+        {
+            Debug.Log("PostKaizenLayoutClicked");
+            _preKaizenLayoutActive = false;
             DeactivatePage(PageType.KaizenForm);
             ActivatePage(PageType.FloorDimensionsPage);
         }
@@ -76,7 +88,28 @@ namespace KaizenApp
         private void OnFloorDimensionsSet(Dictionary<string, object> dictionary)
         {
             DeactivatePage(PageType.FloorDimensionsPage);
-            ActivatePage(PageType.PreKaizenLayout);
+            if (_preKaizenLayoutActive)
+            {
+                ActivatePage(PageType.PreKaizenLayout);
+            }
+            else
+            {
+                ActivatePage(PageType.PostKaizenLayout);
+            }
+        }
+
+        private void OnBackToKaizenFormClicked(Dictionary<string, object> dictionary)
+        {
+            if(_activePageType == PageType.PreKaizenLayout)
+            {
+                DeactivatePage(PageType.PreKaizenLayout);
+            }
+            else if(_activePageType == PageType.PostKaizenLayout)
+            {
+                DeactivatePage(PageType.PostKaizenLayout);
+            }
+            
+            ActivatePage(PageType.KaizenForm);
         }
 
         private void OnPageSortOrderChanged(Dictionary<string, object> evntMessage)
@@ -105,6 +138,7 @@ namespace KaizenApp
                 PageStateChanger pageStateChanger = new PageStateChanger(pageType, pageStateEntry.PageState, newPageState);
                 pageStateEntry.PageState = newPageState;
                 _commandHandler.AddCommand(pageStateChanger);
+                _activePageType = pageType;
             }
         }
 
@@ -133,6 +167,7 @@ namespace KaizenApp
                     PageStateChanger pageStateChanger = new PageStateChanger(pageType, pageStateEntry.PageState, newPageState);
                     pageStateEntry.PageState = newPageState;
                     _commandHandler.AddCommand(pageStateChanger);
+                    _activePageType = pageType;
                 }
             }
         }

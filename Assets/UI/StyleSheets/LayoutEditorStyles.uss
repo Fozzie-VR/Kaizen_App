@@ -168,4 +168,6 @@ VisualElement {
     border-left-width: 0;
     width: 32px;
     height: 32px;
+    margin-right: 20px;
+    margin-left: 20px;
 }

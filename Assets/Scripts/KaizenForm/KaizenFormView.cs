@@ -11,7 +11,7 @@ namespace KaizenApp
     {
         public const string PRE_KAIZEN_LAYOUT_CLICKED = "pre_kaizen_layout_CLICKED";
         public const string POST_KAIZEN_LAYOUT_CLICKED = "post_kaizen_layout_CLICKED";
-
+       
         private TextField _kaizenTheme;
         private TextField _jobDetails;
         private TextField _issues;
@@ -61,7 +61,8 @@ namespace KaizenApp
 
         private void OnPostKaizenLayoutClicked(PointerUpEvent pointerUpEvent)
         {
-            
+            Debug.Log("PostKaizenLayoutClicked");
+            EventManager.TriggerEvent(POST_KAIZEN_LAYOUT_CLICKED, null);
         }
 
         private void OnKaizenThemeChanged(ChangeEvent<string> evt)

@@ -52,6 +52,7 @@ namespace KaizenApp
             EventManager.StartListening(DailyInspiration.INSPIRATION_PAGE_CLICKED, OnInspirationClicked);
             EventManager.StartListening(MainMenuView.MAKE_KAIZEN_FORM_CLICKED, OnMakeKaizenFormClicked);
             EventManager.StartListening(KaizenFormView.PRE_KAIZEN_LAYOUT_CLICKED, OnPreKaizenLayoutClicked);
+            EventManager.StartListening(KaizenFormView.POST_KAIZEN_LAYOUT_CLICKED, OnPostKaizenLayoutClicked);
             EventManager.StartListening(FLOOR_DIMENSIONS_SET_EVENT, OnFloorDimensionsSet);
 
             _commandHandler = new CommandHandler();

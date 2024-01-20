@@ -123,7 +123,18 @@ namespace KaizenApp
         }
         private void InitializePostKaizenLayoutView()
         {
-            throw new NotImplementedException();
+           PageView pageView = _pages.Find(page => page.PageType == PageType.PostKaizenLayout);
+           VisualElement pageRoot = pageView.PageRoot;
+            pageRoot.RegisterCallback<GeometryChangedEvent>(PostKaizenGeometryChanged);
+        }
+
+        private void PostKaizenGeometryChanged(GeometryChangedEvent evt)
+        {
+            VisualElement pageRoot = (VisualElement)evt.target;
+            EventManager.TriggerEvent(POST_KAIZEN_LAYOUT_PAGE_EVENT, new Dictionary<string, object>
+            {
+                {POST_KAIZEN_LAYOUT_PAGE_EVENT_KEY, pageRoot }
+            });
         }
 
         private void InitializePreKaizenLayoutPageView()

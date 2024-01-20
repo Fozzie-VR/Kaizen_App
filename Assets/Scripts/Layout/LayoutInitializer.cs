@@ -22,8 +22,8 @@ namespace KaizenApp
         {
             _preKaizenLayoutModel = new LayoutModel();
             _postKaizenLayoutModel = new LayoutModel();
-            _preKaizenLayoutView = new LayoutView();
-            _postKaizenLayoutView = new LayoutView();
+            _preKaizenLayoutView = new LayoutView(true);
+            _postKaizenLayoutView = new LayoutView(false);
             EventManager.StartListening(PageManager.PRE_KAIZEN_LAYOUT_PAGE_EVENT, OnPreKaizenLayoutEvent);
             EventManager.StartListening(PageManager.POST_KAIZEN_LAYOUT_PAGE_EVENT, OnPostKaizenLayoutEvent);
         }
@@ -45,7 +45,7 @@ namespace KaizenApp
 
         private void OnPostKaizenLayoutEvent(Dictionary<string, object> eventArgs)
         {
-            if (eventArgs.TryGetValue(PageManager.PRE_KAIZEN_LAYOUT_PAGE_EVENT_KEY, out object pageViewObject))
+            if (eventArgs.TryGetValue(PageManager.POST_KAIZEN_LAYOUT_PAGE_EVENT_KEY, out object pageViewObject))
             {
                 VisualElement pageRoot = pageViewObject as VisualElement;
                 _postKaizenLayoutContainer = pageRoot;

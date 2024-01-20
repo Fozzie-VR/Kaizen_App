@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -73,9 +74,14 @@ namespace KaizenApp
 
         private Dictionary<int, VisualElement> _iconsOnFloor = new ();
         public Dictionary<int, VisualElement> IconsOnFloor { get => _iconsOnFloor; }
+
+        private bool _isPreKaizenLayout = true;
+        private bool _preKaizenLayoutActive = true;
         
-        public LayoutView()
-        {
+        public LayoutView(bool isPreKaizenLayout) 
+        { 
+        
+            _isPreKaizenLayout = isPreKaizenLayout;
             _iconFactory.Factory += GetIcon;
             _iconFactory.PreGet += PreGetIcon;
             _iconFactory.PreReturn += ReturnIcon;
@@ -87,9 +93,11 @@ namespace KaizenApp
             EventManager.StartListening(RemoveIconCommand.REMOVE_ICON_COMMAND, RemoveIcon);
             EventManager.StartListening(RotateIconCommand.ICON_ROTATE_COMMAND, OnIconRotated);
             EventManager.StartListening(ResizeIconCommand.RESIZE_ICON_COMMAND, OnIconResized);
+            EventManager.StartListening(KaizenFormView.POST_KAIZEN_LAYOUT_CLICKED, OnPostKaizenLayoutClicked);
+            EventManager.StartListening(KaizenFormView.PRE_KAIZEN_LAYOUT_CLICKED, OnPreKaizenLayoutClicked);
         }
 
-       
+        
 
         public void BindElements(VisualElement root)
         {
@@ -180,9 +188,22 @@ namespace KaizenApp
 
         private void OnGridDrawn(Dictionary<string, object> eventArgs)
         {
+            if (_preKaizenLayoutActive && !_isPreKaizenLayout)
+            {
+                Debug.Log("floor is null, so not drawing grid");
+                return;
+            }
+
+            if(!_preKaizenLayoutActive && _isPreKaizenLayout)
+            {
+                Debug.Log("floor is null, so not drawing grid");
+                return;
+            }
+
             Debug.Log("OnGridDrawn");
             object args = eventArgs[GridDrawer.GRID_DRAWN_EVENT_KEY];
             Texture2D gridTexture = (Texture2D)args;
+            
             
             _floor.style.backgroundImage = gridTexture;
             _floor.style.unityBackgroundScaleMode = ScaleMode.ScaleToFit;
@@ -524,7 +545,15 @@ namespace KaizenApp
             return floorContainsIcon;
         }
 
-        //
+        private void OnPostKaizenLayoutClicked(Dictionary<string, object> dictionary)
+        {
+            _preKaizenLayoutActive = false;
+        }
+
+        private void OnPreKaizenLayoutClicked(Dictionary<string, object> dictionary)
+        {
+            _preKaizenLayoutActive = true;
+        }
         private void OnSwitchKaizenLayoutClicked(Dictionary<string, object> switchEvent)
         {
             

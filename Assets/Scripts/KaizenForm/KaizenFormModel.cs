@@ -22,6 +22,10 @@ namespace KaizenApp
 
         public KaizenFormModel()
         {
+           RegisterCallbacks();
+        }
+        private void RegisterCallbacks()
+        {
             EventManager.StartListening(LayoutView.LAYOUT_CAPTURED_EVENT, OnLayoutCaptured);
             EventManager.StartListening(KaizenFormView.PRE_KAIZEN_LAYOUT_CLICKED, OnPreKaizenLayoutClicked);
         }
@@ -44,10 +48,7 @@ namespace KaizenApp
             }
         }
 
-        private void RegisterCallbacks()
-        {
-
-        }
+        
 
 
     }

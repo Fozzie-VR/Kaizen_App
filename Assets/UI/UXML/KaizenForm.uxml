@@ -16,9 +16,10 @@
                 <ui:Label tabindex="-1" text="改善前" display-tooltip-when-elided="true" class="label-text" />
                 <ui:VisualElement name="ve_pre_kaizen_layout" style="flex-grow: 1;" />
             </ui:VisualElement>
-            <ui:VisualElement name="ve_post_kaizen_container" style="flex-grow: 1; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px;">
+            <ui:VisualElement name="ve_post_kaizen_container" class="grey-background" style="flex-grow: 1; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px;">
                 <ui:Label tabindex="-1" text="改善後" display-tooltip-when-elided="true" class="label-text" />
                 <ui:VisualElement name="ve_post_kaizen_layout" style="flex-grow: 1;" />
+                <ui:Label tabindex="-1" text="初めに改善前の図を作成してください" display-tooltip-when-elided="true" name="lbl_warning" class="label-text" style="align-self: center; position: absolute; top: 40%;" />
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="ve_results_summary" style="flex-grow: 1; margin-bottom: 50px; margin-right: 40px; margin-left: 40px; max-height: 30%;">

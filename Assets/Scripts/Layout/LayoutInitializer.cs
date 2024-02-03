@@ -20,8 +20,8 @@ namespace KaizenApp
 
         public LayoutInitializer()
         {
-            _preKaizenLayoutModel = new LayoutModel();
-            _postKaizenLayoutModel = new LayoutModel();
+            _preKaizenLayoutModel = new LayoutModel(true);
+            _postKaizenLayoutModel = new LayoutModel(false);
             _preKaizenLayoutView = new LayoutView(true);
             _postKaizenLayoutView = new LayoutView(false);
             EventManager.StartListening(PageManager.PRE_KAIZEN_LAYOUT_PAGE_EVENT, OnPreKaizenLayoutEvent);
@@ -41,6 +41,7 @@ namespace KaizenApp
                 new SelectionInspector(pageRoot, _preKaizenLayoutView);
                 new UndoRedoView(pageRoot);
             }
+            EventManager.StopListening(PageManager.PRE_KAIZEN_LAYOUT_PAGE_EVENT, OnPreKaizenLayoutEvent);
         }
 
         private void OnPostKaizenLayoutEvent(Dictionary<string, object> eventArgs)
@@ -54,6 +55,7 @@ namespace KaizenApp
                 new SelectionInspector(pageRoot, _postKaizenLayoutView);
                 new UndoRedoView(pageRoot);
             }
+            EventManager.StopListening(PageManager.POST_KAIZEN_LAYOUT_PAGE_EVENT, OnPostKaizenLayoutEvent);
         }
     }
 

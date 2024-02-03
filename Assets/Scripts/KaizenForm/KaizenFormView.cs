@@ -22,6 +22,8 @@ namespace KaizenApp
         private VisualElement _rootElement;
         private VisualElement _preKaizenLayout;
         private VisualElement _postKaizenLayout;
+
+        private bool _preKaizenLayoutFinished = false;
        
         public KaizenFormView(VisualElement container)
         {
@@ -40,6 +42,7 @@ namespace KaizenApp
             _kaizenResults = _rootElement.Q<TextField>("txt_results");
             _preKaizenLayout = _rootElement.Q<VisualElement>("ve_pre_kaizen_layout");
             _postKaizenLayout = _rootElement.Q<VisualElement>("ve_post_kaizen_layout");
+            
         }
 
         private void RegisterCallbacks()
@@ -52,8 +55,17 @@ namespace KaizenApp
             _kaizenDescription.RegisterCallback<ChangeEvent<string>>(evt => OnKaizenDescriptionChanged(evt));
             _otherItems.RegisterCallback<ChangeEvent<string>>(evt => OnOtherItemsChanged(evt));
             _kaizenResults.RegisterCallback<ChangeEvent<string>>(evt => OnKaizenResultsChanged(evt));
+            EventManager.StartListening(LayoutView.BACK_TO_KAIZEN_FORM_EVENT, OnPreKaizenCompleted);
         }
-       
+
+        private void OnPreKaizenCompleted(Dictionary<string, object> dictionary)
+        {
+            _preKaizenLayoutFinished = true;
+            _postKaizenLayout.parent.RemoveFromClassList("grey-background");
+            Label warning = _postKaizenLayout.parent.Q<Label>("lbl_warning");
+            warning.AddToClassList("hidden-text");
+        }
+
         private void OnPreKaizenLayoutClicked(PointerUpEvent pointerUpEvent)
         {
            EventManager.TriggerEvent(PRE_KAIZEN_LAYOUT_CLICKED, null);
@@ -62,7 +74,11 @@ namespace KaizenApp
         private void OnPostKaizenLayoutClicked(PointerUpEvent pointerUpEvent)
         {
             Debug.Log("PostKaizenLayoutClicked");
-            EventManager.TriggerEvent(POST_KAIZEN_LAYOUT_CLICKED, null);
+            if (_preKaizenLayoutFinished)
+            {
+                EventManager.TriggerEvent(POST_KAIZEN_LAYOUT_CLICKED, null);
+                
+            }
         }
 
         private void OnKaizenThemeChanged(ChangeEvent<string> evt)

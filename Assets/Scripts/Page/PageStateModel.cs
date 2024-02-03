@@ -42,6 +42,7 @@ namespace KaizenApp
         Dictionary<PageType, PageStateEntry> _pageStateModelEntries = new();
         PageType _activePageType;
         private bool _preKaizenLayoutActive;
+        private bool _floorDimensionsSet = false;
 
         private CommandHandler _commandHandler;
 
@@ -54,6 +55,7 @@ namespace KaizenApp
             EventManager.StartListening(KaizenFormView.PRE_KAIZEN_LAYOUT_CLICKED, OnPreKaizenLayoutClicked);
             EventManager.StartListening(KaizenFormView.POST_KAIZEN_LAYOUT_CLICKED, OnPostKaizenLayoutClicked);
             EventManager.StartListening(FLOOR_DIMENSIONS_SET_EVENT, OnFloorDimensionsSet);
+            EventManager.StartListening(LayoutView.BACK_TO_KAIZEN_FORM_EVENT, OnBackToKaizenFormClicked);
 
             _commandHandler = new CommandHandler();
         }
@@ -74,8 +76,15 @@ namespace KaizenApp
         {
             Debug.Log("PreKaizenLayoutClicked");
             _preKaizenLayoutActive = true;
+            if (_floorDimensionsSet)
+            {
+                ActivatePage(PageType.PreKaizenLayout);
+            }
+            else
+            {
+                ActivatePage(PageType.FloorDimensionsPage);
+            }
             DeactivatePage(PageType.KaizenForm);
-            ActivatePage(PageType.FloorDimensionsPage);
         }
 
         private void OnPostKaizenLayoutClicked(Dictionary<string, object> dictionary)
@@ -83,11 +92,12 @@ namespace KaizenApp
             Debug.Log("PostKaizenLayoutClicked");
             _preKaizenLayoutActive = false;
             DeactivatePage(PageType.KaizenForm);
-            ActivatePage(PageType.FloorDimensionsPage);
+            ActivatePage(PageType.PostKaizenLayout);
         }
 
         private void OnFloorDimensionsSet(Dictionary<string, object> dictionary)
         {
+            _floorDimensionsSet = true;
             DeactivatePage(PageType.FloorDimensionsPage);
             if (_preKaizenLayoutActive)
             {

@@ -17,6 +17,7 @@ namespace KaizenApp
 
         //list of all pages
         [SerializeField] List<PageView> _pages;
+        private List<PageView> _initializedPages = new();
 
         MainMenuView _mainMenuView;
 
@@ -37,10 +38,6 @@ namespace KaizenApp
             EventManager.StartListening(PageStateChanger.PAGE_STATE_CHANGE, OnPageStateChange);
         }
         
-        private void Start()
-        {
-            //InitializeMainMenuView();
-        }
 
         private void OnPageStateChange(Dictionary<string, object> evntMessage)
         {
@@ -97,22 +94,35 @@ namespace KaizenApp
         private void InitializeMainMenuView()
         {
             PageView mainMenuPage = _pages.Find(page => page.PageType == PageType.MainMenu);
-            _mainMenuView = new MainMenuView(mainMenuPage.PageRoot);
+            if(!_initializedPages.Contains(mainMenuPage))
+            {
+                _mainMenuView = new MainMenuView(mainMenuPage.PageRoot);
+                _initializedPages.Add(mainMenuPage);
+            }
         }
 
         //Initialize FloorDimensionsPageView
         private void InitializeFloorDimensionsPageView()
         {
             PageView floorDimensionsPage = _pages.Find(page => page.PageType == PageType.FloorDimensionsPage);
-            FloorDimensionsPage floorDimensionsPageView = new FloorDimensionsPage(floorDimensionsPage.PageRoot);
+            if (!_initializedPages.Contains(floorDimensionsPage))
+            {
+                FloorDimensionsPage floorDimensionsPageView = new FloorDimensionsPage(floorDimensionsPage.PageRoot);
+                _initializedPages.Add(floorDimensionsPage);
+            }
+            
         }
-
 
         private void InitializeKaizenFormView()
         {
             PageView pageView = _pages.Find(page => page.PageType == PageType.KaizenForm);
-            VisualElement pageRoot = pageView.PageRoot;
-            pageRoot.RegisterCallback<GeometryChangedEvent>(KaizenFormGeometryChanged);
+            if (!_initializedPages.Contains(pageView))
+            {
+                VisualElement pageRoot = pageView.PageRoot;
+                pageRoot.RegisterCallback<GeometryChangedEvent>(KaizenFormGeometryChanged);
+                _initializedPages.Add(pageView);
+            }
+            
         }
 
         private void KaizenFormGeometryChanged(GeometryChangedEvent evt)
@@ -123,9 +133,13 @@ namespace KaizenApp
         }
         private void InitializePostKaizenLayoutView()
         {
-           PageView pageView = _pages.Find(page => page.PageType == PageType.PostKaizenLayout);
-           VisualElement pageRoot = pageView.PageRoot;
-            pageRoot.RegisterCallback<GeometryChangedEvent>(PostKaizenGeometryChanged);
+            PageView pageView = _pages.Find(page => page.PageType == PageType.PostKaizenLayout);
+            if (!_initializedPages.Contains(pageView))
+            {
+                VisualElement pageRoot = pageView.PageRoot;
+                pageRoot.RegisterCallback<GeometryChangedEvent>(PostKaizenGeometryChanged);
+                _initializedPages.Add(pageView);
+            }
         }
 
         private void PostKaizenGeometryChanged(GeometryChangedEvent evt)
@@ -135,15 +149,18 @@ namespace KaizenApp
             {
                 {POST_KAIZEN_LAYOUT_PAGE_EVENT_KEY, pageRoot }
             });
+            pageRoot.UnregisterCallback<GeometryChangedEvent>(PostKaizenGeometryChanged);
         }
 
         private void InitializePreKaizenLayoutPageView()
         {
-           //initialize icon spawner, layout view, layout model, grid drawer, icon view, navigation view, undo/redo view
-           PageView pageView = _pages.Find(page => page.PageType == PageType.PreKaizenLayout);
-           VisualElement pageRoot = pageView.PageRoot;
-           pageRoot.RegisterCallback<GeometryChangedEvent>(PreKaizenGeometryChanged);
-           
+            PageView pageView = _pages.Find(page => page.PageType == PageType.PreKaizenLayout);
+            if (!_initializedPages.Contains(pageView))
+            {
+                VisualElement pageRoot = pageView.PageRoot;
+                pageRoot.RegisterCallback<GeometryChangedEvent>(PreKaizenGeometryChanged);
+                _initializedPages.Add(pageView);
+            }
         }
 
         private void PreKaizenGeometryChanged(GeometryChangedEvent evt)
@@ -156,11 +173,14 @@ namespace KaizenApp
                    pageRoot
                }
            });
+            pageRoot.UnregisterCallback<GeometryChangedEvent>(PreKaizenGeometryChanged);
+
+            
         }
 
         private void InitializeComparisonPageView()
         {
-            throw new NotImplementedException();
+            
         }
 
 

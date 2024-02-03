@@ -34,17 +34,48 @@ namespace KaizenApp
         private int _nextIconId = 0;
 
         CommandHandler _commandHandler;
+
+        private bool _isPreKaizenModel;
         
         //this class will hold all the info about the layout; icons, floor size, pixels per meter, etc.
         //will need to listen to events from view classes to update info
         //will issue commands to view classes to update view
-        public LayoutModel()
+        public LayoutModel(bool isPreKaizenModel)
         {
             _commandHandler = new CommandHandler(UndoRedoView.UNDO_EVENT, UndoRedoView.REDO_EVENT);
-            RegisterEvents();
+            _isPreKaizenModel   = isPreKaizenModel;
+
+            EventManager.StartListening(KaizenFormView.POST_KAIZEN_LAYOUT_CLICKED, OnPostKaizenLayoutClicked);
+            EventManager.StartListening(KaizenFormView.PRE_KAIZEN_LAYOUT_CLICKED, OnPreKaizenLayoutClicked);
+           
         }
 
-        private void RegisterEvents()
+        private void OnPreKaizenLayoutClicked(Dictionary<string, object> dictionary)
+        {
+            //if pre kaizen, register callbacks, else unregister
+            if (_isPreKaizenModel)
+            {
+                RegisterCallbacks();
+            }
+            else
+            {
+                UnRegisterCallbacks();
+            }
+        }
+
+        private void OnPostKaizenLayoutClicked(Dictionary<string, object> dictionary)
+        {
+            if (!_isPreKaizenModel)
+            {
+                RegisterCallbacks();
+            }
+            else
+            {
+                UnRegisterCallbacks();
+            }
+        }
+
+        private void RegisterCallbacks()
         {
             EventManager.StartListening(FloorDimensionsPage.FLOOR_DIMENSIONS_SET_EVENT, OnFloorDimensionsSet);
             EventManager.StartListening(IconSpawner.ICON_SPAWN_REQUESTED, OnIconSpawned);
@@ -58,7 +89,22 @@ namespace KaizenApp
 
         }
 
-       
+        private void UnRegisterCallbacks()
+        {
+            EventManager.StopListening(FloorDimensionsPage.FLOOR_DIMENSIONS_SET_EVENT, OnFloorDimensionsSet);
+            EventManager.StopListening(IconSpawner.ICON_SPAWN_REQUESTED, OnIconSpawned);
+            EventManager.StopListening(IconMover.ICON_MOVED_EVENT, OnIconMoved);
+            EventManager.StopListening(LayoutView.ICON_OFF_FLOOR_EVENT, OnIconOffFloor);
+            EventManager.StopListening(SelectionInspector.ROTATION_CHANGED_EVENT, OnRotationChanged);
+            EventManager.StopListening(SelectionInspector.ICON_DIMENSIONS_CHANGED_EVENT, OnIconDimensionsChanged);
+            EventManager.StopListening(MoveIconCommand.ICON_MOVE_COMMAND_UNDO, OnMoveIconUndo);
+            EventManager.StopListening(RotateIconCommand.ICON_ROTATE_COMMAND_UNDO, OnRotateIconUndo);
+            EventManager.StopListening(ResizeIconCommand.UNDO_RESIZE_ICON_COMMAND, OnResizeIconUndo);
+        }
+
+
+
+
 
         private void OnRotationChanged(Dictionary<string, object> evntArgs)
         {

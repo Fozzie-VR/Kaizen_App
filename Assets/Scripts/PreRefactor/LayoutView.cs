@@ -68,6 +68,8 @@ namespace KaizenApp
         private FloatField _floorHeight;
         private FloatField _floorWidth;
 
+        private Texture2D _gridTexture;
+
         private Button _backButton;
 
         private IconFactory<VisualElement> _iconFactory = new IconFactory<VisualElement>();
@@ -85,7 +87,14 @@ namespace KaizenApp
             _iconFactory.Factory += GetIcon;
             _iconFactory.PreGet += PreGetIcon;
             _iconFactory.PreReturn += ReturnIcon;
+            
+            EventManager.StartListening(KaizenFormView.POST_KAIZEN_LAYOUT_CLICKED, OnPostKaizenLayoutClicked);
+            EventManager.StartListening(KaizenFormView.PRE_KAIZEN_LAYOUT_CLICKED, OnPreKaizenLayoutClicked);
 
+        }
+
+        private void RegisterCallbacks()
+        {
             EventManager.StartListening(GridDrawer.GRID_DRAWN_EVENT, OnGridDrawn);
             EventManager.StartListening(AddIconCommand.ADD_ICON_COMMAND, OnAddIcon);
             EventManager.StartListening(SetFloorSizeCommand.FLOOR_SIZE_SET_EVENT, OnFloorDimensionsSet);
@@ -93,11 +102,19 @@ namespace KaizenApp
             EventManager.StartListening(RemoveIconCommand.REMOVE_ICON_COMMAND, RemoveIcon);
             EventManager.StartListening(RotateIconCommand.ICON_ROTATE_COMMAND, OnIconRotated);
             EventManager.StartListening(ResizeIconCommand.RESIZE_ICON_COMMAND, OnIconResized);
-            EventManager.StartListening(KaizenFormView.POST_KAIZEN_LAYOUT_CLICKED, OnPostKaizenLayoutClicked);
-            EventManager.StartListening(KaizenFormView.PRE_KAIZEN_LAYOUT_CLICKED, OnPreKaizenLayoutClicked);
+           
+        }
+        private void UnRegisterCallbacks()
+        {
+            EventManager.StopListening(GridDrawer.GRID_DRAWN_EVENT, OnGridDrawn);
+            EventManager.StopListening(AddIconCommand.ADD_ICON_COMMAND, OnAddIcon);
+            EventManager.StopListening(SetFloorSizeCommand.FLOOR_SIZE_SET_EVENT, OnFloorDimensionsSet);
+            EventManager.StopListening(MoveIconCommand.ICON_MOVE_COMMAND, OnIconMoved);
+            EventManager.StopListening(RemoveIconCommand.REMOVE_ICON_COMMAND, RemoveIcon);
+            EventManager.StopListening(RotateIconCommand.ICON_ROTATE_COMMAND, OnIconRotated);
+            EventManager.StopListening(ResizeIconCommand.RESIZE_ICON_COMMAND, OnIconResized);
         }
 
-        
 
         public void BindElements(VisualElement root)
         {
@@ -156,6 +173,8 @@ namespace KaizenApp
                     icon.Value.RemoveFromClassList("hidden");
                 }
             }
+            //show grid
+            _floor.style.backgroundImage = _gridTexture;
             EventManager.TriggerEvent(LAYOUT_CAPTURED_EVENT, new Dictionary<string, object> { 
                 { LAYOUT_CAPTURED_EVENT_KEY, layout } 
             });
@@ -188,24 +207,12 @@ namespace KaizenApp
 
         private void OnGridDrawn(Dictionary<string, object> eventArgs)
         {
-            if (_preKaizenLayoutActive && !_isPreKaizenLayout)
-            {
-                Debug.Log("floor is null, so not drawing grid");
-                return;
-            }
-
-            if(!_preKaizenLayoutActive && _isPreKaizenLayout)
-            {
-                Debug.Log("floor is null, so not drawing grid");
-                return;
-            }
-
             Debug.Log("OnGridDrawn");
             object args = eventArgs[GridDrawer.GRID_DRAWN_EVENT_KEY];
-            Texture2D gridTexture = (Texture2D)args;
+            _gridTexture = (Texture2D)args;
             
             
-            _floor.style.backgroundImage = gridTexture;
+            _floor.style.backgroundImage = _gridTexture;
             _floor.style.unityBackgroundScaleMode = ScaleMode.ScaleToFit;
 
         }
@@ -338,10 +345,7 @@ namespace KaizenApp
             }
             EventManager.TriggerEvent(PIXELS_PER_METER_EVENT, new Dictionary<string, object> { { PIXELS_PER_METER_EVENT_KEY, _pixelsPerMeter } });
         }
-       
-
-        //floor icons are data that should be kept in a model class
-        //This should be callback from command issued by layout model
+        
         //Callback will generate an icon and place it on the floor
         public void OnAddIcon(Dictionary<string, object> evntArgs)
         {
@@ -413,7 +417,7 @@ namespace KaizenApp
 
         private void OnIconRotated(Dictionary<string, object> evntArgs)
         {
-           IconViewInfo iconViewInfo = evntArgs[RotateIconCommand.ICON_ROTATE_COMMAND_KEY] as IconViewInfo;
+            IconViewInfo iconViewInfo = evntArgs[RotateIconCommand.ICON_ROTATE_COMMAND_KEY] as IconViewInfo;
             int id = iconViewInfo.iconID;
             VisualElement icon = _iconsOnFloor[id];
             icon.style.rotate = new Rotate(iconViewInfo.RotationAngle);
@@ -422,6 +426,7 @@ namespace KaizenApp
 
         private void OnIconResized(Dictionary<string, object> dictionary)
         {
+           
             IconViewInfo iconViewInfo = dictionary[ResizeIconCommand.RESIZE_ICON_COMMAND_KEY] as IconViewInfo;
             int id = iconViewInfo.iconID;
             VisualElement icon = _iconsOnFloor[id];
@@ -548,12 +553,47 @@ namespace KaizenApp
         private void OnPostKaizenLayoutClicked(Dictionary<string, object> dictionary)
         {
             _preKaizenLayoutActive = false;
+            if(!_isPreKaizenLayout)
+            {
+                Debug.Log("registering callbacks on post kaizen layout clicked");
+                RegisterCallbacks();
+            }
+            else
+            {
+                UnRegisterCallbacks();
+            }
+
         }
 
         private void OnPreKaizenLayoutClicked(Dictionary<string, object> dictionary)
         {
             _preKaizenLayoutActive = true;
+            if(_isPreKaizenLayout)
+            {
+                Debug.Log("registering callbacks on pre kaizen layout clicked");
+                RegisterCallbacks();
+            }
+            else
+            {
+                UnRegisterCallbacks();
+            }
         }
+
+        //private bool IsActiveLayout()
+        //{
+        //    if (_preKaizenLayoutActive && _isPreKaizenLayout)
+        //    {
+        //        return true;
+        //    }
+
+        //    if (!_preKaizenLayoutActive && !_isPreKaizenLayout)
+        //    {
+        //        return true;
+        //    }
+
+        //    return false;
+        //}
+
         private void OnSwitchKaizenLayoutClicked(Dictionary<string, object> switchEvent)
         {
             

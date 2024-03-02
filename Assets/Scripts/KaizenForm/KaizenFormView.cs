@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -47,6 +48,7 @@ namespace KaizenApp
 
         private void RegisterCallbacks()
         {
+            Debug.Log("registering Kaizen Form callbacks");
             _preKaizenLayout.RegisterCallback<PointerUpEvent>(PointerUpEvent => OnPreKaizenLayoutClicked(PointerUpEvent));
             _postKaizenLayout.RegisterCallback<PointerUpEvent>(PointerUpEvent => OnPostKaizenLayoutClicked(PointerUpEvent));
             _kaizenTheme.RegisterCallback<ChangeEvent<string>>(evt => OnKaizenThemeChanged(evt));

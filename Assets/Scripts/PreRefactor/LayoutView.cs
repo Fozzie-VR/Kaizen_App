@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -43,6 +44,11 @@ namespace KaizenApp
         public const string LAYOUT_CAPTURED_EVENT = "layout_captured";
         public const string LAYOUT_CAPTURED_EVENT_KEY = "layout_captured_key";
 
+        public const string ON_COPY_LAYOUT_VIEW = "on_copy_layout_view";
+        public const string ON_COPY_LAYOUT_VIEW_KEY = "on_copy_layout_view";
+
+        public const string LAYOUT_COPIED_EVENT = "layout_copied";
+
         //all of these floats and ints should be in a model class
         private const float DEFAULT_FLOOR_WIDTH = 5; //meters
         private const float DEFAULT_FLOOR_HEIGHT = 5; //meters
@@ -69,6 +75,7 @@ namespace KaizenApp
         private FloatField _floorWidth;
 
         private Texture2D _gridTexture;
+        public Texture2D GridTexture => _gridTexture;
 
         private Button _backButton;
 
@@ -76,6 +83,7 @@ namespace KaizenApp
 
         private Dictionary<int, VisualElement> _iconsOnFloor = new ();
         public Dictionary<int, VisualElement> IconsOnFloor { get => _iconsOnFloor; }
+       
 
         private bool _isPreKaizenLayout = true;
         private bool _preKaizenLayoutActive = true;
@@ -90,6 +98,9 @@ namespace KaizenApp
             
             EventManager.StartListening(KaizenFormView.POST_KAIZEN_LAYOUT_CLICKED, OnPostKaizenLayoutClicked);
             EventManager.StartListening(KaizenFormView.PRE_KAIZEN_LAYOUT_CLICKED, OnPreKaizenLayoutClicked);
+
+            EventManager.StartListening(PageManager.POST_KAIZEN_LAYOUT_PAGE_EVENT, OnPostKaizenInitialized);
+            EventManager.StartListening(ON_COPY_LAYOUT_VIEW, OnLayoutCopied);
 
         }
 
@@ -136,8 +147,15 @@ namespace KaizenApp
                 _floorWidth.SetValueWithoutNotify(_floorWidthMeters);
                 SetContainerSize();
             }
-        }  
+        } 
         
+        public void SetFloorSize(float width, float height)
+        {
+            _floorWidthMeters = width;
+            _floorHeightMeters = height;
+            
+        }
+       
         private async void BackButtonClicked()
         {
            await CaptureLayout();
@@ -150,7 +168,8 @@ namespace KaizenApp
             foreach (var icon in _iconsOnFloor)
             {
                 IconViewInfo iconViewInfo = icon.Value.userData as IconViewInfo;
-                if (iconViewInfo.IconType == IconType.Photo)
+                
+                if (iconViewInfo != null && iconViewInfo.IconType == IconType.Photo)
                 {
                     icon.Value.AddToClassList("hidden");
                 }
@@ -168,7 +187,7 @@ namespace KaizenApp
             foreach (var icon in _iconsOnFloor)
             {
                 IconViewInfo iconViewInfo = icon.Value.userData as IconViewInfo;
-                if (iconViewInfo.IconType == IconType.Photo)
+                if (iconViewInfo != null && iconViewInfo.IconType == IconType.Photo)
                 {
                     icon.Value.RemoveFromClassList("hidden");
                 }
@@ -178,9 +197,6 @@ namespace KaizenApp
             EventManager.TriggerEvent(LAYOUT_CAPTURED_EVENT, new Dictionary<string, object> { 
                 { LAYOUT_CAPTURED_EVENT_KEY, layout } 
             });
-
-
-            
         }
 
         private void OnFloorDimensionsSet(Dictionary<string, object> eventArgs)
@@ -188,6 +204,8 @@ namespace KaizenApp
             //get floor dimensions from event args
             FloorDimensions floorDimensions = 
                 (FloorDimensions)eventArgs[SetFloorSizeCommand.FLOOR_SIZE_SET_EVENT_KEY];
+            if (floorDimensions.FloorWidthMeters == 0 || floorDimensions.FloorHeightMeters == 0)
+                return;
             SetFloorDimensions(floorDimensions);
         }
 
@@ -238,7 +256,8 @@ namespace KaizenApp
             GridDrawer gridDrawer = new GridDrawer();
             gridDrawer.DrawGrid(_floorWidthMeters, _floorHeightMeters, _pixelsPerMeter);
         }
-        
+
+       
 
         private void ChangeFloorHeight(FocusOutEvent evt)
         {
@@ -349,6 +368,7 @@ namespace KaizenApp
         //Callback will generate an icon and place it on the floor
         public void OnAddIcon(Dictionary<string, object> evntArgs)
         {
+            Debug.Log("OnAddIcon. Is pre kaizen view: " + _isPreKaizenLayout);
             //unpack event args
             IconViewInfo iconViewInfo = evntArgs[AddIconCommand.ADD_ICON_COMMAND_KEY] as IconViewInfo;
             
@@ -357,6 +377,7 @@ namespace KaizenApp
             Vector2 localPosition = iconViewInfo.LocalPosition;
             int iconHeight = iconViewInfo.Height;
             int iconWidth = iconViewInfo.Width;
+            float iconRotation = iconViewInfo.RotationAngle;
 
             //check if icon is inside the floor container
             if(!IconIsOnFloor(localPosition, iconWidth, iconHeight))
@@ -370,11 +391,14 @@ namespace KaizenApp
             icon.AddToClassList(iconStyleClass);
             _floor.Add(icon);
             icon.style.translate = new Translate(localPosition.x, localPosition.y);
+            icon.style.rotate = new Rotate(iconViewInfo.RotationAngle);
             icon.style.height = iconHeight;
             icon.style.width = iconWidth;
             icon.RegisterCallback<GeometryChangedEvent>(OnIconGeometryChanged);
             IconMover iconMover = new IconMover(icon, _dragArea);
+            Debug.Log("adding icon to floor with id: " + id);
             _iconsOnFloor.Add(id, icon);
+            
             EventManager.TriggerEvent(IconMover.ICON_CLICKED_EVENT, new Dictionary<string, object> { { IconMover.ICON_CLICKED_EVENT_KEY, iconViewInfo } });
         }
 
@@ -441,10 +465,7 @@ namespace KaizenApp
                 float yOffset = iconViewInfo.Height / 2;
                 var localPosition = iconViewInfo.LocalPosition;
                 icon.style.translate = new Translate(localPosition.x, localPosition.y);
-
             }
-
-           
         }
 
 
@@ -555,7 +576,6 @@ namespace KaizenApp
             _preKaizenLayoutActive = false;
             if(!_isPreKaizenLayout)
             {
-                Debug.Log("registering callbacks on post kaizen layout clicked");
                 RegisterCallbacks();
             }
             else
@@ -563,6 +583,36 @@ namespace KaizenApp
                 UnRegisterCallbacks();
             }
 
+        }
+
+        private void OnPostKaizenInitialized(Dictionary<string, object> args)
+        {
+            if (_isPreKaizenLayout)
+            {
+                
+                Dictionary<string, object> eventArgs = new Dictionary<string, object>();
+                //add floor icons and grid texture and floor dimensions to event args
+                eventArgs.Add("grid_texture", _gridTexture);
+                eventArgs.Add("floor_dimensions", new FloorDimensions
+                {
+                    FloorHeightMeters = _floorHeightMeters,
+                    FloorWidthMeters = _floorWidthMeters
+                });
+                EventManager.TriggerEvent(ON_COPY_LAYOUT_VIEW, eventArgs);
+            }
+
+        }
+
+        private void OnLayoutCopied(Dictionary<string, object> args)
+        {
+            if (_isPreKaizenLayout) return;
+            
+            Texture2D gridTexture = args["grid_texture"] as Texture2D;
+            FloorDimensions floorDimensions = (FloorDimensions)args["floor_dimensions"];
+            SetFloorDimensions(floorDimensions);
+            //_gridTexture = gridTexture;
+            //_floor.style.backgroundImage = _gridTexture;
+            EventManager.TriggerEvent(LAYOUT_COPIED_EVENT, null);
         }
 
         private void OnPreKaizenLayoutClicked(Dictionary<string, object> dictionary)

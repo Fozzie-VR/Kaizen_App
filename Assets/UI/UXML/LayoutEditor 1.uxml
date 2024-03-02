@@ -1,0 +1,166 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/StyleSheets/LayoutEditorStyles.uss?fileID=7433441132597879392&amp;guid=8ae92a8b5f9424e42a8849c5c201882e&amp;type=3#LayoutEditorStyles" />
+    <Style src="project://database/Assets/UI/StyleSheets/FloorIconStyles.uss?fileID=7433441132597879392&amp;guid=273822ff3b16a7343a5b859dd5c6f3b8&amp;type=3#FloorIconStyles" />
+    <ui:VisualElement name="ve_floor_plan_screen" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1;">
+        <ui:VisualElement name="ve_header" class="skyblue_background" style="flex-grow: 1; flex-direction: row; max-height: 64px; align-items: center;">
+            <ui:Button display-tooltip-when-elided="true" name="btn_back" style="font-size: 24px; display: flex; background-color: rgb(203, 231, 255); background-image: url(&apos;project://database/Assets/UI/Sprites/arrow.png?fileID=21300000&amp;guid=94c83d08fd37ed147a722e64bb1060df&amp;type=3#arrow&apos;); -unity-background-scale-mode: scale-to-fit; margin-right: 40px; height: 40px; width: 128px;" />
+            <ui:Button display-tooltip-when-elided="true" name="btn_undo" class="undo-redo-buttons" />
+            <ui:Button display-tooltip-when-elided="true" name="btn_redo" class="undo-redo-buttons" style="background-image: url(&apos;project://database/Assets/UI/Sprites/redo-circular-arrow.png?fileID=21300000&amp;guid=74ce92729d60a7946b7e9ea8e5c6e58d&amp;type=3#redo-circular-arrow&apos;);" />
+            <ui:Label tabindex="-1" text="改善前レイアウト" display-tooltip-when-elided="true" name="lbl_layout_header" style="background-color: rgb(203, 231, 255); -unity-text-align: upper-center; -unity-font-style: bold; font-size: 32px; margin-bottom: 0; margin-top: 0; margin-right: 0; margin-left: 25%; padding-top: 0; padding-right: 0; padding-bottom: 10px; padding-left: 0; -unity-font-definition: url(&apos;project://database/Assets/UI/NotoSansJP-VariableFont_wght.ttf?fileID=12800000&amp;guid=62d3f4a7445c7ed48bbc2aabf8e07646&amp;type=3#NotoSansJP-VariableFont_wght&apos;);" />
+        </ui:VisualElement>
+        <ui:VisualElement name="ve_inspector" style="background-color: rgb(203, 231, 255); visibility: visible; overflow: hidden; display: flex; flex-direction: row; flex-grow: 1; max-height: 25%;">
+            <ui:VisualElement name="ve_floor_specs" class="skyblue_background" style="flex-grow: 1; overflow: hidden; width: 30%; visibility: visible; border-right-width: 5px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); display: flex;">
+                <ui:Label tabindex="-1" text="改善するエリア" display-tooltip-when-elided="true" style="font-size: 24px; -unity-text-align: upper-center; -unity-font-definition: url(&apos;project://database/Assets/UI/NotoSansJP-VariableFont_wght.ttf?fileID=12800000&amp;guid=62d3f4a7445c7ed48bbc2aabf8e07646&amp;type=3#NotoSansJP-VariableFont_wght&apos;); -unity-font-style: bold;" />
+                <ui:VisualElement name="ve_container" style="flex-grow: 0; width: 70%; align-self: center;">
+                    <ui:FloatField label="縦 (m)" value="5" name="float_floor_height" class="inspector_float_field" style="width: 100%; flex-shrink: 1; flex-grow: 0; justify-content: center; -unity-font-definition: url(&apos;project://database/Assets/UI/NotoSansJP-VariableFont_wght.ttf?fileID=12800000&amp;guid=62d3f4a7445c7ed48bbc2aabf8e07646&amp;type=3#NotoSansJP-VariableFont_wght&apos;); -unity-font-style: bold;" />
+                    <ui:FloatField label="横 (m)" value="5" name="float_floor_width" class="inspector_float_field" style="width: 100%; justify-content: center; -unity-font-definition: url(&apos;project://database/Assets/UI/NotoSansJP-VariableFont_wght.ttf?fileID=12800000&amp;guid=62d3f4a7445c7ed48bbc2aabf8e07646&amp;type=3#NotoSansJP-VariableFont_wght&apos;); -unity-font-style: bold;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="ve_selection_inspector" class="skyblue_background" style="flex-grow: 1; overflow: hidden; width: 50%; visibility: visible; flex-shrink: 1;">
+                <ui:VisualElement name="ve_layout_icon_inspector" style="flex-grow: 1; display: flex; visibility: visible;">
+                    <ui:Label tabindex="-1" text="アイコンの詳細" display-tooltip-when-elided="true" style="font-size: 24px; -unity-text-align: upper-center; -unity-font-definition: url(&apos;project://database/Assets/UI/NotoSansJP-VariableFont_wght.ttf?fileID=12800000&amp;guid=62d3f4a7445c7ed48bbc2aabf8e07646&amp;type=3#NotoSansJP-VariableFont_wght&apos;); -unity-font-style: bold;" />
+                    <ui:VisualElement name="ve_inspector_container" style="padding-bottom: 40px; flex-direction: row;">
+                        <ui:VisualElement name="ve_left_fields" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-right-width: 1px;">
+                            <ui:FloatField label="縦 (m)" value="0" name="float_height" style="align-self: center; flex-grow: 0; max-height: 100px; min-height: 40px; -unity-font-definition: url(&apos;project://database/Assets/UI/NotoSansJP-VariableFont_wght.ttf?fileID=12800000&amp;guid=62d3f4a7445c7ed48bbc2aabf8e07646&amp;type=3#NotoSansJP-VariableFont_wght&apos;); -unity-font-style: bold;" />
+                            <ui:FloatField label="横 (m)" value="0" name="float_width" style="align-self: center; max-height: 100px; min-height: 40px; -unity-font-definition: url(&apos;project://database/Assets/UI/NotoSansJP-VariableFont_wght.ttf?fileID=12800000&amp;guid=62d3f4a7445c7ed48bbc2aabf8e07646&amp;type=3#NotoSansJP-VariableFont_wght&apos;); -unity-font-style: bold;" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="ve_right_fields" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                            <ui:Vector2Field name="v2_position" style="padding-right: 10px; align-self: center;" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:Slider picking-mode="Ignore" label="回転" value="42" high-value="180" low-value="-180" inverted="false" name="slider_rotation" style="max-width: 75%; flex-grow: 1; align-self: center; -unity-font-definition: url(&apos;project://database/Assets/UI/NotoSansJP-VariableFont_wght.ttf?fileID=12800000&amp;guid=62d3f4a7445c7ed48bbc2aabf8e07646&amp;type=3#NotoSansJP-VariableFont_wght&apos;);" />
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_photo_icon_inspector" style="flex-grow: 1; flex-direction: row; display: flex;">
+                    <ui:VisualElement name="ve_photo" style="flex-grow: 1; width: 30%; -unity-background-scale-mode: scale-and-crop;" />
+                    <ui:VisualElement name="ve_photo_buttons" style="flex-grow: 1; justify-content: space-around; width: 70%;">
+                        <ui:Button text="Select Photo" display-tooltip-when-elided="true" name="btn_select_photo" style="background-color: rgb(203, 231, 255); width: 50%; align-self: center; visibility: hidden;" />
+                        <ui:Button text="Take Photo" display-tooltip-when-elided="true" name="btn_take_photo" style="background-color: rgb(203, 231, 255); width: 50%; align-self: center;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Button display-tooltip-when-elided="true" name="btn_next" style="font-size: 24px; flex-shrink: 1; background-color: rgb(203, 231, 255); background-image: url(&apos;project://database/Assets/UI/Sprites/arrow%201.png?fileID=21300000&amp;guid=c9f7bb6d3f9200646ab80834c59faeef&amp;type=3#arrow 1&apos;); -unity-background-scale-mode: scale-to-fit; width: 64px; display: none;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="ve_layout_container" focusable="true" style="background-color: rgb(255, 255, 255); flex-grow: 1; align-items: center; justify-content: center; flex-direction: column; min-height: 50%; max-height: 80%;">
+            <ui:VisualElement name="ve_floor" />
+            <ui:VisualElement name="ve_post_kaizen_layout_area" />
+            <ui:ScrollView name="scroll_layout_area" style="flex-grow: 1; justify-content: center; align-self: center; display: none;" />
+        </ui:VisualElement>
+        <ui:ScrollView name="ve_icons" class="skyblue_background" style="padding-top: 20px; max-height: 20%;">
+            <ui:VisualElement name="ve_row_1" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; padding-bottom: 30px;">
+                <ui:VisualElement name="ve_worker_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image worker_icon" />
+                        <ui:Label tabindex="-1" text="作業者" display-tooltip-when-elided="true" class="icon_label" style="top: 10px;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_custom_item" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image" style="border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;" />
+                        <ui:Label tabindex="-1" text="フリーボックス" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_custom_lable" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image custom_label_icon" />
+                        <ui:Label tabindex="-1" text="フリーテキスト" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_product_flow" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image flow_icon" />
+                        <ui:Label tabindex="-1" text="モノの流れ" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_worker_movement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image movement_icon" />
+                        <ui:Label tabindex="-1" text="移動" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_transport_flow" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image transport_icon" />
+                        <ui:Label tabindex="-1" text="運搬" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="ve_row_2" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; padding-bottom: 30px;">
+                <ui:VisualElement name="ve_product_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image product_icon" />
+                        <ui:Label tabindex="-1" text="製品" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_table_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="table_icon icon_image" />
+                        <ui:Label tabindex="-1" text="作業台" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_trolley_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image trolley_icon" />
+                        <ui:Label tabindex="-1" text="台車" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_machine_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image machine_icon" />
+                        <ui:Label tabindex="-1" text="機械" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_converyor_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image conveyor_icon" />
+                        <ui:Label tabindex="-1" text="コンベアーコロコン" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_kanban" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image kanban_icon" />
+                        <ui:Label tabindex="-1" text="管理板" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="ve_row_2" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; padding-bottom: 30px;">
+                <ui:VisualElement name="ve_parts_shelf" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image parts_shelf_icon" />
+                        <ui:Label tabindex="-1" text="部品棚・治具棚" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_photo_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; visibility: visible; background-image: none;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="table_icon icon_image floor_photo" />
+                        <ui:Label tabindex="-1" text="写真" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_trolley_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; visibility: hidden;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image trolley_icon" />
+                        <ui:Label tabindex="-1" text="Trolley" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_machine_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; visibility: hidden;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image machine_icon" />
+                        <ui:Label tabindex="-1" text="Machine" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_machine_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; visibility: hidden;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image conveyor_icon" />
+                        <ui:Label tabindex="-1" text="Conveyor" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="ve_machine_icon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; visibility: hidden;">
+                    <ui:VisualElement name="ve_icon_container" focusable="true" class="icon_container">
+                        <ui:VisualElement name="ve_icon_image" picking-mode="Ignore" class="icon_image" style="background-image: url(&apos;project://database/Assets/UI/Sprites/Kanban.jpg?fileID=2800000&amp;guid=b9664df4c25a2854086eaf53e843f4a9&amp;type=3#Kanban&apos;); -unity-background-scale-mode: stretch-to-fill;" />
+                        <ui:Label tabindex="-1" text="Kanban" display-tooltip-when-elided="true" class="icon_label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:ScrollView>
+    </ui:VisualElement>
+    <ui:VisualElement name="ve_bottom_buffer" style="flex-grow: 1; height: 5%; max-height: 5%; min-height: 5%; background-color: rgb(203, 231, 255);" />
+</ui:UXML>

@@ -22,16 +22,15 @@ namespace KaizenApp
         private const string ICON_REMOVED_EVENT = "IconRemoved";
         private const string FLOOR_ICON_EVENT_KEY = "floorIcon";
 
-        private const string COMPARE_LAYOUTS_EVENT = "compare_layouts";
+        //private const string COMPARE_LAYOUTS_EVENT = "compare_layouts";
 
-        private const string PIXELS_PER_METER_EVENT = "PixelsPerMeterChanged";
-        private const string PIXELS_PER_METER_EVENT_KEY = "pixelsPerMeter";
+      
 
         private const string TAKE_PHOTO_EVENT = "TakePhoto";
         private const string TAKE_PHOTO_EVENT_KEY = "iconInfo";
-
-        private const string PHOTO_TAKEN_EVENT = "PhotoTaken";
-        private const string PHOTO_TAKEN_EVENT_KEY = "photoTexture";
+        //
+        // private const string PHOTO_TAKEN_EVENT = "PhotoTaken";
+        // private const string PHOTO_TAKEN_EVENT_KEY = "photoTexture";
 
         public const string ROTATION_CHANGED_EVENT = "RotationChanged";
         public const string ROTATION_CHANGED_EVENT_KEY = "rotation";
@@ -69,7 +68,6 @@ namespace KaizenApp
             _layoutView = layoutView;
             BindElements();
             RegisterCallbacks();
-            
         }
 
         private void BindElements()
@@ -88,13 +86,14 @@ namespace KaizenApp
 
         }
 
-        private void RegisterCallbacks()
+        public void RegisterCallbacks()
         {
+            Debug.Log("registering selection inspector callbacks");
             //EventManager.StartListening(SELECTION_EVENT, SetData);
             EventManager.StartListening(IconMover.ICON_CLICKED_EVENT, SetData);
-            EventManager.StartListening(PIXELS_PER_METER_EVENT, OnPixelsPerMeterChanged);
-            EventManager.StartListening(COMPARE_LAYOUTS_EVENT, OnCompareLayouts);
-            EventManager.StartListening(PHOTO_TAKEN_EVENT, OnPhotoTaken);
+            EventManager.StartListening(LayoutView.PIXELS_PER_METER_EVENT, OnPixelsPerMeterChanged);
+            //EventManager.StartListening(COMPARE_LAYOUTS_EVENT, OnCompareLayouts);
+            EventManager.StartListening(PhotoIconController.PHOTO_TAKEN_EVENT, OnPhotoTaken);
             EventManager.StartListening(UndoRedoView.UNDO_EVENT, OnUndoRedo);
 
             _widthField.RegisterValueChangedCallback(OnWidthChanged);
@@ -109,6 +108,27 @@ namespace KaizenApp
 
         }
 
+        public void UnregisterCallbacks()
+        {
+            Debug.Log("unregistering selection inspector callbacks");
+            //stop listening for all events
+            EventManager.StopListening(IconMover.ICON_CLICKED_EVENT, SetData);
+            EventManager.StopListening( LayoutView.PIXELS_PER_METER_EVENT_KEY, OnPixelsPerMeterChanged);
+            //EventManager.StopListening(COMPARE_LAYOUTS_EVENT, OnCompareLayouts);
+            EventManager.StopListening(PhotoIconController.PHOTO_TAKEN_EVENT, OnPhotoTaken);
+            EventManager.StopListening(UndoRedoView.UNDO_EVENT, OnUndoRedo);
+
+            _widthField.UnregisterValueChangedCallback(OnWidthChanged);
+            _heightField.UnregisterValueChangedCallback(OnHeightChanged);
+            
+            _positionField.UnregisterValueChangedCallback(OnPositionChanged);
+            _rotationSlider.UnregisterValueChangedCallback(OnRotationChanged);
+            VisualElement sliderDragHandle = _rotationSlider.Q("unity-drag-container");
+            sliderDragHandle.UnregisterCallback<PointerUpEvent>(OnSliderOff);
+            //_deleteButton.clicked -= OnDeleteClicked;
+            _takePhotoButton.clicked -= OnTakePhotoClicked;
+        }
+
        
         private void SetData(Dictionary<string, object> selectionEvent)
         {
@@ -121,11 +141,11 @@ namespace KaizenApp
             if (_iconInfo.IconType == IconType.Photo)
             {
                ShowPhotoIconInspector();
-           }
-           else
+            }
+            else
             {
                ShowLayoutIconInspector();
-           }
+            }
         }
 
         private void OnUndoRedo(Dictionary<string, object> undoRedoEvent)
@@ -197,7 +217,7 @@ namespace KaizenApp
 
         private void OnPhotoTaken(Dictionary<string, object> eventDictionary)
         {
-            Texture2D photoTexture = eventDictionary[PHOTO_TAKEN_EVENT_KEY] as Texture2D;
+            Texture2D photoTexture = eventDictionary[PhotoIconController.PHOTO_TAKEN_EVENT_KEY] as Texture2D;
             _photoElement.style.backgroundImage = photoTexture;
             _photoElement.style.rotate = new Rotate(_iconInfo.RotationAngle);
             //_photoElement.style.scale = new Scale(new Vector2(-1f, 1f));
@@ -295,7 +315,7 @@ namespace KaizenApp
         private void OnPixelsPerMeterChanged(Dictionary<string, object> pixelsPerMeterEvent)
         {
             Debug.Log("changing pixels per meter");
-            _pixelsPerMeter = (int)pixelsPerMeterEvent[PIXELS_PER_METER_EVENT_KEY];
+            _pixelsPerMeter = (int)pixelsPerMeterEvent[LayoutView.PIXELS_PER_METER_EVENT_KEY];
         }
 
         private void OnDeleteClicked()

@@ -13,6 +13,9 @@ namespace KaizenApp
         public const string ICON_REMOVED_EVENT = "iconRemoved";
         public const string ICON_REMOVED_EVENT_KEY = "iconRemovedKey";
 
+        public const string ON_COPY_LAYOUT_INFO = "onCopyLayoutInfo";
+        public const string ON_COPY_LAYOUT_INFO_KEY = "onCopyLayoutInfoKey";
+
         //in meters
         private const float DEFAULT_FLOOR_WIDTH = 4; 
         private const float DEFAULT_FLOOR_HEIGHT = 4; 
@@ -47,7 +50,9 @@ namespace KaizenApp
 
             EventManager.StartListening(KaizenFormView.POST_KAIZEN_LAYOUT_CLICKED, OnPostKaizenLayoutClicked);
             EventManager.StartListening(KaizenFormView.PRE_KAIZEN_LAYOUT_CLICKED, OnPreKaizenLayoutClicked);
-           
+            EventManager.StartListening(LayoutInitializer.POST_KAIZEN_LAYOUT_INITIALIZED, OnPostKaizenInitialized);
+            EventManager.StartListening(ON_COPY_LAYOUT_INFO, OnLayoutCopied);
+
         }
 
         private void OnPreKaizenLayoutClicked(Dictionary<string, object> dictionary)
@@ -86,6 +91,7 @@ namespace KaizenApp
             EventManager.StartListening(MoveIconCommand.ICON_MOVE_COMMAND_UNDO, OnMoveIconUndo);
             EventManager.StartListening(RotateIconCommand.ICON_ROTATE_COMMAND_UNDO, OnRotateIconUndo);
             EventManager.StartListening(ResizeIconCommand.UNDO_RESIZE_ICON_COMMAND, OnResizeIconUndo);
+            EventManager.StartListening(LayoutView.BACK_TO_KAIZEN_FORM_EVENT, OnBackToKaizenFormClicked);
 
         }
 
@@ -100,10 +106,13 @@ namespace KaizenApp
             EventManager.StopListening(MoveIconCommand.ICON_MOVE_COMMAND_UNDO, OnMoveIconUndo);
             EventManager.StopListening(RotateIconCommand.ICON_ROTATE_COMMAND_UNDO, OnRotateIconUndo);
             EventManager.StopListening(ResizeIconCommand.UNDO_RESIZE_ICON_COMMAND, OnResizeIconUndo);
+            EventManager.StopListening(LayoutView.BACK_TO_KAIZEN_FORM_EVENT, OnBackToKaizenFormClicked);
         }
 
-
-
+        private void OnBackToKaizenFormClicked(Dictionary<string, object> obj)
+        {
+            _commandHandler.Clear();
+        }
 
 
         private void OnRotationChanged(Dictionary<string, object> evntArgs)
@@ -268,6 +277,52 @@ namespace KaizenApp
             iconViewInfo.LocalPosition = iconModelInfo.LocalPosition;
             iconViewInfo.RotationAngle = iconModelInfo.RotationAngle;
             return iconViewInfo;
+        }
+
+        private void OnPostKaizenInitialized(Dictionary<string, object> args)
+        {
+            if (_isPreKaizenModel)
+            {
+               //set off event and pass through icon info
+                Dictionary<string, object> eventArgs = new Dictionary<string, object>();
+                eventArgs.Add(ON_COPY_LAYOUT_INFO_KEY, _icons);
+                EventManager.TriggerEvent(ON_COPY_LAYOUT_INFO, eventArgs);
+            }
+            
+        }
+
+        private void OnLayoutCopied(Dictionary<string, object> eventArgs)
+        {
+            if (_isPreKaizenModel)
+            {
+                return; 
+            }
+
+            Dictionary<int, IconModelInfo> iconInfo = (Dictionary<int, IconModelInfo>)eventArgs[ON_COPY_LAYOUT_INFO_KEY];
+            for (int i = 0; i < iconInfo.Count; i++)
+            {
+                IconModelInfo iconModelInfo = new IconModelInfo
+                {
+                    IconID = iconInfo[i].IconID,
+                    IconType = iconInfo[i].IconType,
+                    Height = iconInfo[i].Height,
+                    Width = iconInfo[i].Width,
+                    Position = iconInfo[i].Position,
+                    LocalPosition = iconInfo[i].LocalPosition,
+                    RotationAngle = iconInfo[i].RotationAngle,
+                    IsActive = iconInfo[i].IsActive
+                };
+
+                if(iconModelInfo.IsActive)
+                {
+                    IconViewInfo iconViewInfo = ConvertModelInfoToViewInfo(iconModelInfo);
+                    AddIconCommand addIconCommand = new AddIconCommand(iconViewInfo);
+                    Debug.Log("adding icon" + iconViewInfo.iconID);
+                    _commandHandler.AddCommand(addIconCommand);
+                }
+                _icons.Add(iconModelInfo.IconID, iconModelInfo);
+            }
+            _nextIconId = iconInfo.Count;
         }
 
         //incorporate Icon info here...

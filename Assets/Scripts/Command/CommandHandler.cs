@@ -23,6 +23,12 @@ namespace KaizenApp
             EventManager.StartListening(undoEvent, OnUndoCommand);
             EventManager.StartListening(redoEvent, OnRedoCommand);
         }
+        
+        public void Clear()
+        {
+            _commandBuffer.Clear();
+            _commandIndex = 0;
+        }
 
         //Execute the current command
         public void AddCommand(ICommand command)

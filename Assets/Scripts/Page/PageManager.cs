@@ -20,6 +20,7 @@ namespace KaizenApp
         private List<PageView> _initializedPages = new();
 
         MainMenuView _mainMenuView;
+        KaizenFormView _kaizenFormView;
 
         //list of all active pages
         private List<UIDocument> _activePages = new();
@@ -34,7 +35,11 @@ namespace KaizenApp
         private void Awake()
         {
             InitializePageStateModel();
-            LayoutInitializer layoutInitializer = new LayoutInitializer();
+            
+            PageView preKaizenLayoutPage = _pages.Find(page => page.PageType == PageType.PreKaizenLayout);
+            PageView postKaizenLayoutPage = _pages.Find(page => page.PageType == PageType.PostKaizenLayout);
+            
+            LayoutInitializer layoutInitializer = new LayoutInitializer(preKaizenLayoutPage, postKaizenLayoutPage);
             EventManager.StartListening(PageStateChanger.PAGE_STATE_CHANGE, OnPageStateChange);
         }
         
@@ -127,9 +132,11 @@ namespace KaizenApp
 
         private void KaizenFormGeometryChanged(GeometryChangedEvent evt)
         {
-            VisualElement pageRoot = (VisualElement)evt.target;
-            KaizenFormView kaizenFormView = new KaizenFormView(pageRoot);
-           
+            if(_kaizenFormView is null)
+            {
+                VisualElement pageRoot = (VisualElement)evt.target;
+                _kaizenFormView = new KaizenFormView(pageRoot);
+            }
         }
         private void InitializePostKaizenLayoutView()
         {

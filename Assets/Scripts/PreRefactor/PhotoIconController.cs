@@ -11,8 +11,8 @@ namespace KaizenApp
         private const string TAKE_PHOTO_EVENT = "TakePhoto";
         private const string TAKE_PHOTO_EVENT_KEY = "iconInfo";
 
-        private const string PHOTO_TAKEN_EVENT = "PhotoTaken";
-        private const string PHOTO_TAKEN_EVENT_KEY = "photoTexture";
+        public const string PHOTO_TAKEN_EVENT = "PhotoTaken";
+        public const string PHOTO_TAKEN_EVENT_KEY = "photoTexture";
 
         private Image _imageElement;
         private Image _overlayImageElement;
